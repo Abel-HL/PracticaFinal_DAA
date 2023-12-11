@@ -8,13 +8,15 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+struct ManufacturersView: View {
+    /*@Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
-    private var items: FetchedResults<Item>
+    private var items: FetchedResults<Item>*/
+    
+    @StateObject var viewModel = ManufacturersViewModel()
 
     var body: some View {
         NavigationView {
@@ -41,7 +43,7 @@ struct ContentView: View {
             Text("Select an item")
         }
     }
-
+    /*
     private func addItem() {
         withAnimation {
             let newItem = Item(context: viewContext)
@@ -57,7 +59,8 @@ struct ContentView: View {
             }
         }
     }
-
+    */
+    /*
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)
@@ -72,6 +75,7 @@ struct ContentView: View {
             }
         }
     }
+    */
 }
 
 private let itemFormatter: DateFormatter = {
@@ -82,5 +86,5 @@ private let itemFormatter: DateFormatter = {
 }()
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ManufacturersView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

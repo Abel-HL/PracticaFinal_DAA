@@ -8,14 +8,14 @@
 import CoreData
 
 struct PersistenceController {
-    static let shared = PersistenceController()
+    static let shared = PersistenceController() //Singleton
 
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+        for x in 0..<10 {
+            let newManufacturer = ManufacturerEntity(context: viewContext)
+            newManufacturer.name = "Name \(x)"
         }
         do {
             try viewContext.save()
@@ -29,6 +29,7 @@ struct PersistenceController {
     }()
 
     let container: NSPersistentContainer
+    let context: NSManagedObjectContext
 
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "BeerApp_CoreData")
@@ -51,6 +52,16 @@ struct PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
-        container.viewContext.automaticallyMergesChangesFromParent = true
+        context = container.viewContext
+        //container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    
+    func save(){
+        do {
+            try context.save()
+            print("Context Saved successfully!!!!")
+        } catch let error {
+            print("Error saving Core Data: \(error.localizedDescription)")
+        }
     }
 }
