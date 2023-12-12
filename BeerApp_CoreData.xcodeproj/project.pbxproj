@@ -16,6 +16,7 @@
 		141ABF972B277AD9001EB107 /* ManufacturersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF962B277AD9001EB107 /* ManufacturersViewModel.swift */; };
 		141ABF992B27A04F001EB107 /* AddManufacturerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF982B27A04F001EB107 /* AddManufacturerView.swift */; };
 		141ABF9C2B27A9C8001EB107 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF9B2B27A9C8001EB107 /* Enums.swift */; };
+		14E3D8832B28840D0091E1D2 /* ViewBuilders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3D8822B28840D0091E1D2 /* ViewBuilders.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		141ABF962B277AD9001EB107 /* ManufacturersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturersViewModel.swift; sourceTree = "<group>"; };
 		141ABF982B27A04F001EB107 /* AddManufacturerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddManufacturerView.swift; sourceTree = "<group>"; };
 		141ABF9B2B27A9C8001EB107 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		14E3D8822B28840D0091E1D2 /* ViewBuilders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBuilders.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 		141ABF932B277954001EB107 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				14E3D8812B2883F80091E1D2 /* ViewBuilders */,
 				141ABF822B274CFB001EB107 /* ManufacturersView.swift */,
 				141ABF982B27A04F001EB107 /* AddManufacturerView.swift */,
 			);
@@ -112,6 +115,14 @@
 				141ABF9B2B27A9C8001EB107 /* Enums.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		14E3D8812B2883F80091E1D2 /* ViewBuilders */ = {
+			isa = PBXGroup;
+			children = (
+				14E3D8822B28840D0091E1D2 /* ViewBuilders.swift */,
+			);
+			path = ViewBuilders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,6 +197,7 @@
 			files = (
 				141ABF8A2B274CFC001EB107 /* Persistence.swift in Sources */,
 				141ABF832B274CFB001EB107 /* ManufacturersView.swift in Sources */,
+				14E3D8832B28840D0091E1D2 /* ViewBuilders.swift in Sources */,
 				141ABF8D2B274CFC001EB107 /* BeerApp_CoreData.xcdatamodeld in Sources */,
 				141ABF972B277AD9001EB107 /* ManufacturersViewModel.swift in Sources */,
 				141ABF9C2B27A9C8001EB107 /* Enums.swift in Sources */,

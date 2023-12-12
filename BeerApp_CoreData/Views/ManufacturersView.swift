@@ -49,7 +49,7 @@ struct ManufacturersView: View {
                 ToolbarItem {
                     Button(action: {
                         selectedList = "Importadas"
-                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", selectedList: selectedList)
+                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!, selectedList: selectedList)
                     }) {
                         Label("Add Manufacturer", systemImage: "plus")
                     }
@@ -95,6 +95,17 @@ struct ManufacturerRow: View {
                         .foregroundColor(.blue)
                         .frame(width: 30, height: 30)
                 }*/
+                if let imageData = manufacturer.imageData, let uiImage = UIImage(data: imageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 30, height: 30)
+                        .cornerRadius(5)
+                } else {
+                    Image(systemName: "square.fill")
+                        .foregroundColor(.blue)
+                        .frame(width: 30, height: 30)
+                }
                 Text(manufacturer.name ?? "")
                 Spacer()
                 if manufacturer.countryCode != "ES"{

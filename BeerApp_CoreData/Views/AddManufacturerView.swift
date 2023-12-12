@@ -12,8 +12,14 @@ struct AddManufacturerView: View {
     @State private var manufacturerName = ""
     @State private var manufacturerCountry : CountryInfo
     @State private var isImported: Bool = false
-    @ObservedObject var viewModel: ManufacturersViewModel
+    @State private var selectedImage: UIImage?
+    @State private var isImagePickerPresented = false
+    @State private var statusMessage = ""
+
     @Binding var selectedList: String
+    
+    @ObservedObject var viewModel: ManufacturersViewModel
+    
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -34,6 +40,9 @@ struct AddManufacturerView: View {
         Form {
             Section(header: Text("Nuevo Fabricante")) {
                 TextField("Nombre del Fabricante", text: $manufacturerName)
+                    .onChange(of: manufacturerName) { _ in
+                        checkNewManufacturerFields()
+                    }
                 //TextField("País de Origen", text: $manufacturerCountry)
                 
                 Picker("País de Origen", selection: $manufacturerCountry) {
@@ -46,7 +55,7 @@ struct AddManufacturerView: View {
                     checkImported()
                 }
                 
-                /*
+                
                 Section {
                     if let selectedImage = selectedImage {
                         VStack {
@@ -83,7 +92,7 @@ struct AddManufacturerView: View {
                             }
                         }
                     }
-                }*/
+                }
                 
                 Button(action: {
                     checkImported()
@@ -102,12 +111,16 @@ struct AddManufacturerView: View {
                     addManufacturer()
                 }) {
                     Text("Guardar Fabricante")
-                        .foregroundColor(.white)
+                        .foregroundColor(checkNewManufacturerFields() ? Color.white.opacity(0.5) : Color.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(checkNewManufacturerFields() ? Color.gray : Color.blue)
                         .cornerRadius(10)
                 }
+                .disabled(checkNewManufacturerFields())
+                
+                // Label dinámico
+                ViewBuilders.dynamicStatusLabel(for: statusMessage)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -123,9 +136,9 @@ struct AddManufacturerView: View {
                 }
             }
         }
-        /*.sheet(isPresented: $isImagePickerPresented) {
+        .sheet(isPresented: $isImagePickerPresented) {
             ImagePicker(selectedImage: $selectedImage)
-        }*/
+        }
     }
     func addManufacturer(){
         
@@ -135,21 +148,64 @@ struct AddManufacturerView: View {
             selectedList = "Importadas"
         }
         
-        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, selectedList: selectedList)
+        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!, selectedList: selectedList)
+            
         
         presentationMode.wrappedValue.dismiss()
     }
     
     
     private func checkImported() {
-        if manufacturerCountry.name.lowercased() == "spain" {
-            isImported = false
-            //viewModel.getNationalManufacturers()
-        } else {
-            isImported = true
-            
+        isImported = manufacturerCountry.name.lowercased() != "spain"
+    }
+    
+     
+    func checkNewManufacturerFields() -> Bool {
+        DispatchQueue.main.async {
+            statusMessage = manufacturerName.isEmpty && selectedImage == nil ? "Introduce un nombre y selecciona una imagen" :
+                            manufacturerName.isEmpty ? "Introduce un nombre" :
+                            selectedImage == nil ? "Selecciona una imagen" : ""
+        }
+        return manufacturerName.isEmpty || selectedImage == nil
+    }
+}
+
+
+struct ImagePicker: UIViewControllerRepresentable {
+    @Binding var selectedImage: UIImage?
+    @Environment(\.presentationMode) var presentationMode
+
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let parent: ImagePicker
+
+        init(_ parent: ImagePicker) {
+            self.parent = parent
+        }
+
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let selectedImage = info[.originalImage] as? UIImage {
+                parent.selectedImage = selectedImage
+            }
+            parent.presentationMode.wrappedValue.dismiss()
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.presentationMode.wrappedValue.dismiss()
         }
     }
+
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(self)
+    }
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.sourceType = .photoLibrary
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
 
 /*
