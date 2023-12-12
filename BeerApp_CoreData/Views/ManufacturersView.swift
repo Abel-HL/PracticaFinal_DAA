@@ -9,15 +9,8 @@ import SwiftUI
 import CoreData
 
 struct ManufacturersView: View {
-    /*@Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>*/
-    
-    @StateObject var viewModel = ManufacturersViewModel()
-    @State private var selectedList = "Nacionales"
+    @ObservedObject var viewModel = ManufacturersViewModel()
+    @State var selectedList = "Nacionales"
 
     var body: some View {
         NavigationStack {
@@ -28,6 +21,9 @@ struct ManufacturersView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
+                .onChange(of: selectedList) { list in
+                    viewModel.selectedManufacturers(selectedList: list)
+                }
                 
                 List {
                     ForEach(viewModel.manufacturers) { manufacturer in
@@ -45,20 +41,21 @@ struct ManufacturersView: View {
                 //}
                 ToolbarItem {
                     Button(action: {
-                        viewModel.deleteAllManufacturers()
+                        viewModel.deleteAllManufacturers(selectedList: selectedList)
                     }) {
                         Label("Delete Manufacturer", systemImage: "trash")
                     }
                 }
                 ToolbarItem {
                     Button(action: {
-                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN")
+                        selectedList = "Importadas"
+                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", selectedList: selectedList)
                     }) {
                         Label("Add Manufacturer", systemImage: "plus")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: AddManufacturerView()) {
+                    NavigationLink(destination: AddManufacturerView(viewModel : viewModel, selectedList: $selectedList)) {
                         Text("Añadir")
                     }
                 }

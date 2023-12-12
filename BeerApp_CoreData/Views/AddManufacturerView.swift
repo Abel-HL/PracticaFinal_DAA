@@ -12,7 +12,8 @@ struct AddManufacturerView: View {
     @State private var manufacturerName = ""
     @State private var manufacturerCountry : CountryInfo
     @State private var isImported: Bool = false
-    @StateObject var viewModel = ManufacturersViewModel()
+    @ObservedObject var viewModel: ManufacturersViewModel
+    @Binding var selectedList: String
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -20,9 +21,13 @@ struct AddManufacturerView: View {
         return CountryInfo.allCases.sorted { $0.name < $1.name }
     }
     
-    init() {
+    init(viewModel: ManufacturersViewModel, selectedList: Binding<String>) {
+        // Asignar el viewModel recibido en la inicialización
+        self.viewModel = viewModel
+        self._selectedList = selectedList
+        
         // Asignar el país por defecto en la inicialización
-        _manufacturerCountry = State(initialValue: CountryInfo.Spain) //Cambiar el "Spain" por el account.configuration.country
+        _manufacturerCountry = State(initialValue: CountryInfo.Spain) // Cambiar "Spain" por el account.configuration.country
     }
     
     var body: some View {
@@ -94,9 +99,7 @@ struct AddManufacturerView: View {
             }
             Section {
                 Button(action: {
-                    viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code)
-                    print("New Manufacturer")
-                    presentationMode.wrappedValue.dismiss()
+                    addManufacturer()
                 }) {
                     Text("Guardar Fabricante")
                         .foregroundColor(.white)
@@ -124,16 +127,33 @@ struct AddManufacturerView: View {
             ImagePicker(selectedImage: $selectedImage)
         }*/
     }
+    func addManufacturer(){
+        
+        if manufacturerCountry.code == "ES"{
+            selectedList = "Nacionales"
+        }else{
+            selectedList = "Importadas"
+        }
+        
+        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, selectedList: selectedList)
+        
+        presentationMode.wrappedValue.dismiss()
+    }
+    
     
     private func checkImported() {
         if manufacturerCountry.name.lowercased() == "spain" {
             isImported = false
+            //viewModel.getNationalManufacturers()
         } else {
             isImported = true
+            
         }
     }
 }
 
+/*
 #Preview {
     AddManufacturerView()
 }
+*/

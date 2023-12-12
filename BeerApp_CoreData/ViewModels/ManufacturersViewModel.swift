@@ -13,25 +13,67 @@ class ManufacturersViewModel: ObservableObject{
     @Published var manufacturers: [ManufacturerEntity] = []
     
     init() {
-        getManufacturers()
+        getNationalManufacturers()
     }
     
-    func getManufacturers(){
+    func getAllManufacturers(){
         let request = NSFetchRequest<ManufacturerEntity>(entityName: "ManufacturerEntity")
         
         do {
             manufacturers = try manager.context.fetch(request)
+            print(manufacturers)
+        } catch let error {
+            print("Error getting Manufacturers -> fetch error: \(error)")
+        }
+    }
+    
+    func selectedManufacturers(selectedList: String){
+        if selectedList == "Nacionales"{
+            getNationalManufacturers()
+            return
+        }
+        
+        getImportedManufacturers()
+        return
+    }
+    
+    func getNationalManufacturers() {
+        let request = NSFetchRequest<ManufacturerEntity>(entityName: "ManufacturerEntity")
+        
+        // Agregar un predicado para filtrar por countryCode "ES"
+        let predicate = NSPredicate(format: "countryCode == %@", "ES")
+        request.predicate = predicate
+        
+        do {
+            manufacturers = try manager.context.fetch(request)
+            //print(manufacturers)
+        } catch let error {
+            print("Error getting Manufacturers -> fetch error: \(error)")
+        }
+    }
+    
+    func getImportedManufacturers(){
+        let request = NSFetchRequest<ManufacturerEntity>(entityName: "ManufacturerEntity")
+        
+        // Agregar un predicado para filtrar por countryCode "ES"
+        let predicate = NSPredicate(format: "countryCode != %@", "ES")
+        request.predicate = predicate
+        
+        do {
+            manufacturers = try manager.context.fetch(request)
+            //print(manufacturers)
         } catch let error {
             print("Error getting Manufacturers -> fetch error: \(error)")
         }
     }
     
     
-    func addManufacturer(name: String, countryCode: String){
+    func addManufacturer(name: String, countryCode: String, selectedList: String){
         let newManufacturer = ManufacturerEntity(context: manager.context)
         newManufacturer.name = name
         newManufacturer.countryCode = countryCode
         print("Añadido")
+        selectedManufacturers(selectedList: selectedList)
         save()
     }
     
@@ -40,16 +82,17 @@ class ManufacturersViewModel: ObservableObject{
         save()
     }
     
-    func deleteAllManufacturers(){
+    func deleteAllManufacturers(selectedList: String){
         manufacturers.forEach { manufacturer in
             manager.container.viewContext.delete(manufacturer)
         }
+        selectedManufacturers(selectedList: selectedList)
         save()
     }
     
     func save(){
         manager.save()
-        getManufacturers()
+        //getAllManufacturers()
     }
     
 }
