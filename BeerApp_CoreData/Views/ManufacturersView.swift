@@ -95,7 +95,8 @@ struct ManufacturerRow: View {
                         .foregroundColor(.blue)
                         .frame(width: 30, height: 30)
                 }*/
-                if let imageData = manufacturer.imageData, let uiImage = UIImage(data: imageData) {
+                if let imageData = manufacturer.imageData,
+                   let uiImage = ImageProcessor.getImageFromData(imageData) {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)

@@ -71,12 +71,12 @@ class ManufacturersViewModel: ObservableObject{
     
     
     func addManufacturer(name: String, countryCode: String, image: UIImage, selectedList: String){
-        if let data = image.pngData(){
+        if let compressedImageData = ImageProcessor.compressImage(image) {
             let newManufacturer = ManufacturerEntity(context: manager.context)
+            newManufacturer.id = UUID()
             newManufacturer.name = name
             newManufacturer.countryCode = countryCode
-            newManufacturer.imageData = data // Asigna la imagen en forma de Data al atributo imageData de la entidad
-            // Aquí puedes realizar más configuraciones y guardar la entidad en CoreData
+            newManufacturer.imageData = compressedImageData // Asigna la imagen comprimida al atributo imageData de la entidad
         }
         print("Añadido")
         selectedManufacturers(selectedList: selectedList)
@@ -94,14 +94,6 @@ class ManufacturersViewModel: ObservableObject{
         }
         selectedManufacturers(selectedList: selectedList)
         save()
-    }
-    
-    func saveImageToCoreData(image: UIImage){
-        if let data = image.pngData(){
-            let newManufacturer = ManufacturerEntity() // Crea una nueva instancia de ManufacturerEntity
-            newManufacturer.imageData = data // Asigna la imagen en forma de Data al atributo imageData de la entidad
-            // Aquí puedes realizar más configuraciones y guardar la entidad en CoreData
-        }
     }
     
     func save(){

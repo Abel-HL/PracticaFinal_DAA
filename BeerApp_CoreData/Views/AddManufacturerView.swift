@@ -111,13 +111,13 @@ struct AddManufacturerView: View {
                     addManufacturer()
                 }) {
                     Text("Guardar Fabricante")
-                        .foregroundColor(checkNewManufacturerFields() ? Color.white.opacity(0.5) : Color.white)
+                        .foregroundColor(checkButtonAvailable() ? Color.white.opacity(0.5) : Color.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(checkNewManufacturerFields() ? Color.gray : Color.blue)
+                        .background(checkButtonAvailable() ? Color.gray : Color.blue)
                         .cornerRadius(10)
                 }
-                .disabled(checkNewManufacturerFields())
+                .disabled(checkButtonAvailable())
                 
                 // Label dinámico
                 ViewBuilders.dynamicStatusLabel(for: statusMessage)
@@ -140,13 +140,12 @@ struct AddManufacturerView: View {
             ImagePicker(selectedImage: $selectedImage)
         }
     }
+    
+    
+    
     func addManufacturer(){
         
-        if manufacturerCountry.code == "ES"{
-            selectedList = "Nacionales"
-        }else{
-            selectedList = "Importadas"
-        }
+        selectedList = manufacturerCountry.code == "ES" ? "Nacionales" : "Importadas"
         
         viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!, selectedList: selectedList)
             
@@ -155,58 +154,28 @@ struct AddManufacturerView: View {
     }
     
     
+    
     private func checkImported() {
         isImported = manufacturerCountry.name.lowercased() != "spain"
     }
     
-     
-    func checkNewManufacturerFields() -> Bool {
+    
+    
+    func checkNewManufacturerFields(){
         DispatchQueue.main.async {
             statusMessage = manufacturerName.isEmpty && selectedImage == nil ? "Introduce un nombre y selecciona una imagen" :
                             manufacturerName.isEmpty ? "Introduce un nombre" :
                             selectedImage == nil ? "Selecciona una imagen" : ""
         }
+    }
+    
+    
+    
+    func checkButtonAvailable() -> Bool{
         return manufacturerName.isEmpty || selectedImage == nil
     }
 }
 
-
-struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var selectedImage: UIImage?
-    @Environment(\.presentationMode) var presentationMode
-
-    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        let parent: ImagePicker
-
-        init(_ parent: ImagePicker) {
-            self.parent = parent
-        }
-
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let selectedImage = info[.originalImage] as? UIImage {
-                parent.selectedImage = selectedImage
-            }
-            parent.presentationMode.wrappedValue.dismiss()
-        }
-
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.presentationMode.wrappedValue.dismiss()
-        }
-    }
-
-    func makeCoordinator() -> Coordinator {
-        return Coordinator(self)
-    }
-
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.delegate = context.coordinator
-        picker.sourceType = .photoLibrary
-        return picker
-    }
-
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
-}
 
 /*
 #Preview {
