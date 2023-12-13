@@ -8,15 +8,63 @@
 import SwiftUI
 
 struct BeersView: View {
+    
+    let beerName = "Mi cerveza"
+    let selectedImage = UIImage(named: "nombre_de_la_imagen")
+    let alcoholContent = 5.0
+    let calories: Int16 = 150
+    let favorite = true
+    
+    //let entity: ManufacturerEntity
+    
+    @ObservedObject var viewModel: ManufacturersViewModel
+    @Environment(\.presentationMode) var presentationMode
+    
+    init(viewModel: ManufacturersViewModel) {
+        // Asignar el viewModel recibido en la inicialización
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            VStack {
+                List {
+                    ForEach(viewModel.beers) { beer in
+                        Text(beer.name ?? "default value")
+                    }
+                    .onDelete(perform: viewModel.deleteBeer)
+                }
+            }
+            .toolbar {
+                ToolbarItem {
+                    Button(action: {
+                        viewModel.deleteAllBeers()
+                    }) {
+                        Label("Delete Beer", systemImage: "trash")
+                    }
+                }
+                ToolbarItem {
+                    Button(action: {
+                        viewModel.addBeer(name: beerName,
+                                          type: "Lager",
+                                          alcoholContent: Float(alcoholContent),
+                                          calories: calories,
+                                          favorite: favorite,
+                                          image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!)
+                    }) {
+                        Label("Add Beer", systemImage: "plus")
+                    }
+                }
+            }
+        }
     }
 }
 
+/*
 #Preview {
     BeersView()
 }
-
+*/
 
 
 /*

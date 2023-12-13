@@ -27,7 +27,9 @@ struct ManufacturersView: View {
                 
                 List {
                     ForEach(viewModel.manufacturers) { manufacturer in
-                        ManufacturerRow(manufacturer: manufacturer)
+                        ManufacturerRow(manufacturer: manufacturer, viewModel: viewModel)
+                        #warning("Hacerlo con navigationLink -> value")
+                        #warning("Hacerlo con navigationDestination(l.43) -> for")
                         /*NavigationLink(value: manufacturer){
                             //nada
                         }*/
@@ -38,9 +40,9 @@ struct ManufacturersView: View {
             .navigationBarBackButtonHidden(true)
             .navigationTitle("Lista de Fabricantes")
             .navigationBarTitleDisplayMode(.large)
-            .navigationDestination(for: ManufacturerEntity.self){ manufacturer in
-                ManufacturerRow(manufacturer: manufacturer)
-            }
+            /*.navigationDestination(for: ManufacturerEntity.self){ manufacturer in
+                ManufacturerRow(manufacturer: manufacturer, viewModel: viewModel)
+            }*/
             .toolbar {
                 //ToolbarItem(placement: .topBarLeading) {
                     //MenuView()
@@ -73,13 +75,15 @@ struct ManufacturersView: View {
 
 struct ManufacturerRow: View {
     var manufacturer: ManufacturerEntity
+    @ObservedObject var viewModel: ManufacturersViewModel
     //@Binding var selectedList: String
     //@EnvironmentObject var manufacturerListViewModel: ManufacturerListViewModel
     //@StateObject var manufacturerDetailViewModel: ManufacturerDetailViewModel
     //@EnvironmentObject var manufacturerListViewModel: ManufacturerListViewModel
     
-    init(manufacturer: ManufacturerEntity/*, selectedList: Binding<String>*/) {
+    init(manufacturer: ManufacturerEntity, viewModel: ManufacturersViewModel) {
         self.manufacturer = manufacturer
+        self.viewModel = viewModel
         //self._selectedList = selectedList
         //_manufacturerDetailViewModel = StateObject(wrappedValue: ManufacturerDetailViewModel(selectedManufacturer: manufacturer))
     }
@@ -115,17 +119,23 @@ struct ManufacturerRow: View {
                         .frame(width: 30, height: 30)
                 }
                 Text(manufacturer.name ?? "")
+                /*
                 NavigationLink(value: manufacturer){
+                }   .opacity(0.0)
+                 */
+                NavigationLink(destination: BeersView(viewModel : viewModel)) {
+                    Text("Añadir")
                 }   .opacity(0.0)
                 Spacer()
                 if manufacturer.countryCode != "ES"{
                     Text(searchFlag(countryCode: manufacturer.countryCode ?? "") ?? "")
                 }
             }
-            .navigationDestination(for: ManufacturerEntity.self){ manufacturer in
-                //BeersView(manufacturer: manufacturer)
+            /*
+            .navigationDestination(for: ManufacturersViewModel.self){ manufacturer in
+                BeersView(viewModel: manufacturer)
                 //Text("Pantalla Detalles")
-            }
+            }*/
         }
         //}
         /*.onAppear{

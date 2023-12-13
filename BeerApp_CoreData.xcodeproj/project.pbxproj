@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14140FAE2B29CAAB00D35671 /* AddBeerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14140FAD2B29CAAB00D35671 /* AddBeerView.swift */; };
 		141ABF812B274CFB001EB107 /* BeerApp_CoreDataApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF802B274CFB001EB107 /* BeerApp_CoreDataApp.swift */; };
 		141ABF832B274CFB001EB107 /* ManufacturersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF822B274CFB001EB107 /* ManufacturersView.swift */; };
 		141ABF852B274CFC001EB107 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 141ABF842B274CFC001EB107 /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		14140FAD2B29CAAB00D35671 /* AddBeerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBeerView.swift; sourceTree = "<group>"; };
 		141ABF7D2B274CFB001EB107 /* BeerApp_CoreData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeerApp_CoreData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		141ABF802B274CFB001EB107 /* BeerApp_CoreDataApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeerApp_CoreDataApp.swift; sourceTree = "<group>"; };
 		141ABF822B274CFB001EB107 /* ManufacturersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturersView.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				141ABF822B274CFB001EB107 /* ManufacturersView.swift */,
 				141ABF982B27A04F001EB107 /* AddManufacturerView.swift */,
 				14B0C5FC2B29BE54004F04A1 /* BeersView.swift */,
+				14140FAD2B29CAAB00D35671 /* AddBeerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -210,6 +213,7 @@
 				141ABF972B277AD9001EB107 /* ManufacturersViewModel.swift in Sources */,
 				141ABF9C2B27A9C8001EB107 /* Enums.swift in Sources */,
 				141ABF812B274CFB001EB107 /* BeerApp_CoreDataApp.swift in Sources */,
+				14140FAE2B29CAAB00D35671 /* AddBeerView.swift in Sources */,
 				141ABF992B27A04F001EB107 /* AddManufacturerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

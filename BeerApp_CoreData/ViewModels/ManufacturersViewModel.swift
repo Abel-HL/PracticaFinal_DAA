@@ -13,10 +13,13 @@ class ManufacturersViewModel: ObservableObject{
     
     let manager = PersistenceController.shared
     @Published var manufacturers: [ManufacturerEntity] = []
+    @Published var beers: [BeerEntity] = []
     
     init() {
         getNationalManufacturers()
     }
+    
+    //  Manufacturers
     
     func getAllManufacturers(){
         let request = NSFetchRequest<ManufacturerEntity>(entityName: "ManufacturerEntity")
@@ -69,7 +72,6 @@ class ManufacturersViewModel: ObservableObject{
         }
     }
     
-    
     func addManufacturer(name: String, countryCode: String, image: UIImage, selectedList: String){
         if let compressedImageData = ImageProcessor.compressImage(image) {
             let newManufacturer = ManufacturerEntity(context: manager.context)
@@ -77,6 +79,7 @@ class ManufacturersViewModel: ObservableObject{
             newManufacturer.name = name
             newManufacturer.countryCode = countryCode
             newManufacturer.imageData = compressedImageData // Asigna la imagen comprimida al atributo imageData de la entidad
+            newManufacturer.beers = []  //  Ya que inicialmente no tenemos cervezas asociadas
         }
         print("Añadido")
         selectedManufacturers(selectedList: selectedList)
@@ -96,9 +99,61 @@ class ManufacturersViewModel: ObservableObject{
         save()
     }
     
+    
+    
+    //  Beers
+    func addBeer(name: String, type: String,
+                 alcoholContent: Float,
+                 calories: Int16,
+                 favorite: Bool,
+                 image: UIImage){
+        //if let compressedImageData = ImageProcessor.compressImage(image) {
+        let newBeer = BeerEntity(context: manager.context)
+        newBeer.id = UUID()
+        newBeer.name = name
+        newBeer.alcoholContent = alcoholContent
+        newBeer.calories = calories
+        newBeer.type = type
+        //newBeer.imageData = compressedImageData
+        newBeer.favorite = favorite
+        //}
+        
+        print("Beer Added")
+        //selectedManufacturers(selectedList: selectedList)
+        save()
+        getBeers()
+    }
+    
+    
+    func getBeers(){
+        let request = NSFetchRequest<BeerEntity>(entityName: "BeerEntity")
+        
+        do {
+            beers = try manager.context.fetch(request)
+            print(beers)
+        } catch let error {
+            print("Error getting Beers -> fetch error: \(error)")
+        }
+    }
+    
+    func deleteBeer(indexSet: IndexSet){
+        indexSet.map { beers[$0]}.forEach(manager.container.viewContext.delete)
+        getBeers()
+        save()
+    }
+    
+    func deleteAllBeers(){
+        beers.forEach { beer in
+            manager.container.viewContext.delete(beer)
+        }
+        getBeers()
+        save()
+    }
+    
+    
+    
     func save(){
         manager.save()
         //getAllManufacturers()
     }
-    
 }
