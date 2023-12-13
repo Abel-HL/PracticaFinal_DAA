@@ -17,6 +17,7 @@
 		141ABF992B27A04F001EB107 /* AddManufacturerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF982B27A04F001EB107 /* AddManufacturerView.swift */; };
 		141ABF9C2B27A9C8001EB107 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF9B2B27A9C8001EB107 /* Enums.swift */; };
 		144BAF342B28B3B700E85A5B /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144BAF332B28B3B700E85A5B /* ImageProcessor.swift */; };
+		14B0C5FD2B29BE54004F04A1 /* BeersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B0C5FC2B29BE54004F04A1 /* BeersView.swift */; };
 		14E3D8832B28840D0091E1D2 /* ViewBuilders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3D8822B28840D0091E1D2 /* ViewBuilders.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		141ABF982B27A04F001EB107 /* AddManufacturerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddManufacturerView.swift; sourceTree = "<group>"; };
 		141ABF9B2B27A9C8001EB107 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		144BAF332B28B3B700E85A5B /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
+		14B0C5FC2B29BE54004F04A1 /* BeersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeersView.swift; sourceTree = "<group>"; };
 		14E3D8822B28840D0091E1D2 /* ViewBuilders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBuilders.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,6 +92,7 @@
 				14E3D8812B2883F80091E1D2 /* ViewBuilders */,
 				141ABF822B274CFB001EB107 /* ManufacturersView.swift */,
 				141ABF982B27A04F001EB107 /* AddManufacturerView.swift */,
+				14B0C5FC2B29BE54004F04A1 /* BeersView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14B0C5FD2B29BE54004F04A1 /* BeersView.swift in Sources */,
 				141ABF8A2B274CFC001EB107 /* Persistence.swift in Sources */,
 				144BAF342B28B3B700E85A5B /* ImageProcessor.swift in Sources */,
 				141ABF832B274CFB001EB107 /* ManufacturersView.swift in Sources */,

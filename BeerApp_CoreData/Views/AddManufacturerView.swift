@@ -14,7 +14,7 @@ struct AddManufacturerView: View {
     @State private var isImported: Bool = false
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
-    @State private var statusMessage = ""
+    @State private var statusMessage : String
 
     @Binding var selectedList: String
     
@@ -32,8 +32,9 @@ struct AddManufacturerView: View {
         self.viewModel = viewModel
         self._selectedList = selectedList
         
-        // Asignar el país por defecto en la inicialización
+        // Asignar el país por defecto y el mensaje de campos por completar en la inicialización
         _manufacturerCountry = State(initialValue: CountryInfo.Spain) // Cambiar "Spain" por el account.configuration.country
+        _statusMessage = State(initialValue: "Introduce un nombre y selecciona una imagen")
     }
     
     var body: some View {
