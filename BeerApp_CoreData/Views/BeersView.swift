@@ -51,6 +51,11 @@ struct BeersView: View {
                         Label("Add Beer", systemImage: "plus")
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(destination: AddBeerView()) {
+                        Text("Añadir")
+                    }
+                }
             }
         }
     }

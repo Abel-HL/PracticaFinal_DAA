@@ -10,31 +10,23 @@ import SwiftUI
 struct AddManufacturerView: View {
     
     @State private var manufacturerName = ""
-    @State private var manufacturerCountry : CountryInfo
+    @State private var manufacturerCountry : CountryInfo = CountryInfo.Spain
     @State private var isImported: Bool = false
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
-    @State private var statusMessage : String
+    @State private var statusMessage : String = "Introduce un nombre y selecciona una imagen"
 
     @Binding var selectedList: String
     
-    @ObservedObject var viewModel: ManufacturersViewModel
-    
-    
+    @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     
     var sortedCountries: [CountryInfo] {
         return CountryInfo.allCases.sorted { $0.name < $1.name }
     }
     
-    init(viewModel: ManufacturersViewModel, selectedList: Binding<String>) {
-        // Asignar el viewModel recibido en la inicialización
-        self.viewModel = viewModel
+    init(selectedList: Binding<String>) {
         self._selectedList = selectedList
-        
-        // Asignar el país por defecto y el mensaje de campos por completar en la inicialización
-        _manufacturerCountry = State(initialValue: CountryInfo.Spain) // Cambiar "Spain" por el account.configuration.country
-        _statusMessage = State(initialValue: "Introduce un nombre y selecciona una imagen")
     }
     
     var body: some View {

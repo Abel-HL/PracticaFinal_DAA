@@ -66,7 +66,7 @@ struct ManufacturersView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: AddManufacturerView(viewModel : viewModel, selectedList: $selectedList)) {
+                    NavigationLink(destination: AddManufacturerView(selectedList: $selectedList)) {
                         Text("Añadir")
                     }
                 }
