@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 struct ManufacturersView: View {
-    @ObservedObject var viewModel = ManufacturersViewModel()
+    @ObservedObject var viewModel = ManufacturersViewModel.shared
     @State var selectedList = "Nacionales"
 
     var body: some View {
@@ -27,21 +27,24 @@ struct ManufacturersView: View {
                 
                 List {
                     ForEach(viewModel.manufacturers) { manufacturer in
-                        ManufacturerRow(manufacturer: manufacturer, viewModel: viewModel)
-                        #warning("Hacerlo con navigationLink -> value")
-                        #warning("Hacerlo con navigationDestination(l.43) -> for")
-                        /*NavigationLink(value: manufacturer){
-                            //nada
-                        }*/
+                        ManufacturerRow(manufacturer: manufacturer)
+                        /*
+                         NavigationLink(value: manufacturer){
+                            //ManufacturerRow(manufacturer: manufacturer)
+                         }//.opacity(0.0)
+                         */
                     }
-                    .onDelete(perform: viewModel.deleteManufacturer)
+                    .onDelete{ indexSet in
+                        viewModel.deleteManufacturer(indexSet: indexSet, selectedList: selectedList)
+                    }
+
                 }
             }
             .navigationBarBackButtonHidden(true)
             .navigationTitle("Lista de Fabricantes")
             .navigationBarTitleDisplayMode(.large)
             /*.navigationDestination(for: ManufacturerEntity.self){ manufacturer in
-                ManufacturerRow(manufacturer: manufacturer, viewModel: viewModel)
+                BeersView(manufacturer: manufacturer)
             }*/
             .toolbar {
                 //ToolbarItem(placement: .topBarLeading) {
@@ -75,17 +78,15 @@ struct ManufacturersView: View {
 
 struct ManufacturerRow: View {
     var manufacturer: ManufacturerEntity
-    @ObservedObject var viewModel: ManufacturersViewModel
+    @StateObject var viewModel = ManufacturersViewModel.shared
+    
     //@Binding var selectedList: String
     //@EnvironmentObject var manufacturerListViewModel: ManufacturerListViewModel
     //@StateObject var manufacturerDetailViewModel: ManufacturerDetailViewModel
     //@EnvironmentObject var manufacturerListViewModel: ManufacturerListViewModel
     
-    init(manufacturer: ManufacturerEntity, viewModel: ManufacturersViewModel) {
+    init(manufacturer: ManufacturerEntity) {
         self.manufacturer = manufacturer
-        self.viewModel = viewModel
-        //self._selectedList = selectedList
-        //_manufacturerDetailViewModel = StateObject(wrappedValue: ManufacturerDetailViewModel(selectedManufacturer: manufacturer))
     }
     
     var body: some View {
@@ -119,23 +120,28 @@ struct ManufacturerRow: View {
                         .frame(width: 30, height: 30)
                 }
                 Text(manufacturer.name ?? "")
+                
+                NavigationLink(destination: BeersView().onAppear {
+                    viewModel.setManufacturer(for: manufacturer)
+                }) {
+                    //Text("Añadir")
+                }   .opacity(0.0)
                 /*
-                NavigationLink(value: manufacturer){
+                 NavigationLink(destination: BeersView(manufacturer: manufacturer)) {
+                    //Text("Añadir")
                 }   .opacity(0.0)
                  */
-                NavigationLink(destination: BeersView(viewModel : viewModel)) {
-                    Text("Añadir")
-                }   .opacity(0.0)
                 Spacer()
                 if manufacturer.countryCode != "ES"{
                     Text(searchFlag(countryCode: manufacturer.countryCode ?? "") ?? "")
                 }
             }
             /*
-            .navigationDestination(for: ManufacturersViewModel.self){ manufacturer in
-                BeersView(viewModel: manufacturer)
+            .navigationDestination(for: ManufacturerEntity.self){ manufacturer in
+                BeersView(manufacturer: manufacturer)
                 //Text("Pantalla Detalles")
-            }*/
+            }
+             */
         }
         //}
         /*.onAppear{
@@ -161,7 +167,7 @@ struct ManufacturerRow: View {
 
 
 /*
- @StateObject var viewModel = ManufacturersViewModel()
+ @StateObject var viewModel = ManufacturersViewModel.shared
 
  var body: some View {
      NavigationView {

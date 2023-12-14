@@ -15,19 +15,14 @@ struct BeersView: View {
     let calories: Int16 = 150
     let favorite = true
     
-    //let entity: ManufacturerEntity
-    
-    @ObservedObject var viewModel: ManufacturersViewModel
+    @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
-    
-    init(viewModel: ManufacturersViewModel) {
-        // Asignar el viewModel recibido en la inicialización
-        self.viewModel = viewModel
-    }
     
     var body: some View {
         NavigationStack {
             VStack {
+                Text(viewModel.manufacturer?.name ?? "Default Value")
+                    .font(.largeTitle)
                 List {
                     ForEach(viewModel.beers) { beer in
                         Text(beer.name ?? "default value")
@@ -50,7 +45,8 @@ struct BeersView: View {
                                           alcoholContent: Float(alcoholContent),
                                           calories: calories,
                                           favorite: favorite,
-                                          image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!)
+                                          image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!,
+                                          manufacturer: viewModel.manufacturer!)
                     }) {
                         Label("Add Beer", systemImage: "plus")
                     }

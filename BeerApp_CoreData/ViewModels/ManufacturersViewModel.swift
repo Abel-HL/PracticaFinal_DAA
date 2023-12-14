@@ -10,9 +10,11 @@ import UIKit
 
 
 class ManufacturersViewModel: ObservableObject{
+    static let shared = ManufacturersViewModel()    //Singleton
     
     let manager = PersistenceController.shared
     @Published var manufacturers: [ManufacturerEntity] = []
+    @Published var manufacturer: ManufacturerEntity?
     @Published var beers: [BeerEntity] = []
     
     init() {
@@ -86,8 +88,9 @@ class ManufacturersViewModel: ObservableObject{
         save()
     }
     
-    func deleteManufacturer(indexSet: IndexSet){
+    func deleteManufacturer(indexSet: IndexSet, selectedList : String){
         indexSet.map { manufacturers[$0]}.forEach(manager.container.viewContext.delete)
+        selectedManufacturers(selectedList: selectedList)
         save()
     }
     
@@ -99,14 +102,19 @@ class ManufacturersViewModel: ObservableObject{
         save()
     }
     
-    
+    // Manufacturer
+    func setManufacturer(for manufacturer: ManufacturerEntity){
+        self.manufacturer = manufacturer
+        getBeers()
+    }
     
     //  Beers
     func addBeer(name: String, type: String,
                  alcoholContent: Float,
                  calories: Int16,
                  favorite: Bool,
-                 image: UIImage){
+                 image: UIImage,
+                 manufacturer: ManufacturerEntity){
         //if let compressedImageData = ImageProcessor.compressImage(image) {
         let newBeer = BeerEntity(context: manager.context)
         newBeer.id = UUID()
@@ -118,15 +126,26 @@ class ManufacturersViewModel: ObservableObject{
         newBeer.favorite = favorite
         //}
         
+        //Asociamos la nueva cerveza al fabricante en cuestión
+        newBeer.manufacturer = manufacturer
+        
         print("Beer Added")
         //selectedManufacturers(selectedList: selectedList)
         save()
-        getBeers()
     }
     
     
-    func getBeers(){
+    func getBeers() {
+        guard let currentManufacturer = self.manufacturer else {
+            print("Manufacturer is nil")
+            return
+        }
+        
         let request = NSFetchRequest<BeerEntity>(entityName: "BeerEntity")
+        
+        // Establecer un predicado para filtrar las cervezas por el fabricante específico
+        let predicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
+        request.predicate = predicate
         
         do {
             beers = try manager.context.fetch(request)
@@ -138,7 +157,6 @@ class ManufacturersViewModel: ObservableObject{
     
     func deleteBeer(indexSet: IndexSet){
         indexSet.map { beers[$0]}.forEach(manager.container.viewContext.delete)
-        getBeers()
         save()
     }
     
@@ -146,7 +164,6 @@ class ManufacturersViewModel: ObservableObject{
         beers.forEach { beer in
             manager.container.viewContext.delete(beer)
         }
-        getBeers()
         save()
     }
     
@@ -154,6 +171,7 @@ class ManufacturersViewModel: ObservableObject{
     
     func save(){
         manager.save()
+        getBeers()
         //getAllManufacturers()
     }
 }

@@ -8,13 +8,13 @@
         <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
-        <relationship name="manufacturer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManufacturerEntity" inverseName="beers" inverseEntity="ManufacturerEntity"/>
+        <relationship name="manufacturer" maxCount="1" deletionRule="Nullify" destinationEntity="ManufacturerEntity" inverseName="beers" inverseEntity="ManufacturerEntity"/>
     </entity>
     <entity name="ManufacturerEntity" representedClassName="ManufacturerEntity" syncable="YES" codeGenerationType="class">
         <attribute name="countryCode" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="name" attributeType="String"/>
-        <relationship name="beers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BeerEntity" inverseName="manufacturer" inverseEntity="BeerEntity"/>
+        <relationship name="beers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BeerEntity" inverseName="manufacturer" inverseEntity="BeerEntity"/>
     </entity>
 </model>
