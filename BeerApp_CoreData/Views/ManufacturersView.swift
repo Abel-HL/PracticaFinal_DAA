@@ -10,7 +10,6 @@ import CoreData
 
 struct ManufacturersView: View {
     @ObservedObject var viewModel = ManufacturersViewModel.shared
-    //@State var selectedList = "Nacionales"
 
     var body: some View {
         NavigationStack {

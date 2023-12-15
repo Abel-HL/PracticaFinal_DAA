@@ -13,6 +13,7 @@ class ManufacturersViewModel: ObservableObject{
     static let shared = ManufacturersViewModel()    //Singleton
     
     let manager = PersistenceController.shared
+    
     @Published var manufacturers: [ManufacturerEntity] = []
     @Published var selectedList: String = "Nacionales"
     @Published var manufacturer: ManufacturerEntity?
@@ -106,7 +107,7 @@ class ManufacturersViewModel: ObservableObject{
     // Manufacturer
     func setManufacturer(for manufacturer: ManufacturerEntity){
         self.manufacturer = manufacturer
-        getBeers()
+        getBeers(for: SortCriteria.name)
     }
     
     //  Beers
@@ -135,24 +136,37 @@ class ManufacturersViewModel: ObservableObject{
         save()
     }
     
-    
-    func getBeers() {
+    #warning("Hay que cambiar este getBeers para que por Defecto se haga el getBeers filtrado por sortCriteria = .Name")
+    func getBeers(for sortCriteria: SortCriteria) {
         guard let currentManufacturer = self.manufacturer else {
             print("Manufacturer is nil")
             return
         }
+
+        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
         
-        let request = NSFetchRequest<BeerEntity>(entityName: "BeerEntity")
-        
-        // Establecer un predicado para filtrar las cervezas por el fabricante específico
+        // Establecer un predicado para filtrar por el fabricante actual
         let predicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
-        request.predicate = predicate
+        fetchRequest.predicate = predicate
+        
+        var sortDescriptor: NSSortDescriptor
+        
+        switch sortCriteria {
+        case .name:
+            sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        case .calories:
+            sortDescriptor = NSSortDescriptor(key: "calories", ascending: true)
+        case .alcoholContent:
+            sortDescriptor = NSSortDescriptor(key: "alcoholContent", ascending: true)
+        }
+        
+        fetchRequest.sortDescriptors = [sortDescriptor]
         
         do {
-            beers = try manager.context.fetch(request)
-            print(beers)
-        } catch let error {
-            print("Error getting Beers -> fetch error: \(error)")
+            // Fetch beers based on the specified sort criteria and manufacturer
+            self.beers = try manager.container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Error fetching beers: \(error.localizedDescription)")
         }
     }
     
@@ -167,12 +181,12 @@ class ManufacturersViewModel: ObservableObject{
         }
         save()
     }
+        
     
-    
-    
+#warning("cambiar este getBeers")
     func save(){
         manager.save()
-        getBeers()
+        getBeers(for: SortCriteria.name)
         //getAllManufacturers()
     }
 }
