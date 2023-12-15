@@ -10,18 +10,18 @@ import CoreData
 
 struct ManufacturersView: View {
     @ObservedObject var viewModel = ManufacturersViewModel.shared
-    @State var selectedList = "Nacionales"
+    //@State var selectedList = "Nacionales"
 
     var body: some View {
         NavigationStack {
             VStack {
-                Picker(selection: $selectedList, label: Text("Tipo")) {
+                Picker(selection: $viewModel.selectedList, label: Text("Tipo")) {
                     Text("Nacionales").tag("Nacionales")
                     Text("Importadas").tag("Importadas")
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-                .onChange(of: selectedList) { list in
+                .onChange(of: viewModel.selectedList) { list in
                     viewModel.selectedManufacturers(selectedList: list)
                 }
                 
@@ -35,7 +35,7 @@ struct ManufacturersView: View {
                          */
                     }
                     .onDelete{ indexSet in
-                        viewModel.deleteManufacturer(indexSet: indexSet, selectedList: selectedList)
+                        viewModel.deleteManufacturer(indexSet: indexSet, selectedList: viewModel.selectedList)
                     }
 
                 }
@@ -52,21 +52,21 @@ struct ManufacturersView: View {
                 //}
                 ToolbarItem {
                     Button(action: {
-                        viewModel.deleteAllManufacturers(selectedList: selectedList)
+                        viewModel.deleteAllManufacturers(selectedList: viewModel.selectedList)
                     }) {
                         Label("Delete Manufacturer", systemImage: "trash")
                     }
                 }
                 ToolbarItem {
                     Button(action: {
-                        selectedList = "Importadas"
-                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!, selectedList: selectedList)
+                        viewModel.selectedList = "Importadas"
+                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!, selectedList: viewModel.selectedList)
                     }) {
                         Label("Add Manufacturer", systemImage: "plus")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: AddManufacturerView(selectedList: $selectedList)) {
+                    NavigationLink(destination: AddManufacturerView(selectedList: $viewModel.selectedList)) {
                         Text("Añadir")
                     }
                 }

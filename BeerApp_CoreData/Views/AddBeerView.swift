@@ -84,6 +84,17 @@ struct AddBeerView: View {
                     }
                     .pickerStyle(MenuPickerStyle())
                 }
+                Button(action: {
+                    isFavorite.toggle()
+                }) {
+                    HStack {
+                        Image(systemName: isFavorite ? "checkmark.square.fill" : "square")
+                            .foregroundColor(isFavorite ? .blue : .gray)
+                        Text("Favorita")
+                            .foregroundColor(isFavorite ? .blue : .black)
+                    }
+                }
+
                 
                 
                 Section {
@@ -95,7 +106,7 @@ struct AddBeerView: View {
                                 Image(uiImage: selectedImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(maxHeight: 340) // Límite de altura deseado
+                                    .frame(maxHeight: 240) // Límite de altura deseado
                                 
                                 Spacer()
                             }
@@ -151,7 +162,7 @@ struct AddBeerView: View {
                 NavigationLink(destination: BeersView()) {
                     HStack {
                         Image(systemName: "chevron.backward")
-                        Text("Lista de Fabricantes")
+                        Text("Lista de Cervezas")
                     }
                 }
             }
@@ -168,7 +179,7 @@ struct AddBeerView: View {
                           type: "Lager",
                           alcoholContent: 5.0,
                           calories: 150,
-                          favorite: true,
+                          favorite: isFavorite,
                           image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!,
                           manufacturer: viewModel.manufacturer!)
         

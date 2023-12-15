@@ -58,6 +58,19 @@ struct BeersView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
+        //.navigationTitle("Añadir Cerveza")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                NavigationLink(destination: ManufacturersView()) {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                        Text("Lista de Fabricantes")
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -14,6 +14,7 @@ class ManufacturersViewModel: ObservableObject{
     
     let manager = PersistenceController.shared
     @Published var manufacturers: [ManufacturerEntity] = []
+    @Published var selectedList: String = "Nacionales"
     @Published var manufacturer: ManufacturerEntity?
     @Published var beers: [BeerEntity] = []
     
