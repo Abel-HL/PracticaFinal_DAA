@@ -22,7 +22,7 @@ struct ManufacturersView: View {
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
                 .onChange(of: viewModel.selectedList) { list in
-                    viewModel.selectedManufacturers(selectedList: list)
+                    viewModel.selectedManufacturers()
                 }
                 
                 List {
@@ -35,7 +35,7 @@ struct ManufacturersView: View {
                          */
                     }
                     .onDelete{ indexSet in
-                        viewModel.deleteManufacturer(indexSet: indexSet, selectedList: viewModel.selectedList)
+                        viewModel.deleteManufacturer(indexSet: indexSet)
                     }
 
                 }
@@ -52,7 +52,7 @@ struct ManufacturersView: View {
                 //}
                 ToolbarItem {
                     Button(action: {
-                        viewModel.deleteAllManufacturers(selectedList: viewModel.selectedList)
+                        viewModel.deleteAllManufacturers()
                     }) {
                         Label("Delete Manufacturer", systemImage: "trash")
                     }
@@ -60,13 +60,13 @@ struct ManufacturersView: View {
                 ToolbarItem {
                     Button(action: {
                         viewModel.selectedList = "Importadas"
-                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!, selectedList: viewModel.selectedList)
+                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!)
                     }) {
                         Label("Add Manufacturer", systemImage: "plus")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: AddManufacturerView(selectedList: $viewModel.selectedList)) {
+                    NavigationLink(destination: AddManufacturerView()) {
                         Text("Añadir")
                     }
                 }

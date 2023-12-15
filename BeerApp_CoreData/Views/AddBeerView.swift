@@ -21,7 +21,6 @@ struct AddBeerView: View {
     @State private var isImagePickerPresented = false
     
     @State private var statusMessage : String = "Introduce un nombre y selecciona una imagen"
-    //@Binding var selectedList: String
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     

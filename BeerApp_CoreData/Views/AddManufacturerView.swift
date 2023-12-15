@@ -15,18 +15,12 @@ struct AddManufacturerView: View {
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
     @State private var statusMessage : String = "Introduce un nombre y selecciona una imagen"
-
-    @Binding var selectedList: String
     
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     
     var sortedCountries: [CountryInfo] {
         return CountryInfo.allCases.sorted { $0.name < $1.name }
-    }
-    
-    init(selectedList: Binding<String>) {
-        self._selectedList = selectedList
     }
     
     var body: some View {
@@ -138,9 +132,9 @@ struct AddManufacturerView: View {
     
     func addManufacturer(){
         
-        selectedList = manufacturerCountry.code == "ES" ? "Nacionales" : "Importadas"
+        viewModel.selectedList = manufacturerCountry.code == "ES" ? "Nacionales" : "Importadas"
         
-        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!, selectedList: selectedList)
+        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!)
             
         
         presentationMode.wrappedValue.dismiss()

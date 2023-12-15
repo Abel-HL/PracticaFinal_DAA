@@ -35,8 +35,8 @@ class ManufacturersViewModel: ObservableObject{
         }
     }
     
-    func selectedManufacturers(selectedList: String){
-        if selectedList == "Nacionales"{
+    func selectedManufacturers(){
+        if self.selectedList == "Nacionales"{
             getNationalManufacturers()
             return
         }
@@ -75,7 +75,7 @@ class ManufacturersViewModel: ObservableObject{
         }
     }
     
-    func addManufacturer(name: String, countryCode: String, image: UIImage, selectedList: String){
+    func addManufacturer(name: String, countryCode: String, image: UIImage){
         if let compressedImageData = ImageProcessor.compressImage(image) {
             let newManufacturer = ManufacturerEntity(context: manager.context)
             newManufacturer.id = UUID()
@@ -85,21 +85,21 @@ class ManufacturersViewModel: ObservableObject{
             newManufacturer.beers = []  //  Ya que inicialmente no tenemos cervezas asociadas
         }
         print("Añadido")
-        selectedManufacturers(selectedList: selectedList)
+        selectedManufacturers()
         save()
     }
     
-    func deleteManufacturer(indexSet: IndexSet, selectedList : String){
+    func deleteManufacturer(indexSet: IndexSet){
         indexSet.map { manufacturers[$0]}.forEach(manager.container.viewContext.delete)
-        selectedManufacturers(selectedList: selectedList)
+        selectedManufacturers()
         save()
     }
     
-    func deleteAllManufacturers(selectedList: String){
+    func deleteAllManufacturers(){
         manufacturers.forEach { manufacturer in
             manager.container.viewContext.delete(manufacturer)
         }
-        selectedManufacturers(selectedList: selectedList)
+        selectedManufacturers()
         save()
     }
     
@@ -131,7 +131,7 @@ class ManufacturersViewModel: ObservableObject{
         newBeer.manufacturer = manufacturer
         
         print("Beer Added")
-        //selectedManufacturers(selectedList: selectedList)
+        //selectedManufacturers()
         save()
     }
     
