@@ -89,10 +89,10 @@ struct AddBeerView: View {
                     isFavorite.toggle()
                 }) {
                     HStack {
-                        Image(systemName: isFavorite ? "checkmark.square.fill" : "square")
-                            .foregroundColor(isFavorite ? .blue : .gray)
+                        Image(systemName: isFavorite ? "heart.fill" : "heart")
+                            .foregroundColor(isFavorite ? .red : .gray)
                         Text("Favorita")
-                            .foregroundColor(isFavorite ? .blue : .black)
+                            .foregroundColor(isFavorite ? .red : .black)
                     }
                 }
 

@@ -116,7 +116,7 @@ struct BeersView: View {
                 ToolbarItemGroup(placement: .bottomBar) {
                     
                     Button(action: {
-                        //beersToDelete = []
+                        // beersToDelete = []
                         // Si editMode está en .inactive, llama a deleteSelectedBeers() del viewModel
                         if editMode?.wrappedValue == .active {
                             viewModel.deleteSelectedBeers()
@@ -130,7 +130,7 @@ struct BeersView: View {
                     }) {
                         Image(systemName: "trash")
                         //Text("Eliminar Cerveza")
-                        Text(editMode?.wrappedValue == .active ? "Eliminar" : "Eliminar Cervezas")
+                        Text(editMode?.wrappedValue == .active ? "Eliminar Seleccionadas" : "Eliminar Cervezas")
                             .fontWeight(.bold)
                     }
                     //.environment(\.editMode, $editMode)
@@ -221,7 +221,7 @@ struct BeerRow: View {
                         Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                             .foregroundColor(isSelected ? .blue : .gray)
                     }
-                    .padding(.trailing)
+                    //.padding(.trailing)
                 }
                 if let imageData = beer.imageData,
                    let uiImage = ImageProcessor.getImageFromData(imageData) {
@@ -236,7 +236,11 @@ struct BeerRow: View {
                         .frame(width: 30, height: 30)
                 }
                 Text(beer.name ?? "")
-                
+                Spacer()
+                if(beer.favorite){
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(.red)
+                }
                 /*
                 NavigationLink(destination: BeerDetailView()) {
                     //Text("Añadir")
