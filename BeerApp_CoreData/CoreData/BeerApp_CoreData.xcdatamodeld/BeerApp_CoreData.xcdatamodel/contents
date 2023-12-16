@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="23B92" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="23C64" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="BeerEntity" representedClassName="BeerEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="alcoholContent" optional="YES" attributeType="Float" minValueString="0" maxValueString="100" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="calories" optional="YES" attributeType="Integer 16" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="alcoholContent" attributeType="Float" minValueString="0" maxValueString="100" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="calories" attributeType="Integer 16" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="favorite" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="type" attributeType="String"/>
         <relationship name="manufacturer" maxCount="1" deletionRule="Nullify" destinationEntity="ManufacturerEntity" inverseName="beers" inverseEntity="ManufacturerEntity"/>
     </entity>
     <entity name="ManufacturerEntity" representedClassName="ManufacturerEntity" syncable="YES" codeGenerationType="class">

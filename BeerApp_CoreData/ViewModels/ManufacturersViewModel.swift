@@ -107,7 +107,7 @@ class ManufacturersViewModel: ObservableObject{
     // Manufacturer
     func setManufacturer(for manufacturer: ManufacturerEntity){
         self.manufacturer = manufacturer
-        getBeers(for: SortCriteria.name)
+        getBeers()
     }
     
     //  Beers
@@ -117,27 +117,100 @@ class ManufacturersViewModel: ObservableObject{
                  favorite: Bool,
                  image: UIImage,
                  manufacturer: ManufacturerEntity){
-        //if let compressedImageData = ImageProcessor.compressImage(image) {
-        let newBeer = BeerEntity(context: manager.context)
-        newBeer.id = UUID()
-        newBeer.name = name
-        newBeer.alcoholContent = alcoholContent
-        newBeer.calories = calories
-        newBeer.type = type
-        //newBeer.imageData = compressedImageData
-        newBeer.favorite = favorite
-        //}
         
-        //Asociamos la nueva cerveza al fabricante en cuestión
-        newBeer.manufacturer = manufacturer
+        if let compressedImageData = ImageProcessor.compressImage(image) {
+            let newBeer = BeerEntity(context: manager.context)
+            newBeer.id = UUID()
+            newBeer.name = name
+            newBeer.alcoholContent = alcoholContent
+            newBeer.calories = calories
+            newBeer.type = type
+            newBeer.imageData = compressedImageData
+            newBeer.favorite = favorite
+            
+            //Asociamos la nueva cerveza al fabricante en cuestión
+            newBeer.manufacturer = manufacturer
+        }
         
         print("Beer Added")
-        //selectedManufacturers()
         save()
+        getBeers()
+        
     }
     
     #warning("Hay que cambiar este getBeers para que por Defecto se haga el getBeers filtrado por sortCriteria = .Name")
-    func getBeers(for sortCriteria: SortCriteria) {
+    func getBeers() {
+        guard let currentManufacturer = self.manufacturer else {
+            print("Manufacturer is nil")
+            return
+        }
+
+        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
+        
+        // Establecer un predicado para filtrar por el fabricante actual
+        let predicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
+        fetchRequest.predicate = predicate
+
+        let sortDescriptor = NSSortDescriptor(key: "type", ascending: true) // Ordenar por el atributo 'type'
+        fetchRequest.sortDescriptors = [sortDescriptor] // Agregar el descriptor de ordenación a la solicitud de búsqueda
+        
+        do {
+            // Fetch beers based on the specified sort criteria and manufacturer
+            self.beers = try manager.container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Error fetching beers: \(error.localizedDescription)")
+        }
+    }
+    
+    func sortAndFilterBeers(filter searchText: String, sort sortCriteria: SortCriteria){
+        self.getBeers()
+        guard !searchText.isEmpty else {
+            self.filterBeers(by: sortCriteria)
+            return
+        }
+        
+        self.filterBeers(by: sortCriteria)
+        self.beers = self.beers.filter {$0.name!.localizedCaseInsensitiveContains(searchText)}
+        //return filteredBeers
+    }
+    
+    func filterBeers(by criteria: SortCriteria) {
+        switch criteria {
+        case .name:
+            self.beers.sort { $0.name! < $1.name! } // Ordenar por nombre
+            print(beers)
+        case .calories:
+            self.beers.sort { $0.calories < $1.calories } // Ordenar por calorías
+            print(beers)
+        case .alcoholContent:
+            self.beers.sort { $0.alcoholContent < $1.alcoholContent } // Ordenar por contenido de alcohol
+            print(beers)
+        }
+    }
+    
+    
+    func deleteBeer(indexSet: IndexSet){
+        indexSet.map { beers[$0]}.forEach(manager.container.viewContext.delete)
+        save()
+    }
+    
+    func deleteAllBeers(){
+        beers.forEach { beer in
+            manager.container.viewContext.delete(beer)
+        }
+        save()
+        getBeers()
+    }
+        
+    
+#warning("cambiar este getBeers")
+    func save(){
+        manager.save()
+        //getAllManufacturers()
+    }
+    
+    /*
+    func filterBeers(for sortCriteria: SortCriteria) {
         guard let currentManufacturer = self.manufacturer else {
             print("Manufacturer is nil")
             return
@@ -169,24 +242,5 @@ class ManufacturersViewModel: ObservableObject{
             print("Error fetching beers: \(error.localizedDescription)")
         }
     }
-    
-    func deleteBeer(indexSet: IndexSet){
-        indexSet.map { beers[$0]}.forEach(manager.container.viewContext.delete)
-        save()
-    }
-    
-    func deleteAllBeers(){
-        beers.forEach { beer in
-            manager.container.viewContext.delete(beer)
-        }
-        save()
-    }
-        
-    
-#warning("cambiar este getBeers")
-    func save(){
-        manager.save()
-        getBeers(for: SortCriteria.name)
-        //getAllManufacturers()
-    }
+     */
 }

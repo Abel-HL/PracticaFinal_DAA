@@ -10,16 +10,18 @@ import SwiftUI
 
 struct AddBeerView: View {
     
-    @State private var beerName = ""
-    @State private var alcoholContent: Float = -1
-    @State private var calories: Int16 = -1
-    @State private var beerType: String = "Pilsen"
+    @State private var beerName: String = ""
+    @State private var alcoholContent: String = ""
+    @State private var calories: String = ""
+    @State private var beerType: String = ""
     @State private var isFavorite : Bool = false
     //@State private var isImported: Bool = false
     
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
     
+    @State private var alcoholContentTextColor: Color = .black
+    @State private var caloriesTextColor: Color = .black
     @State private var statusMessage : String = "Introduce un nombre y selecciona una imagen"
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
@@ -40,39 +42,28 @@ struct AddBeerView: View {
                 HStack {
                     Text("Graduación alcohólica:")
                     Spacer()
-                    TextField("0-100", text: Binding(
-                        get: {
-                            if alcoholContent >= 0 {
-                                return String(alcoholContent)
-                            } else {
-                                return "0-100" // O cualquier valor por defecto que desees mostrar
-                            }
-                        },
-                        set: { alcoholContent = Float($0) ?? 0.0 }
-                    ))
+                    TextField("0-100", text: alcoholContentBinding(alcoholContent: $alcoholContent, textColor: $alcoholContentTextColor), onEditingChanged: { _ in }, onCommit: {
+                        // Acción cuando se presiona "Enter" o se confirma el texto
+                    })
                     .keyboardType(.decimalPad)
                     .frame(maxWidth: 80)
                     .multilineTextAlignment(.trailing)
-                    Text("%")
+                    .onChange(of: alcoholContent) { newValue in
+                        print(newValue)
+                        if !Validators.validateAlcoholDecimal(newValue) {
+                            alcoholContent = ""
+                        }
+                    }
+                    Text("%").foregroundColor($alcoholContentTextColor.wrappedValue)
                 }
                 
                 HStack {
                     Text("Aporte calórico:")
                     Spacer()
-                    #warning("Hacer la reutilizacion de codigo para estos get-set")
-                    TextField("Aporte calórico", text: Binding(
-                        get: {
-                            if calories >= 0 {
-                                return String(calories)
-                            } else {
-                                return "0-100" // O cualquier valor por defecto que desees mostrar
-                            }
-                        },
-                        set: { calories = Int16($0) ?? 0 }
-                    ))
-                    .keyboardType(.numberPad)
-                    .multilineTextAlignment(.trailing)
-                    Text("kcal")
+                    TextField("0-500", text: caloriesBinding(calories: $calories, textColor: $caloriesTextColor))
+                        .keyboardType(.numberPad)
+                        .multilineTextAlignment(.trailing)
+                    Text("kcal").foregroundColor($caloriesTextColor.wrappedValue)
                 }
                 
                 HStack {
@@ -83,6 +74,7 @@ struct AddBeerView: View {
                     }
                     .pickerStyle(MenuPickerStyle())
                 }
+                
                 Button(action: {
                     isFavorite.toggle()
                 }) {
@@ -175,13 +167,12 @@ struct AddBeerView: View {
 #warning("Revisar esta sección -> Revisar '!' forzado en el ultimo param de addBeer")
     func addBeer(){
         viewModel.addBeer(name: beerName,
-                          type: "Lager",
-                          alcoholContent: 5.0,
-                          calories: 150,
+                          type: beerType,
+                          alcoholContent: Float(alcoholContent)!,
+                          calories: Int16(calories)!,
                           favorite: isFavorite,
                           image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!,
                           manufacturer: viewModel.manufacturer!)
-        
         
         presentationMode.wrappedValue.dismiss()
     }
@@ -200,9 +191,9 @@ struct AddBeerView: View {
             return "Introduce un nombre"
         } else if selectedImage == nil {
             return "Selecciona una imagen"
-        } else if alcoholContent < 0.0 {
+        } else if Float(alcoholContent)! < 0.0 {
             return "Introduce un contenido de alcohol válido (0-100)"
-        } else if calories < 0 {
+        } else if Float(calories)! < 0 {
             return "Introduce un valor válido para las calorías"
         } else {
             return ""
@@ -211,7 +202,7 @@ struct AddBeerView: View {
     
     // Check if any of the mandatory fields are empty
     func checkButtonAvailable() -> Bool {
-        return beerName.isEmpty || selectedImage == nil || alcoholContent < 0.0 || calories < 0
+        return beerName.isEmpty || selectedImage == nil || Float(alcoholContent)! < 0.0 || Int16(calories)! < 0
     }
 }
 

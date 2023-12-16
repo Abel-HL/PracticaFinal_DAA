@@ -11,19 +11,12 @@ import SwiftUI
 struct BeersView: View {
     
     @State private var searchText = ""
+    @State private var currentBeerType: String = "nil"
     @State private var sortCriteria: SortCriteria = .name
     
     @State private var showActionSheet = false
     @State private var showDeleteView = false
     @State private var allSelected = false
-    
-    
-    #warning("Eliminar estas variables cuando cambie el buTTon del toolbar de PLUS")
-    let beerName = "Prueba 5.0 150"
-    let selectedImage = UIImage(named: "nombre_de_la_imagen")
-    let alcoholContent = 5.0
-    let calories: Int16 = 150
-    let favorite = true
     
     
     @ObservedObject var viewModel = ManufacturersViewModel.shared
@@ -34,19 +27,33 @@ struct BeersView: View {
             VStack {
                 SearchBar(text: $searchText)
                     .padding(.horizontal)
-                
-                
+                /*
+                 List {
+                 ForEach(viewModel.beers) { beer in
+                 if currentBeerType != beer.type {
+                 ForEach(viewModel.beers.filter { $0.type == beer.type }) { filteredBeer in
+                 BeerRow(beer: filteredBeer)
+                 }
+                 }
+                 }
+                 }
+                 }
+                 */
                 
                 List {
                     ForEach(viewModel.beers) { beer in
-                        Text(beer.name ?? "default value")
+                        BeerRow(beer: beer)
                     }
                     .onDelete(perform: viewModel.deleteBeer)
                 }
-                .onChange(of: sortCriteria){ newCriteria in
-                    viewModel.getBeers(for: newCriteria)
+                
+                .onChange(of: sortCriteria) { newCriteria in
+                    viewModel.sortAndFilterBeers(filter: searchText, sort: newCriteria)
                 }
-                 
+                .onChange(of: searchText) { newSearchText in
+                    viewModel.sortAndFilterBeers(filter: newSearchText, sort: sortCriteria)
+                }
+                
             }
             .navigationBarBackButtonHidden(true)
             .navigationTitle(viewModel.manufacturer?.name ?? "Hola ajaja")
@@ -67,14 +74,15 @@ struct BeersView: View {
                         Label("Delete Beer", systemImage: "trash")
                     }
                 }
+                #warning("Eliminar este BarItem")
                 ToolbarItem {
                     Button(action: {
-                        viewModel.addBeer(name: beerName,
+                        viewModel.addBeer(name: "Prueba 3.0 80",
                                           type: "Lager",
-                                          alcoholContent: Float(alcoholContent),
-                                          calories: calories,
-                                          favorite: favorite,
-                                          image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!,
+                                          alcoholContent: 3.0,
+                                          calories: 80,
+                                          favorite: true,
+                                          image: (UIImage(named: "BeerLogo") ?? UIImage(systemName: "xmark.circle.fill"))!,
                                           manufacturer: viewModel.manufacturer!)
                     }) {
                         Label("Add Beer", systemImage: "plus")
@@ -89,25 +97,25 @@ struct BeersView: View {
                 //ToolbarItemGroup
                 ToolbarItem(placement: .bottomBar) {
                     /*
-                    Button(action: {
-                        beersToDelete = []
-                        showDeleteView.toggle()
-                    }) {
-                        Image(systemName: "trash")
-                        Text("Eliminar Cerveza")
-                    }
-                    .disabled(viewModel.manufacturer.beerTypes.values.flatMap { $0 }.isEmpty)
-                    .sheet(isPresented: $showDeleteView, onDismiss: {
-                        deleteBeers()
-                    }) {
-                        DeleteMultipleBeersView(
-                            beers: Array(viewModel.manufacturer.beerTypes.values.joined()),
-                            selectedBeerIndexes: $selectedBeerIndexes,
-                            allSelected: $allSelected,
-                            availableBeersIDs: $availableBeersIDs,
-                            beersToDelete: $beersToDelete
-                        )
-                    }
+                     Button(action: {
+                     beersToDelete = []
+                     showDeleteView.toggle()
+                     }) {
+                     Image(systemName: "trash")
+                     Text("Eliminar Cerveza")
+                     }
+                     .disabled(viewModel.manufacturer.beerTypes.values.flatMap { $0 }.isEmpty)
+                     .sheet(isPresented: $showDeleteView, onDismiss: {
+                     deleteBeers()
+                     }) {
+                     DeleteMultipleBeersView(
+                     beers: Array(viewModel.manufacturer.beerTypes.values.joined()),
+                     selectedBeerIndexes: $selectedBeerIndexes,
+                     allSelected: $allSelected,
+                     availableBeersIDs: $availableBeersIDs,
+                     beersToDelete: $beersToDelete
+                     )
+                     }
                      */
                     Button(action: {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -128,6 +136,84 @@ struct BeersView: View {
                 }
             }
         }
+    }
+    /*
+    func filteredBeers(by sortCriteria : SortCriteria) {
+        guard !searchText.isEmpty else {
+            viewModel.getBeers()
+            viewModel.filterBeers(by: sortCriteria)
+            return
+        }
+        viewModel.getBeers()
+        viewModel.filterBeers(by: sortCriteria)
+        viewModel.beers = viewModel.beers.filter {$0.name!.localizedCaseInsensitiveContains(searchText)}
+        //return filteredBeers
+    }
+     */
+}
+
+
+struct BeerRow: View {
+    var beer: BeerEntity // Suponiendo que tienes un modelo Beer
+    @StateObject var viewModel = ManufacturersViewModel.shared
+    
+    init(beer: BeerEntity) {
+        self.beer = beer
+    }
+        
+    var body: some View {
+        NavigationStack{
+            HStack {
+                /*if let imagePath = Bundle.main.url(forResource: manufacturer.imageURL, withExtension: nil),
+                 let imageData = try? Data(contentsOf: imagePath),
+                 let uiImage = UIImage(data: imageData) {
+                 
+                 Image(uiImage: uiImage)
+                 .resizable()
+                 .aspectRatio(contentMode: .fit)
+                 .frame(width: 30, height: 30)
+                 .cornerRadius(5)
+                 } else {
+                 Image(systemName: "square.fill")
+                 .foregroundColor(.blue)
+                 .frame(width: 30, height: 30)
+                 }*/
+                if let imageData = beer.imageData,
+                   let uiImage = ImageProcessor.getImageFromData(imageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 30, height: 30)
+                        .cornerRadius(5)
+                } else {
+                    Image(systemName: "square.fill")
+                        .foregroundColor(.blue)
+                        .frame(width: 30, height: 30)
+                }
+                Text(beer.name ?? "")
+                
+                /*
+                NavigationLink(destination: BeerDetailView()) {
+                    //Text("Añadir")
+                }   .opacity(0.0)
+                 */
+                /*
+                 NavigationLink(destination: BeersView(beer: beer)) {
+                    //Text("Añadir")
+                }   .opacity(0.0)
+                 */
+            }
+            /*
+            .navigationDestination(for: ManufacturerEntity.self){ manufacturer in
+                BeersView(manufacturer: manufacturer)
+                //Text("Pantalla Detalles")
+            }
+             */
+        }
+        //}
+        /*.onAppear{
+            //manufacturerDetailViewModel.selectedManufacturer = manufacturer
+        }*/
     }
 }
 
