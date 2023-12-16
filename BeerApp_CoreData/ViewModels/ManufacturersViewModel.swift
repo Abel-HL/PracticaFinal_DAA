@@ -18,6 +18,7 @@ class ManufacturersViewModel: ObservableObject{
     @Published var selectedList: String = "Nacionales"
     @Published var manufacturer: ManufacturerEntity?
     @Published var beers: [BeerEntity] = []
+    @Published var deleteBeersList: [UUID] = []
     
     init() {
         getNationalManufacturers()
@@ -185,6 +186,9 @@ class ManufacturersViewModel: ObservableObject{
         case .alcoholContent:
             self.beers.sort { $0.alcoholContent < $1.alcoholContent } // Ordenar por contenido de alcohol
             print(beers)
+        case .favorites:
+            self.beers.sort { $0.favorite && !$1.favorite } // Ordenar por favoritos
+            print(beers)
         }
     }
     
@@ -192,6 +196,20 @@ class ManufacturersViewModel: ObservableObject{
     func deleteBeer(indexSet: IndexSet){
         indexSet.map { beers[$0]}.forEach(manager.container.viewContext.delete)
         save()
+    }
+    
+    func deleteSelectedBeers() {
+        
+        for id in self.deleteBeersList {
+            let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            
+            if let beerToDelete = try? manager.container.viewContext.fetch(fetchRequest).first {
+                manager.container.viewContext.delete(beerToDelete)
+            }
+        }
+        save()
+        getBeers()
     }
     
     func deleteAllBeers(){

@@ -11,16 +11,20 @@ import SwiftUI
 struct BeersView: View {
     
     @State private var searchText = ""
-    @State private var currentBeerType: String = "nil"
+    //@State private var currentBeerType: String = "nil"
     @State private var sortCriteria: SortCriteria = .name
     
     @State private var showActionSheet = false
     @State private var showDeleteView = false
     @State private var allSelected = false
     
+    @State private var isSelected = false
+    //@State private var editMode: EditMode = .inactive
+    
     
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.editMode) var editMode
     
     var body: some View {
         NavigationStack {
@@ -42,7 +46,10 @@ struct BeersView: View {
                 
                 List {
                     ForEach(viewModel.beers) { beer in
-                        BeerRow(beer: beer)
+                        HStack{
+                            
+                            BeerRow(beer: beer)
+                        }
                     }
                     .onDelete(perform: viewModel.deleteBeer)
                 }
@@ -56,9 +63,10 @@ struct BeersView: View {
                 
             }
             .navigationBarBackButtonHidden(true)
-            .navigationTitle(viewModel.manufacturer?.name ?? "Hola ajaja")
+            .navigationTitle(viewModel.manufacturer?.name ?? "")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                //EditButton()
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink(destination: ManufacturersView()) {
                         HStack {
@@ -67,14 +75,23 @@ struct BeersView: View {
                         }
                     }
                 }
+                
                 ToolbarItem {
                     Button(action: {
-                        viewModel.deleteAllBeers()
+                        //viewModel.deleteAllBeers()
+                        viewModel.addBeer(name: "Hola 5.0 50",
+                                          type: "Lager",
+                                          alcoholContent: 5.0,
+                                          calories: 50,
+                                          favorite: false,
+                                          image: (UIImage(named: "BeerLogo") ?? UIImage(systemName: "xmark.circle.fill"))!,
+                                          manufacturer: viewModel.manufacturer!)
                     }) {
                         Label("Delete Beer", systemImage: "trash")
                     }
                 }
-                #warning("Eliminar este BarItem")
+                
+#warning("Eliminar este BarItem")
                 ToolbarItem {
                     Button(action: {
                         viewModel.addBeer(name: "Prueba 3.0 80",
@@ -88,35 +105,42 @@ struct BeersView: View {
                         Label("Add Beer", systemImage: "plus")
                     }
                 }
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(destination: AddBeerView()) {
                         Text("Añadir")
                     }
                 }
                 
-                //ToolbarItemGroup
-                ToolbarItem(placement: .bottomBar) {
-                    /*
-                     Button(action: {
-                     beersToDelete = []
-                     showDeleteView.toggle()
-                     }) {
-                     Image(systemName: "trash")
-                     Text("Eliminar Cerveza")
-                     }
-                     .disabled(viewModel.manufacturer.beerTypes.values.flatMap { $0 }.isEmpty)
-                     .sheet(isPresented: $showDeleteView, onDismiss: {
-                     deleteBeers()
-                     }) {
-                     DeleteMultipleBeersView(
-                     beers: Array(viewModel.manufacturer.beerTypes.values.joined()),
-                     selectedBeerIndexes: $selectedBeerIndexes,
-                     allSelected: $allSelected,
-                     availableBeersIDs: $availableBeersIDs,
-                     beersToDelete: $beersToDelete
-                     )
-                     }
-                     */
+                //
+                ToolbarItemGroup(placement: .bottomBar) {
+                    
+                    Button(action: {
+                        //beersToDelete = []
+                        // Si editMode está en .inactive, llama a deleteSelectedBeers() del viewModel
+                        if editMode?.wrappedValue == .active {
+                            viewModel.deleteSelectedBeers()
+                            searchText = ""
+                        }
+                        
+                        editMode?.wrappedValue = editMode?.wrappedValue == .active ? .inactive : .active
+                        
+                        print(editMode?.wrappedValue == .inactive ? viewModel.deleteBeersList : "")
+                        //showDeleteView.toggle()
+                    }) {
+                        Image(systemName: "trash")
+                        //Text("Eliminar Cerveza")
+                        Text(editMode?.wrappedValue == .active ? "Eliminar" : "Eliminar Cervezas")
+                            .fontWeight(.bold)
+                    }
+                    //.environment(\.editMode, $editMode)
+                    //.disabled(viewModel.manufacturer.beerTypes.values.flatMap { $0 }.isEmpty)
+                    /*.sheet(isPresented: $showDeleteView, onDismiss: {
+                        //viewModel.deleteBeersSelected()
+                    }) {
+                       */
+                    
+                    
                     Button(action: {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         showActionSheet = true
@@ -130,6 +154,7 @@ struct BeersView: View {
                             .default(Text("Name")) { sortCriteria = .name },
                             .default(Text("Calories")) { sortCriteria = .calories },
                             .default(Text("Alcohol Content")) { sortCriteria = .alcoholContent },
+                            .default(Text("Favorites")) { sortCriteria = .favorites },
                             .cancel()
                         ])
                     }
@@ -137,6 +162,7 @@ struct BeersView: View {
             }
         }
     }
+}
     /*
     func filteredBeers(by sortCriteria : SortCriteria) {
         guard !searchText.isEmpty else {
@@ -150,12 +176,14 @@ struct BeersView: View {
         //return filteredBeers
     }
      */
-}
 
 
 struct BeerRow: View {
     var beer: BeerEntity // Suponiendo que tienes un modelo Beer
     @StateObject var viewModel = ManufacturersViewModel.shared
+    @Environment(\.editMode) var editMode
+    @State private var isSelected = false
+    
     
     init(beer: BeerEntity) {
         self.beer = beer
@@ -178,6 +206,23 @@ struct BeerRow: View {
                  .foregroundColor(.blue)
                  .frame(width: 30, height: 30)
                  }*/
+                
+                if editMode?.wrappedValue == .active {
+                    Button(action: {
+                        isSelected.toggle()
+                        if isSelected {
+                            viewModel.deleteBeersList.append(beer.id!) // Agrega el ID de la cerveza a la lista
+                        } else {
+                            if let index = viewModel.deleteBeersList.firstIndex(of: beer.id!) {
+                                viewModel.deleteBeersList.remove(at: index) // Elimina el ID de la cerveza de la lista
+                            }
+                        }
+                    }) {
+                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                            .foregroundColor(isSelected ? .blue : .gray)
+                    }
+                    .padding(.trailing)
+                }
                 if let imageData = beer.imageData,
                    let uiImage = ImageProcessor.getImageFromData(imageData) {
                     Image(uiImage: uiImage)

@@ -11,6 +11,7 @@ enum SortCriteria: String, CaseIterable {
     case name = "Name"
     case calories = "Calories"
     case alcoholContent = "Alcohol %"
+    case favorites = "Favorites"
 }
 
 

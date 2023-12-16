@@ -13,12 +13,16 @@ struct AddBeerView: View {
     @State private var beerName: String = ""
     @State private var alcoholContent: String = ""
     @State private var calories: String = ""
-    @State private var beerType: String = ""
+    @State private var beerType: String = "Lager"
     @State private var isFavorite : Bool = false
     //@State private var isImported: Bool = false
     
     @State private var selectedImage: UIImage?
+    @State private var hasImage = false
     @State private var isImagePickerPresented = false
+    
+    @State private var attempts = 0
+    @State private var isShaking = false
     
     @State private var alcoholContentTextColor: Color = .black
     @State private var caloriesTextColor: Color = .black
@@ -49,7 +53,7 @@ struct AddBeerView: View {
                     .frame(maxWidth: 80)
                     .multilineTextAlignment(.trailing)
                     .onChange(of: alcoholContent) { newValue in
-                        print(newValue)
+                        //print(newValue)
                         if !Validators.validateAlcoholDecimal(newValue) {
                             alcoholContent = ""
                         }
@@ -63,6 +67,12 @@ struct AddBeerView: View {
                     TextField("0-500", text: caloriesBinding(calories: $calories, textColor: $caloriesTextColor))
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.trailing)
+                        .onChange(of: calories) { newValue in
+                            //print(newValue)
+                            if !Validators.validateCaloriesTextField(newValue) {
+                                calories = ""
+                            }
+                        }
                     Text("kcal").foregroundColor($caloriesTextColor.wrappedValue)
                 }
                 
@@ -103,26 +113,43 @@ struct AddBeerView: View {
                             }
                             
                             Button(action: {
-                                self.isImagePickerPresented.toggle()
+                                self.hasImage = false
+                                self.selectedImage = nil
+                                checkNewBeerFields()
                             }) {
                                 HStack {
-                                    Image(systemName: "square.and.arrow.up")
-                                    Text("Cambiar Imagen")
+                                    Image(systemName: "square.and.arrow.down")
+                                    Text("Eliminar Imagen")
                                 }
                             }
                             .padding(2) // Añade espacios alrededor del botón
                             
                         }
+                        .onAppear {
+                            self.hasImage = true // Cuando hay una imagen, establece hasImage como true al cargar la vista
+                            checkNewBeerFields()
+                        }
                         
                     } else {
                         Button(action: {
+                            // Acción normal del botón si no se supera el límite de intentos
+                            // Por ejemplo, mostrar el selector de imagen
                             self.isImagePickerPresented.toggle()
                         }) {
                             HStack {
                                 Image(systemName: "photo")
+                                    .foregroundColor(.red)
                                 Text("Seleccionar Imagen")
                             }
+                            .padding(2)
+                            /*.background(isShaking ? Color.red.opacity(0.3) : Color.clear)
+                            .cornerRadius(8)
+                            .offset(x: isShaking ? -5 : 0) // Cambia la posición en el eje x*/
                         }
+                        .background(isShaking ? Color.red.opacity(0.3) : Color.clear)
+                        .cornerRadius(8)
+                        .offset(x: isShaking ? -5 : 0) // Cambia la posición en el eje x
+                        
                     }
                 }
             }
@@ -130,6 +157,16 @@ struct AddBeerView: View {
             
             Section {
                 Button(action: {
+                    // Si se supera el límite, activar el shake
+                    attempts += 1
+                    if attempts >= 2 {
+                        withAnimation(Animation.default.repeatCount(4)) {
+                            isShaking.toggle()
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+                            isShaking = false // Establecer isShaking en false después del tiempo de duración de la animación
+                        }
+                    }
                     addBeer()
                 }) {
                     Text("Guardar Cerveza")
@@ -139,7 +176,7 @@ struct AddBeerView: View {
                         .background(checkButtonAvailable() ? Color.gray : Color.blue)
                         .cornerRadius(10)
                 }
-                .disabled(checkButtonAvailable())
+                //.disabled(checkButtonAvailable())
                 
                 // Label dinámico
                 ViewBuilders.dynamicStatusLabel(for: statusMessage)
@@ -166,6 +203,7 @@ struct AddBeerView: View {
     
 #warning("Revisar esta sección -> Revisar '!' forzado en el ultimo param de addBeer")
     func addBeer(){
+        /*
         viewModel.addBeer(name: beerName,
                           type: beerType,
                           alcoholContent: Float(alcoholContent)!,
@@ -175,6 +213,8 @@ struct AddBeerView: View {
                           manufacturer: viewModel.manufacturer!)
         
         presentationMode.wrappedValue.dismiss()
+         */
+        //attempts += 1
     }
     
     func checkNewBeerFields() {
@@ -185,16 +225,12 @@ struct AddBeerView: View {
     
     // Determine the appropriate status message based on field values
     private func determineStatusMessage() -> String {
-        if beerName.isEmpty && selectedImage == nil {
+        if beerName.isEmpty && hasImage == false {
             return "Introduce un nombre y selecciona una imagen"
         } else if beerName.isEmpty {
             return "Introduce un nombre"
-        } else if selectedImage == nil {
+        } else if hasImage == false {
             return "Selecciona una imagen"
-        } else if Float(alcoholContent)! < 0.0 {
-            return "Introduce un contenido de alcohol válido (0-100)"
-        } else if Float(calories)! < 0 {
-            return "Introduce un valor válido para las calorías"
         } else {
             return ""
         }
@@ -202,13 +238,12 @@ struct AddBeerView: View {
     
     // Check if any of the mandatory fields are empty
     func checkButtonAvailable() -> Bool {
-        return beerName.isEmpty || selectedImage == nil || Float(alcoholContent)! < 0.0 || Int16(calories)! < 0
+        return beerName.isEmpty || hasImage == false || Float(alcoholContent) ?? -1 < 0.0 || Int16(calories) ?? -1 < 0
     }
 }
 
 
- 
- 
+
 /*
 struct AddBeerView2: View {
     @State private var beerName: String = ""

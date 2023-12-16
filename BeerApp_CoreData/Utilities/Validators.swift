@@ -28,6 +28,13 @@ struct Validators {
     }
     
     
+    static func validateCaloriesTextField(_ newValue: String) -> Bool {
+        let decimalRegex = #"^(500|[1-4]?\d{0,2}|0)?$"#
+        let range = NSRange(location: 0, length: newValue.utf16.count)
+        let regex = try! NSRegularExpression(pattern: decimalRegex, options: .caseInsensitive)
+        let matches = regex.matches(in: newValue, options: [], range: range)
+        return !matches.isEmpty
+    }
     
     static func validateCalories(_ input: String) -> (valid: Bool, value: String, color: Color) {
         //let filtered = input.filter { "0123456789".contains($0) }
