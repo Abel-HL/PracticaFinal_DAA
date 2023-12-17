@@ -227,6 +227,74 @@ class ManufacturersViewModel: ObservableObject{
         //getAllManufacturers()
     }
     
+    
+    func getUniqueBeerTypes() -> [String] {
+        guard let currentManufacturer = self.manufacturer else {
+            print("Manufacturer is nil")
+            return []
+        }
+
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "BeerEntity")
+        fetchRequest.predicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
+        fetchRequest.propertiesToFetch = ["type"]
+        fetchRequest.returnsDistinctResults = true
+        fetchRequest.resultType = .dictionaryResultType
+
+        // Definir el criterio de ordenación por 'type' de manera alfabética
+        let sortDescriptorType = NSSortDescriptor(key: "type", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptorType]
+
+        do {
+            let results = try manager.container.viewContext.fetch(fetchRequest)
+            let types = results.compactMap { ($0 as? [String: Any])?["type"] as? String }
+            let uniqueTypes = Array(Set(types)).sorted() // Ordenar alfabéticamente
+            print(uniqueTypes)
+            return uniqueTypes
+        } catch {
+            print("Error fetching unique beer types: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    func getBeersByBeerTypesAndSortCriteria(sortCriteria: SortCriteria) {
+        guard let currentManufacturer = self.manufacturer else {
+            print("Manufacturer is nil")
+            return
+        }
+
+        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
+        
+        // Establecer un predicado para filtrar por el fabricante actual
+        let predicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
+        fetchRequest.predicate = predicate
+
+        var sortKey: String = ""
+        // Definir el sortDescriptor secundario según el sortCriteria
+        switch sortCriteria {
+        case .name:
+            sortKey = "name"
+        case .calories:
+            sortKey = "calories"
+        case .alcoholContent:
+            sortKey = "alcoholContent"
+        case .favorites:
+            sortKey = "favorite"
+        }
+
+        let primarySortDescriptor = NSSortDescriptor(key: "type", ascending: true) // Ordenar por el atributo 'type'
+        let secondarySortDescriptor = NSSortDescriptor(key: sortKey, ascending: true) // Sort descriptor secundario según el sortCriteria
+        fetchRequest.sortDescriptors = [primarySortDescriptor, secondarySortDescriptor] // Agregar los sort descriptors a la solicitud de búsqueda
+        
+        do {
+            // Fetch beers based on the specified sort criteria and manufacturer
+            self.beers = try manager.container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Error fetching beers: \(error.localizedDescription)")
+        }
+    }
+
+
+    
     /*
     func filterBeers(for sortCriteria: SortCriteria) {
         guard let currentManufacturer = self.manufacturer else {
