@@ -13,7 +13,7 @@ struct AddBeerView: View {
     @State private var beerName: String = ""
     @State private var alcoholContent: String = ""
     @State private var calories: String = ""
-    @State private var beerType: String = "Lager"
+    @State private var beerType: BeerTypes = .lager
     @State private var isFavorite : Bool = false
     //@State private var isImported: Bool = false
     
@@ -78,9 +78,14 @@ struct AddBeerView: View {
                 
                 HStack {
                     Picker(selection: $beerType, label: Text("Tipo de Cerveza")) {
+                        ForEach(BeerTypes.allCases, id: \.self) { beerType in
+                            Text(beerType.rawValue).tag(beerType)
+                        }
+                        /*
                         Text("Pilsen").tag("Pilsen")
                         Text("Lager").tag("Lager")
                         Text("Prueba").tag("Prueba")
+                         */
                     }
                     .pickerStyle(MenuPickerStyle())
                 }
@@ -205,7 +210,7 @@ struct AddBeerView: View {
     func addBeer(){
         /*
         viewModel.addBeer(name: beerName,
-                          type: beerType,
+                          type: beerType.rawValue,
                           alcoholContent: Float(alcoholContent)!,
                           calories: Int16(calories)!,
                           favorite: isFavorite,
@@ -213,7 +218,7 @@ struct AddBeerView: View {
                           manufacturer: viewModel.manufacturer!)
         
         presentationMode.wrappedValue.dismiss()
-         */
+        */
         //attempts += 1
     }
     

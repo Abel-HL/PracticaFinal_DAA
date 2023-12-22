@@ -254,6 +254,11 @@ struct ContentView: View {
                 Button(action: {
                     // Cambiar el estado de favorito al presionar el botón
                     isFavorited.toggle()
+                    if isFavorited {
+                        viewModel.getFavoritesBeers()
+                    }else{
+                        viewModel.getBeers()
+                    }
                     // Aquí puedes realizar la lógica para filtrar por favoritos o realizar cualquier otra acción necesaria
                     //viewModel.filterByFavorites(isFavorited)
                 }) {
@@ -476,8 +481,9 @@ struct BeerRow: View {
                 
                 #warning("Revisar esto porq igual es mejor usar solo el viewModel.beer en vez de pasarla por parametro")
                 NavigationLink(destination: BeerDetailView(beer: beer)) {
-                    //Text("Añadir")
+                    
                 }   .opacity(0.0)
+                    .frame(width: 0, height: 0)
                 /*
                  NavigationLink(destination: BeersView(beer: beer)) {
                     //Text("Añadir")

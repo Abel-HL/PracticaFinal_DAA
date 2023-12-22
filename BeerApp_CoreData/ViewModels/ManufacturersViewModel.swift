@@ -307,6 +307,35 @@ class ManufacturersViewModel: ObservableObject{
         }
     }
 
+    func getFavoritesBeers() {
+        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
+        
+        // Predicado para buscar por manufacturer
+        guard let currentManufacturer = self.manufacturer else {
+            print("Manufacturer is nil")
+            return
+        }
+        let manufacturerPredicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
+        
+        // Predicado para buscar favoritas
+        let favoritesPredicate = NSPredicate(format: "favorite == %@", NSNumber(value: true))
+        
+        // Combinar los predicados utilizando NSCompoundPredicate
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [manufacturerPredicate, favoritesPredicate])
+        
+        fetchRequest.predicate = compoundPredicate
+        
+        let sortDescriptor = NSSortDescriptor(key: "type", ascending: true) // Ordenar por el atributo 'type'
+        fetchRequest.sortDescriptors = [sortDescriptor] // Agregar el descriptor de ordenación a la solicitud de búsqueda
+        
+        do {
+            // Obtener las cervezas que cumplen con ambos criterios de búsqueda
+            self.beers = try manager.container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Error fetching filtered beers: \(error.localizedDescription)")
+        }
+    }
+
 
     
     /*
