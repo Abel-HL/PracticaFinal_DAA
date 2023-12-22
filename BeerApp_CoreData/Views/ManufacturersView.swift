@@ -40,7 +40,7 @@ struct ManufacturersView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
-            .navigationTitle("Lista de Fabricantes")
+            .navigationTitle("Fabricantes")
             .navigationBarTitleDisplayMode(.large)
             /*.navigationDestination(for: ManufacturerEntity.self){ manufacturer in
                 BeersView(manufacturer: manufacturer)

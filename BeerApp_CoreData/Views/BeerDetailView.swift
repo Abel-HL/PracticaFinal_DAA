@@ -15,8 +15,10 @@ struct BeerDetailView: View {
     @State private var calories: Int16
     @State private var selectedBeerType: BeerTypes
     @State private var isFavorite : Bool = false
+    #warning("Hay q mirar como saber si ha cambiado de beer.imageData a una nueva imagen del ImagaPicker")
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
+    @State private var hasImageChanges = false
     
     
     
@@ -24,7 +26,6 @@ struct BeerDetailView: View {
 //#warning("Cambiar nombre de estas variables y eliminar las no usadas. Ver si hay duplicadas que hagan la misma funcion")
     //@State private var avatarItem: PhotosPickerItem?
     @State private var avatarImage: Image?
-    @State private var hasImageChanges = false
     @State private var newPhotoURL: URL?
     @State private var showImagePicker = false
     @State private var showActionSheet = false
@@ -113,6 +114,7 @@ struct BeerDetailView: View {
         .overlay(alignment: .bottomTrailing) {
             Button(action: {
                 self.isImagePickerPresented.toggle()
+                hasImageChanges = true
             }) {
                 Image(systemName: "pencil.circle.fill")
                     .symbolRenderingMode(.multicolor)
@@ -195,12 +197,12 @@ struct BeerDetailView: View {
         .navigationBarTitle(beerName)               //Dinamicamente con el TextField de Name
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            /*ToolbarItem(placement: .navigationBarLeading) {
                 //NavigationLink(destination: //ManufacturerDetailView(manufacturerDetailViewModel: //manufacturerDetailViewModel)) {
                 HStack {
                     Text((beer.manufacturer?.name)!)
                 }
-            }
+            }*/
             //}
             
             ToolbarItemGroup(placement: .bottomBar) {

@@ -212,6 +212,25 @@ class ManufacturersViewModel: ObservableObject{
         getBeers()
     }
     
+    func addAllTypeToDeleteBeersList(forType type: String) {
+        guard let currentManufacturer = self.manufacturer else {
+            print("Manufacturer is nil")
+            return
+        }
+
+        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "manufacturer == %@ AND type == %@", currentManufacturer, type)
+
+        do {
+            let beersToDelete = try manager.container.viewContext.fetch(fetchRequest)
+            let beerIDs = beersToDelete.compactMap { $0.id }
+            self.deleteBeersList.append(contentsOf: beerIDs)
+        } catch {
+            print("Error fetching beers to delete: \(error.localizedDescription)")
+        }
+    }
+
+    
     func deleteBeer(indexSet: IndexSet){
         indexSet.map { beers[$0]}.forEach(manager.container.viewContext.delete)
         save()
@@ -234,7 +253,7 @@ class ManufacturersViewModel: ObservableObject{
             getBeers()
         }
         
-        
+        self.deleteBeersList = []
     }
     
     func deleteAllBeers(){
@@ -253,14 +272,21 @@ class ManufacturersViewModel: ObservableObject{
     }
     
     
-    func getUniqueBeerTypes() -> [String] {
+    func getUniqueBeerTypes(isFavorite favSelection: Bool) -> [String] {
         guard let currentManufacturer = self.manufacturer else {
             print("Manufacturer is nil")
             return []
         }
 
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "BeerEntity")
-        fetchRequest.predicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
+        var predicateFormat = "manufacturer == %@"
+        var predicateArgs: [Any] = [currentManufacturer]
+
+        if favSelection {
+            predicateFormat += " AND favorite == true"
+        }
+
+        fetchRequest.predicate = NSPredicate(format: predicateFormat, argumentArray: predicateArgs)
         fetchRequest.propertiesToFetch = ["type"]
         fetchRequest.returnsDistinctResults = true
         fetchRequest.resultType = .dictionaryResultType
@@ -280,7 +306,8 @@ class ManufacturersViewModel: ObservableObject{
             return []
         }
     }
-    
+
+
     func getBeersByBeerTypesAndSortCriteria(sortCriteria: SortCriteria) {
         guard let currentManufacturer = self.manufacturer else {
             print("Manufacturer is nil")

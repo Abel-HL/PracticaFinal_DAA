@@ -195,7 +195,7 @@ struct AddBeerView: View {
                 NavigationLink(destination: BeersView()) {
                     HStack {
                         Image(systemName: "chevron.backward")
-                        Text("Lista de Cervezas")
+                        Text((viewModel.manufacturer?.name)!)
                     }
                 }
             }

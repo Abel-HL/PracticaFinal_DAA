@@ -118,7 +118,7 @@ struct AddManufacturerView: View {
                 NavigationLink(destination: ManufacturersView()) {
                     HStack {
                         Image(systemName: "chevron.backward")
-                        Text("Lista de Fabricantes")
+                        Text("Fabricantes")
                     }
                 }
             }

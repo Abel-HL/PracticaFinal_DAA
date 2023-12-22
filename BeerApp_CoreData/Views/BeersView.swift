@@ -246,7 +246,8 @@ struct ContentView: View {
     init(searchText: Binding<String>, sortCriteria: Binding<SortCriteria>) {
         _searchText = searchText
         _sortCriteria = sortCriteria
-        self.beerTypes = viewModel.getUniqueBeerTypes()    }
+        self.beerTypes = viewModel.getUniqueBeerTypes(isFavorite: onlyFavorites)
+    }
     
     var body: some View {
         VStack {
@@ -291,16 +292,19 @@ struct ContentView: View {
             // Resto de tu toolbar y elementos de navegación
             // ...
         }
-        .navigationBarBackButtonHidden(false)
+        .navigationBarBackButtonHidden(true)
         .navigationTitle(viewModel.manufacturer?.name ?? "")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             //EditButton()
             ToolbarItem(placement: .topBarLeading) {
-                Text("Lista de Fabricantes")
-                    .foregroundStyle(Color.blue)
+                NavigationLink(destination: ManufacturersView()) {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                        Text("Fabricantes")
+                    }
+                }
             }
-            
             ToolbarItem {
                 Button(action: {
                     //viewModel.deleteAllBeers()
@@ -405,10 +409,15 @@ struct BeerSectionView: View {
 
 struct BeerSectionHeaderView: View {
     let beerType: String
+    @Environment(\.editMode) var editMode
+    @ObservedObject var viewModel =  ManufacturersViewModel.shared
 
     var body: some View {
         Button(action: {
-            print("Seleccionadas todas las cervezas del tipo: \(beerType.capitalized)")
+            if editMode?.wrappedValue == .active{
+                print("Seleccionadas todas las cervezas del tipo: \(beerType.capitalized)")
+                viewModel.addAllTypeToDeleteBeersList(forType: beerType)
+            }
         }) {
             Text(beerType)
         }
