@@ -15,9 +15,12 @@ class ManufacturersViewModel: ObservableObject{
     let manager = PersistenceController.shared
     
     @Published var manufacturers: [ManufacturerEntity] = []
-    @Published var selectedList: String = "Nacionales"
     @Published var manufacturer: ManufacturerEntity?
+    
+    @Published var selectedList: String = "Nacionales"
+    
     @Published var beers: [BeerEntity] = []
+    @Published var beer: BeerEntity?
     @Published var deleteBeersList: [UUID] = []
     
     init() {
@@ -192,6 +195,17 @@ class ManufacturersViewModel: ObservableObject{
         }
     }
     
+    func updateBeerDetails(forID id: UUID, newBeer: BeerEntity, image: UIImage){
+        getBeers()  //Para asegurarnos que toda la lista de cervezas esta correctamente cargada
+       
+        if let index = beers.firstIndex(where: { $0.id == id }) {
+            // Encuentra la posición en la lista donde el ID coincide
+            beers[index] = newBeer // Reemplaza la cerveza antigua con la nueva
+        }
+        
+        save()
+        getBeers()
+    }
     
     func deleteBeer(indexSet: IndexSet){
         indexSet.map { beers[$0]}.forEach(manager.container.viewContext.delete)

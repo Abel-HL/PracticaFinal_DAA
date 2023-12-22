@@ -14,6 +14,19 @@ enum SortCriteria: String, CaseIterable {
     case favorites = "Favorites"
 }
 
+enum BeerTypes: String, CaseIterable {
+    case lager = "Lager"
+    case pilsen = "Pilsen"
+    case stout = "Stout"
+    case ale = "Ale"
+    case ipa = "India Pale Ale"
+    case wheat = "Wheat Beer"
+    case porter = "Porter"
+    case sour = "Sour Beer"
+    case bock = "Bock Beer"
+}
+
+
 
 enum CountryInfo: CaseIterable {
     case China

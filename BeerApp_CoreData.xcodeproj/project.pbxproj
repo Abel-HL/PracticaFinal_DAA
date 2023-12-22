@@ -22,6 +22,7 @@
 		144BAF342B28B3B700E85A5B /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144BAF332B28B3B700E85A5B /* ImageProcessor.swift */; };
 		1475B0892B2CD13100729BD7 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1475B0882B2CD13100729BD7 /* SearchBar.swift */; };
 		14B0C5FD2B29BE54004F04A1 /* BeersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B0C5FC2B29BE54004F04A1 /* BeersView.swift */; };
+		14CCF84B2B357BEF00ACB688 /* BeerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCF84A2B357BEF00ACB688 /* BeerDetailView.swift */; };
 		14E3D8832B28840D0091E1D2 /* ViewBuilders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3D8822B28840D0091E1D2 /* ViewBuilders.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		144BAF332B28B3B700E85A5B /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
 		1475B0882B2CD13100729BD7 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		14B0C5FC2B29BE54004F04A1 /* BeersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeersView.swift; sourceTree = "<group>"; };
+		14CCF84A2B357BEF00ACB688 /* BeerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeerDetailView.swift; sourceTree = "<group>"; };
 		14E3D8822B28840D0091E1D2 /* ViewBuilders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBuilders.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,6 +104,7 @@
 				141ABF982B27A04F001EB107 /* AddManufacturerView.swift */,
 				14B0C5FC2B29BE54004F04A1 /* BeersView.swift */,
 				14140FAD2B29CAAB00D35671 /* AddBeerView.swift */,
+				14CCF84A2B357BEF00ACB688 /* BeerDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 				141ABF972B277AD9001EB107 /* ManufacturersViewModel.swift in Sources */,
 				141ABF9C2B27A9C8001EB107 /* Enums.swift in Sources */,
 				141ABF812B274CFB001EB107 /* BeerApp_CoreDataApp.swift in Sources */,
+				14CCF84B2B357BEF00ACB688 /* BeerDetailView.swift in Sources */,
 				14328B242B2DCBDC00FDF65B /* FieldBindings.swift in Sources */,
 				14140FAE2B29CAAB00D35671 /* AddBeerView.swift in Sources */,
 				14328B222B2DCA5A00FDF65B /* Validators.swift in Sources */,

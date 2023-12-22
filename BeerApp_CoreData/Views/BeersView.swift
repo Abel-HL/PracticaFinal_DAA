@@ -21,7 +21,6 @@ struct BeersView: View {
     @State private var isSelected = false
     //@State private var editMode: EditMode = .inactive
     
-    
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
    
@@ -474,11 +473,11 @@ struct BeerRow: View {
                     Image(systemName: "heart.fill")
                         .foregroundColor(.red)
                 }
-                /*
-                NavigationLink(destination: BeerDetailView()) {
+                
+                #warning("Revisar esto porq igual es mejor usar solo el viewModel.beer en vez de pasarla por parametro")
+                NavigationLink(destination: BeerDetailView(beer: beer)) {
                     //Text("Añadir")
                 }   .opacity(0.0)
-                 */
                 /*
                  NavigationLink(destination: BeersView(beer: beer)) {
                     //Text("Añadir")
