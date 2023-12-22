@@ -166,8 +166,13 @@ class ManufacturersViewModel: ObservableObject{
         }
     }
     
-    func sortAndFilterBeers(filter searchText: String, sort sortCriteria: SortCriteria){
-        self.getBeers()
+    func sortAndFilterBeers(filter searchText: String, sort sortCriteria: SortCriteria, isFavorite favSelection: Bool){
+        if favSelection{
+            self.getFavoritesBeers()
+        }else{
+            self.getBeers()
+        }
+        
         guard !searchText.isEmpty else {
             self.filterBeers(by: sortCriteria)
             return

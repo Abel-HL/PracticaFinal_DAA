@@ -237,7 +237,7 @@ struct ContentView: View {
     @ObservedObject var viewModel =  ManufacturersViewModel.shared
     #warning("En esta view pueden ser @State y en la BeerView eliminar esas variables")
     @Binding var searchText: String
-    @State private var favoritesSelected: Bool = false // Estado del botón favorito
+    @State private var onlyFavorites: Bool = false // Estado del botón favorito
     @Binding var sortCriteria: SortCriteria // Asumiendo que tienes un enum SortCriteria
     @Environment(\.editMode) var editMode
     @State private var showActionSheet = false
@@ -253,17 +253,17 @@ struct ContentView: View {
             HStack {
                 Button(action: {
                     // Cambiar el estado de favorito al presionar el botón
-                    favoritesSelected.toggle()
-                    if favoritesSelected {
+                    onlyFavorites.toggle()
+                    if onlyFavorites {
                         viewModel.getFavoritesBeers()
                     }else{
                         viewModel.getBeers()
                     }
                     // Aquí puedes realizar la lógica para filtrar por favoritos o realizar cualquier otra acción necesaria
-                    //viewModel.filterByFavorites(favoritesSelected)
+                    //viewModel.filterByFavorites(onlyFavorites)
                 }) {
-                    Image(systemName: favoritesSelected ? "heart.fill" : "heart")
-                        .foregroundColor(favoritesSelected ? .red : .black) // Cambiar el color si está seleccionado
+                    Image(systemName: onlyFavorites ? "heart.fill" : "heart")
+                        .foregroundColor(onlyFavorites ? .red : .black) // Cambiar el color si está seleccionado
                         .padding(.leading, 10) // Añadir padding al botón
                 }
                 
@@ -282,10 +282,10 @@ struct ContentView: View {
                 }
             }
                 .onChange(of: sortCriteria) { newCriteria in
-                    viewModel.sortAndFilterBeers(filter: searchText, sort: newCriteria)
+                    viewModel.sortAndFilterBeers(filter: searchText, sort: newCriteria, isFavorite: onlyFavorites)
                 }
                 .onChange(of: searchText) { newSearchText in
-                    viewModel.sortAndFilterBeers(filter: newSearchText, sort: sortCriteria)
+                    viewModel.sortAndFilterBeers(filter: newSearchText, sort: sortCriteria, isFavorite: onlyFavorites)
                 }
             
             // Resto de tu toolbar y elementos de navegación
@@ -344,7 +344,7 @@ struct ContentView: View {
                     // beersToDelete = []
                     // Si editMode está en .inactive, llama a deleteSelectedBeers() del viewModel
                     if editMode?.wrappedValue == .active {
-                        viewModel.deleteSelectedBeers(isFavorite: favoritesSelected)
+                        viewModel.deleteSelectedBeers(isFavorite: onlyFavorites)
                         searchText = ""
                     }
                     
