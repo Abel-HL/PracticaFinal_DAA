@@ -40,12 +40,13 @@ struct BeerDetailView: View {
     
     init(beer: BeerEntity) {
         _beer = State(initialValue: beer)
-        _beerName = State(initialValue: beer.name!)
+        _beerName = State(initialValue: beer.name ?? "DefaultName")
         _alcoholContent = State(initialValue: beer.alcoholContent)
         _calories = State(initialValue: beer.calories)
-        _selectedBeerType = State(initialValue: BeerTypes(rawValue: beer.type!) ?? .lager)
+        _selectedBeerType = State(initialValue: BeerTypes(rawValue: beer.type ?? "Lager") ?? .lager)
         _isFavorite = State(initialValue: beer.favorite)
-        _selectedImage = State(initialValue: ImageProcessor.getImageFromData(beer.imageData!))
+        _selectedImage = State(initialValue: ImageProcessor.getImageFromData(beer.imageData ?? Data()))
+        print("Iniciada la beerDetail de \(String(describing: beer.name))")
         //_manufacturerImage = State(initialValue: manufacImage)
     }
     
@@ -111,7 +112,7 @@ struct BeerDetailView: View {
         }
         .overlay(alignment: .bottomTrailing) {
             Button(action: {
-                ImagePicker(selectedImage: $selectedImage)
+                self.isImagePickerPresented.toggle()
             }) {
                 Image(systemName: "pencil.circle.fill")
                     .symbolRenderingMode(.multicolor)
@@ -222,12 +223,21 @@ struct BeerDetailView: View {
                 
                 
                 //NavigationLink(destination: ManufacturerDetailView(manufacturerDetailViewModel: manufacturerDetailViewModel)) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
                     HStack {
                         Image(systemName: "xmark")
                         Text("Cancelar")
                     }
+                }
+
+                    
                 //}
             }
+        }
+        .sheet(isPresented: $isImagePickerPresented) {
+            ImagePicker(selectedImage: $selectedImage)
         }
     }
     

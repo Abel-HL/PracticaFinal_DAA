@@ -237,7 +237,7 @@ struct ContentView: View {
     @ObservedObject var viewModel =  ManufacturersViewModel.shared
     #warning("En esta view pueden ser @State y en la BeerView eliminar esas variables")
     @Binding var searchText: String
-    @State private var isFavorited: Bool = false // Estado del botón favorito
+    @State private var favoritesSelected: Bool = false // Estado del botón favorito
     @Binding var sortCriteria: SortCriteria // Asumiendo que tienes un enum SortCriteria
     @Environment(\.editMode) var editMode
     @State private var showActionSheet = false
@@ -253,17 +253,17 @@ struct ContentView: View {
             HStack {
                 Button(action: {
                     // Cambiar el estado de favorito al presionar el botón
-                    isFavorited.toggle()
-                    if isFavorited {
+                    favoritesSelected.toggle()
+                    if favoritesSelected {
                         viewModel.getFavoritesBeers()
                     }else{
                         viewModel.getBeers()
                     }
                     // Aquí puedes realizar la lógica para filtrar por favoritos o realizar cualquier otra acción necesaria
-                    //viewModel.filterByFavorites(isFavorited)
+                    //viewModel.filterByFavorites(favoritesSelected)
                 }) {
-                    Image(systemName: isFavorited ? "heart.fill" : "heart")
-                        .foregroundColor(isFavorited ? .red : .black) // Cambiar el color si está seleccionado
+                    Image(systemName: favoritesSelected ? "heart.fill" : "heart")
+                        .foregroundColor(favoritesSelected ? .red : .black) // Cambiar el color si está seleccionado
                         .padding(.leading, 10) // Añadir padding al botón
                 }
                 
@@ -344,7 +344,7 @@ struct ContentView: View {
                     // beersToDelete = []
                     // Si editMode está en .inactive, llama a deleteSelectedBeers() del viewModel
                     if editMode?.wrappedValue == .active {
-                        viewModel.deleteSelectedBeers()
+                        viewModel.deleteSelectedBeers(isFavorite: favoritesSelected)
                         searchText = ""
                     }
                     
@@ -480,16 +480,23 @@ struct BeerRow: View {
                 }
                 
                 #warning("Revisar esto porq igual es mejor usar solo el viewModel.beer en vez de pasarla por parametro")
-                NavigationLink(destination: BeerDetailView(beer: beer)) {
+                /*NavigationLink(value: beer) {
                     
                 }   .opacity(0.0)
                     .frame(width: 0, height: 0)
-                /*
-                 NavigationLink(destination: BeersView(beer: beer)) {
+                 */
+                
+                 NavigationLink(destination: BeerDetailView(beer: beer)) {
                     //Text("Añadir")
                 }   .opacity(0.0)
-                 */
+                    .frame(width: 0, height: 0)
+                    
             }
+            /*
+            .navigationDestination(for: BeerEntity.self){ beer in
+                BeerDetailView(beer: beer)
+            }
+             */
             /*
             .navigationDestination(for: ManufacturerEntity.self){ manufacturer in
                 BeersView(manufacturer: manufacturer)

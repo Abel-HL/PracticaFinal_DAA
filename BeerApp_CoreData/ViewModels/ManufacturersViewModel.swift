@@ -212,7 +212,7 @@ class ManufacturersViewModel: ObservableObject{
         save()
     }
     
-    func deleteSelectedBeers() {
+    func deleteSelectedBeers(isFavorite favSelection: Bool) {
         
         for id in self.deleteBeersList {
             let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
@@ -223,7 +223,13 @@ class ManufacturersViewModel: ObservableObject{
             }
         }
         save()
-        getBeers()
+        if favSelection{
+            getFavoritesBeers()
+        }else{
+            getBeers()
+        }
+        
+        
     }
     
     func deleteAllBeers(){
