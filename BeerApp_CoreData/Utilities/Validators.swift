@@ -19,7 +19,6 @@ struct Validators {
     }
     
     static func validateAlcoholContent(_ input: String) -> (valid: Bool, value: String, color: Color) {
-        //let filtered = input.filter { "0123456789.".contains($0) } // Permitir el punto decimal
         if let value = Float(input), value >= 0.0, value <= 100.0 {
             return (true, input, .green)
         } else {
@@ -37,7 +36,6 @@ struct Validators {
     }
     
     static func validateCalories(_ input: String) -> (valid: Bool, value: String, color: Color) {
-        //let filtered = input.filter { "0123456789".contains($0) }
         if let value = Int16(input), value >= 0, value <= 500 {
             return (true, input, .green)
         } else {

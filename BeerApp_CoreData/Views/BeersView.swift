@@ -348,7 +348,7 @@ struct ContentView: View {
                     // beersToDelete = []
                     // Si editMode está en .inactive, llama a deleteSelectedBeers() del viewModel
                     if editMode?.wrappedValue == .active {
-                        viewModel.deleteSelectedBeers(isFavorite: onlyFavorites)
+                        viewModel.deleteSelectedBeers(isFavorite: onlyFavorites, orderBy: sortCriteria)
                         searchText = ""
                     }
                     
@@ -489,23 +489,29 @@ struct BeerRow: View {
                 }
                 
                 #warning("Revisar esto porq igual es mejor usar solo el viewModel.beer en vez de pasarla por parametro")
-                /*NavigationLink(value: beer) {
-                    
-                }   .opacity(0.0)
-                    .frame(width: 0, height: 0)
-                 */
+                /*
+                NavigationLink(value: beer) {
+                }   //.opacity(0.0)
+                    //.frame(width: 0, height: 0)
+                */
+                 
                 
                  NavigationLink(destination: BeerDetailView(beer: beer)) {
                     //Text("Añadir")
                 }   .opacity(0.0)
                     .frame(width: 0, height: 0)
+                 
                     
             }
+            
             /*
             .navigationDestination(for: BeerEntity.self){ beer in
-                BeerDetailView(beer: beer)
+                //BeerDetailView(beer: beer)
+                //AddBeerView()
+                AddManufacturerView()
             }
              */
+            
             /*
             .navigationDestination(for: ManufacturerEntity.self){ manufacturer in
                 BeersView(manufacturer: manufacturer)

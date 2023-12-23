@@ -150,7 +150,6 @@ class ManufacturersViewModel: ObservableObject{
         }
 
         let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
-        
         // Establecer un predicado para filtrar por el fabricante actual
         let predicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
         fetchRequest.predicate = predicate
@@ -236,12 +235,10 @@ class ManufacturersViewModel: ObservableObject{
         save()
     }
     
-    func deleteSelectedBeers(isFavorite favSelection: Bool) {
-        
+    func deleteSelectedBeers(isFavorite favSelection: Bool, orderBy sortCriteria : SortCriteria) {
         for id in self.deleteBeersList {
             let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-            
             if let beerToDelete = try? manager.container.viewContext.fetch(fetchRequest).first {
                 manager.container.viewContext.delete(beerToDelete)
             }
@@ -250,9 +247,8 @@ class ManufacturersViewModel: ObservableObject{
         if favSelection{
             getFavoritesBeers()
         }else{
-            getBeers()
+            getBeersByBeerTypesAndSortCriteria(sortCriteria: sortCriteria)
         }
-        
         self.deleteBeersList = []
     }
     

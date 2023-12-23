@@ -11,14 +11,17 @@ struct BeerDetailView: View {
     @State private var beer: BeerEntity
         
     @State private var beerName: String
-    @State private var alcoholContent: Float
-    @State private var calories: Int16
+    @State private var alcoholContent: String
+    @State private var calories: String
     @State private var selectedBeerType: BeerTypes
     @State private var isFavorite : Bool = false
     #warning("Hay q mirar como saber si ha cambiado de beer.imageData a una nueva imagen del ImagaPicker")
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
     @State private var hasImageChanges = false
+    
+    @State private var alcoholContentTextColor: Color = .green
+    @State private var caloriesTextColor: Color = .green
     
     
     
@@ -42,12 +45,12 @@ struct BeerDetailView: View {
     init(beer: BeerEntity) {
         _beer = State(initialValue: beer)
         _beerName = State(initialValue: beer.name ?? "DefaultName")
-        _alcoholContent = State(initialValue: beer.alcoholContent)
-        _calories = State(initialValue: beer.calories)
+        _alcoholContent = State(initialValue: String(beer.alcoholContent))
+        _calories = State(initialValue: String(beer.calories))
         _selectedBeerType = State(initialValue: BeerTypes(rawValue: beer.type ?? "Lager") ?? .lager)
         _isFavorite = State(initialValue: beer.favorite)
         _selectedImage = State(initialValue: ImageProcessor.getImageFromData(beer.imageData ?? Data()))
-        print("Iniciada la beerDetail de \(String(describing: beer.name))")
+        print("Iniciada la beerDetail de \(beer.name ?? "Default")")
         //_manufacturerImage = State(initialValue: manufacImage)
     }
     
@@ -144,37 +147,38 @@ struct BeerDetailView: View {
                 }
                 #warning("Poner los Validators del AddBeerView")
                 HStack {
-                    Text("Graduación alcohólica: ")
-                        .lineLimit(1)
+                    Text("Graduación alcohólica:")
                     Spacer()
-                    TextField("", text: Binding(
-                        get: { String(alcoholContent) },
-                        set: { alcoholContent = Float($0) ?? 0 }
-                    ))  .keyboardType(.decimalPad)
-                        .frame(maxWidth: 80) // Ajustar según el tamaño deseado
-                        .multilineTextAlignment(.trailing) // Alinear a la derecha
-                    
-                    Text("%")
+                    TextField("0-100", text: alcoholContentBinding(alcoholContent: $alcoholContent, textColor: $alcoholContentTextColor), onEditingChanged: { _ in }, onCommit: {
+                    })
+                    .keyboardType(.decimalPad)
+                    .frame(maxWidth: 80)
+                    .multilineTextAlignment(.trailing)
+                    .onChange(of: alcoholContent) { newValue in
+                        //print(newValue)
+                        if !Validators.validateAlcoholDecimal(newValue) {
+                            alcoholContent = ""
+                        }
+                    }
+                    Text("%").foregroundColor($alcoholContentTextColor.wrappedValue)
                 }
                 
                 HStack {
                     Text("Aporte calórico:")
                     Spacer()
-                    TextField("Aporte calórico", text: Binding(
-                        get: { String(calories) },
-                        set: { calories = Int16($0) ?? 0 }
-                    ))
+                    TextField("0-500", text: caloriesBinding(calories: $calories, textColor: $caloriesTextColor))
                         .keyboardType(.numberPad)
-                        .multilineTextAlignment(.trailing) // Alinear a la derecha
+                        .multilineTextAlignment(.trailing)
+                        .onChange(of: calories) { newValue in
+                            if !Validators.validateCaloriesTextField(newValue) {
+                                calories = ""
+                            }
+                        }
+                    Text("kcal").foregroundColor($caloriesTextColor.wrappedValue)
                 }
                 
                 HStack {
                     Picker(selection: $selectedBeerType, label: Text("Tipo de Cerveza")) {
-                        /*
-                        Text("Pilsen").tag("Pilsen")
-                        Text("Lager").tag("Lager")
-                        Text("Prueba").tag("Prueba")
-                         */
                         ForEach(BeerTypes.allCases, id: \.self) { beerType in
                             Text(beerType.rawValue).tag(beerType)
                         }
@@ -245,8 +249,8 @@ struct BeerDetailView: View {
     
     func hasChanges() -> Bool {
         return beer.name != beerName ||
-        beer.alcoholContent != alcoholContent ||
-        beer.calories != calories ||
+        beer.alcoholContent != Float(alcoholContent) ||
+        beer.calories != Int16(calories) ||
         beer.type != selectedBeerType.rawValue ||
         beer.favorite != isFavorite ||
         hasImageChanges == true
@@ -254,7 +258,7 @@ struct BeerDetailView: View {
     }
     
     func validateInput() -> Bool {
-        if alcoholContent >= 0.0, alcoholContent <= 100.0 {
+        if Float(alcoholContent)! >= 0.0, Float(alcoholContent)! <= 100.0 {
             return true
         }
         return false
@@ -266,8 +270,8 @@ struct BeerDetailView: View {
         let newBeer = BeerEntity(context: viewModel.manager.context)
         newBeer.name = "Prueba123"
         newBeer.id = UUID()
-        newBeer.alcoholContent = alcoholContent
-        newBeer.calories = calories
+        newBeer.alcoholContent = Float(alcoholContent) ?? -1
+        newBeer.calories = Int16(calories) ?? -1
         newBeer.type = selectedBeerType.rawValue
         //newBeer.imageData = compressedImageData
         newBeer.favorite = isFavorite

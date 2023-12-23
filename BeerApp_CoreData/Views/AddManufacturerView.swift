@@ -26,18 +26,21 @@ struct AddManufacturerView: View {
     var body: some View {
         Form {
             Section(header: Text("Nuevo Fabricante")) {
-                TextField("Nombre del Fabricante", text: $manufacturerName)
-                    .onChange(of: manufacturerName) { _ in
-                        checkNewManufacturerFields()
-                    }
-                //TextField("País de Origen", text: $manufacturerCountry)
+                HStack{
+                    Text("Nombre: ")
+                    TextField("Fabricante", text: $manufacturerName)
+                        .onChange(of: manufacturerName) { _ in
+                            checkNewManufacturerFields()
+                        }
+                        .multilineTextAlignment(.trailing)
+                }
                 
                 Picker("País de Origen", selection: $manufacturerCountry) {
                     ForEach(sortedCountries, id: \.self) { country in
                         Text("\(country.flag) \(country.name)").tag(country)
                     }
                 }
-                .pickerStyle(.menu) // Puedes cambiar el estilo del picker si prefieres
+                .pickerStyle(.menu)
                 .onChange(of: manufacturerCountry) { _ in
                     checkImported()
                 }
@@ -52,7 +55,7 @@ struct AddManufacturerView: View {
                                 Image(uiImage: selectedImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(maxHeight: 340) // Límite de altura deseado
+                                    .frame(maxHeight: 340)
                                 
                                 Spacer()
                             }
@@ -65,7 +68,7 @@ struct AddManufacturerView: View {
                                     Text("Cambiar Imagen")
                                 }
                             }
-                            .padding(2) // Añade espacios alrededor del botón
+                            .padding(2)
                             
                         }
                         
@@ -131,12 +134,8 @@ struct AddManufacturerView: View {
     
     
     func addManufacturer(){
-        
         viewModel.selectedList = manufacturerCountry.code == "ES" ? "Nacionales" : "Importadas"
-        
         viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!)
-            
-        
         presentationMode.wrappedValue.dismiss()
     }
     
@@ -145,7 +144,6 @@ struct AddManufacturerView: View {
     private func checkImported() {
         isImported = manufacturerCountry.name.lowercased() != "spain"
     }
-    
     
     
     func checkNewManufacturerFields(){
@@ -162,10 +160,3 @@ struct AddManufacturerView: View {
         return manufacturerName.isEmpty || selectedImage == nil
     }
 }
-
-
-/*
-#Preview {
-    AddManufacturerView()
-}
-*/

@@ -38,16 +38,19 @@ struct AddBeerView: View {
         Form {
             Section(header: Text("Detalles de la Nueva Cerveza")) {
 #warning("Revisar si poner aqui el HStack del otro proyecto")
-                TextField("Nombre de la cerveza: ", text: $beerName)
-                    .onChange(of: beerName) { _ in
-                        checkNewBeerFields()
-                    }
+                HStack{
+                    Text("Nombre: ")
+                    TextField("Cerveza", text: $beerName)
+                        .onChange(of: beerName) { _ in
+                            checkNewBeerFields()
+                        }
+                        .multilineTextAlignment(.trailing)
+                }
                 
                 HStack {
                     Text("Graduación alcohólica:")
                     Spacer()
                     TextField("0-100", text: alcoholContentBinding(alcoholContent: $alcoholContent, textColor: $alcoholContentTextColor), onEditingChanged: { _ in }, onCommit: {
-                        // Acción cuando se presiona "Enter" o se confirma el texto
                     })
                     .keyboardType(.decimalPad)
                     .frame(maxWidth: 80)
@@ -68,7 +71,6 @@ struct AddBeerView: View {
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.trailing)
                         .onChange(of: calories) { newValue in
-                            //print(newValue)
                             if !Validators.validateCaloriesTextField(newValue) {
                                 calories = ""
                             }
@@ -81,11 +83,6 @@ struct AddBeerView: View {
                         ForEach(BeerTypes.allCases, id: \.self) { beerType in
                             Text(beerType.rawValue).tag(beerType)
                         }
-                        /*
-                        Text("Pilsen").tag("Pilsen")
-                        Text("Lager").tag("Lager")
-                        Text("Prueba").tag("Prueba")
-                         */
                     }
                     .pickerStyle(MenuPickerStyle())
                 }
@@ -112,7 +109,7 @@ struct AddBeerView: View {
                                 Image(uiImage: selectedImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(maxHeight: 240) // Límite de altura deseado
+                                    .frame(maxHeight: 240)
                                 
                                 Spacer()
                             }
@@ -127,8 +124,7 @@ struct AddBeerView: View {
                                     Text("Eliminar Imagen")
                                 }
                             }
-                            .padding(2) // Añade espacios alrededor del botón
-                            
+                            .padding(2)
                         }
                         .onAppear {
                             self.hasImage = true // Cuando hay una imagen, establece hasImage como true al cargar la vista
@@ -137,8 +133,6 @@ struct AddBeerView: View {
                         
                     } else {
                         Button(action: {
-                            // Acción normal del botón si no se supera el límite de intentos
-                            // Por ejemplo, mostrar el selector de imagen
                             self.isImagePickerPresented.toggle()
                         }) {
                             HStack {
@@ -147,9 +141,6 @@ struct AddBeerView: View {
                                 Text("Seleccionar Imagen")
                             }
                             .padding(2)
-                            /*.background(isShaking ? Color.red.opacity(0.3) : Color.clear)
-                            .cornerRadius(8)
-                            .offset(x: isShaking ? -5 : 0) // Cambia la posición en el eje x*/
                         }
                         .background(isShaking ? Color.red.opacity(0.3) : Color.clear)
                         .cornerRadius(8)
@@ -169,7 +160,7 @@ struct AddBeerView: View {
                             isShaking.toggle()
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
-                            isShaking = false // Establecer isShaking en false después del tiempo de duración de la animación
+                            isShaking = false
                         }
                     }
                     addBeer()
@@ -208,7 +199,6 @@ struct AddBeerView: View {
     
 #warning("Revisar esta sección -> Revisar '!' forzado en el ultimo param de addBeer")
     func addBeer(){
-        /*
         viewModel.addBeer(name: beerName,
                           type: beerType.rawValue,
                           alcoholContent: Float(alcoholContent)!,
@@ -218,7 +208,6 @@ struct AddBeerView: View {
                           manufacturer: viewModel.manufacturer!)
         
         presentationMode.wrappedValue.dismiss()
-        */
         //attempts += 1
     }
     
@@ -228,7 +217,6 @@ struct AddBeerView: View {
         }
     }
     
-    // Determine the appropriate status message based on field values
     private func determineStatusMessage() -> String {
         if beerName.isEmpty && hasImage == false {
             return "Introduce un nombre y selecciona una imagen"
@@ -241,184 +229,7 @@ struct AddBeerView: View {
         }
     }
     
-    // Check if any of the mandatory fields are empty
     func checkButtonAvailable() -> Bool {
         return beerName.isEmpty || hasImage == false || Float(alcoholContent) ?? -1 < 0.0 || Int16(calories) ?? -1 < 0
     }
 }
-
-
-
-/*
-struct AddBeerView2: View {
-    @State private var beerName: String = ""
-    @State private var alcoholContent: Float = 0.0
-    @State private var calories: UInt16 = 0
-    @State private var beerType: String = "Pilsner"
-    
-    @State private var avatarItem: PhotosPickerItem?
-    @State private var avatarImage: Image?
-    @State private var showImagePicker = false
-    @State private var selectedImage: Image?
-    @State private var beerImageURL: URL?
-    
-    @Environment(\.presentationMode) var presentationMode
-    
-    func saveImageToDocumentsDirectory(image: UIImage, fileName: String) -> URL? {
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        
-        do {
-            if let data = image.jpegData(compressionQuality: 1.0) {
-                try data.write(to: fileURL)
-                return fileURL
-            }
-        } catch {
-            print("Error saving image: \(error)")
-        }
-        
-        return nil
-    }
-    
-    var body: some View {
-        Form {
-            Section(header: Text("Detalles de la Nueva Cerveza")) {
-                HStack {
-                    Text("Nombre:")
-                    Spacer()
-                    TextField("Nombre", text: $beerName)
-                        .multilineTextAlignment(.trailing)
-                }
-                HStack {
-                    Text("Graduación alcohólica:")
-                    Spacer()
-                    TextField("0-100", text: Binding(
-                        get: { String(alcoholContent) },
-                        set: { alcoholContent = Float($0) ?? 0.0 }
-                    ))
-                    .keyboardType(.decimalPad)
-                    .frame(maxWidth: 80)
-                    .multilineTextAlignment(.trailing)
-                    Text("%")
-                }
-                
-                HStack {
-                    Text("Aporte calórico:")
-                    Spacer()
-                    TextField("Aporte calórico", text: Binding(
-                        get: { String(calories) },
-                        set: { calories = UInt16($0) ?? 0 }
-                    ))
-                    .keyboardType(.numberPad)
-                    .multilineTextAlignment(.trailing)
-                    Text("kcal")
-                }
-                
-                HStack {
-                    Picker(selection: $beerType, label: Text("Tipo de Cerveza")) {
-                        Text("Pilsen").tag("Pilsen")
-                        Text("Lager").tag("Lager")
-                        Text("Prueba").tag("Prueba")
-                    }
-                    .pickerStyle(MenuPickerStyle())
-                }
-                
-                HStack {
-                    VStack {
-                        
-                        PhotosPicker("Seleccionar imagen", selection: $avatarItem, matching: .images)
-                        if let avatarImage {
-                            avatarImage
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 300, height: 300)
-                        }
-                    }
-                    .onChange(of: avatarItem) { _ in
-                        Task {
-                            if let data = try? await avatarItem?.loadTransferable(type: Data.self) {
-                                if let uiImage = UIImage(data: data) {
-                                    avatarImage = Image(uiImage: uiImage)
-                                    
-                                    // Guardar la imagen seleccionada en el directorio de documentos
-                                    beerImageURL = saveImageToDocumentsDirectory(image: uiImage, fileName: "\(beerName).jpg")
-                                    
-                                    return
-                                }
-                            }
-                            print("Failed")
-                        }
-                    }
-                }
-            }
-            
-            Section {
-                Button(action: {
-                    if validateInput() {
-                        saveNewBeer()
-                    } else {
-                        // Manejar la validación fallida
-                        print("Fallo")
-                    }
-                }) {
-                    Text("Guardar Cerveza")
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(8)
-                }
-            }
-        }
-        .navigationBarBackButtonHidden(true)
-        .navigationBarTitle("Añadir Cerveza")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                NavigationLink(destination: BeerDetailView(beerDetailViewModel: beerDetailViewModel)) {
-                    HStack {
-                        Image(systemName: "chevron.backward")
-                        //Text("\(beerDetailViewModel.selectedBeer.name)")
-                    }
-                }
-            }
-        }
-        
-        
-    }
-    
-    
-    func validateInput() -> Bool {
-        if alcoholContent >= 0.0, alcoholContent <= 100.0 {
-            return true
-        }
-        return false
-    }
-    func saveNewBeer() {
-        guard let beerImageURL = beerImageURL else {
-            print("No se ha seleccionado una imagen")
-            return
-        }
-        /*
-         //#warning("Change photo attribute")
-         let newBeer = Beer(name: beerName, type: beerType, alcoholContent: alcoholContent, calories: calories, bundlePhoto: beerImageURL.absoluteString)
-         
-         if beerDetailViewModel.addNewBeer(newBeer: newBeer) {
-         beerListViewModel.updateCollection(with: beerDetailViewModel.selectedBeer)
-         }
-         */
-        // Cerrar la vista después de guardar
-        presentationMode.wrappedValue.dismiss()
-    }
-    
-}
-
-/*
- #Preview {
- AddBeerView()
- }
- */
-*/
