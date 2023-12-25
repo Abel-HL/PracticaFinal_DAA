@@ -268,7 +268,7 @@ class ManufacturersViewModel: ObservableObject{
     }
     
     
-    func getUniqueBeerTypes(isFavorite favSelection: Bool) -> [String] {
+    func getUniqueBeerTypes(isFavorite favoriteSelected: Bool) -> [String] {
         guard let currentManufacturer = self.manufacturer else {
             print("Manufacturer is nil")
             return []
@@ -276,9 +276,9 @@ class ManufacturersViewModel: ObservableObject{
 
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "BeerEntity")
         var predicateFormat = "manufacturer == %@"
-        var predicateArgs: [Any] = [currentManufacturer]
+        let predicateArgs: [Any] = [currentManufacturer]
 
-        if favSelection {
+        if favoriteSelected {
             predicateFormat += " AND favorite == true"
         }
 

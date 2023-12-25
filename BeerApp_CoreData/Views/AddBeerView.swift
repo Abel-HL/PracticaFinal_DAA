@@ -24,8 +24,8 @@ struct AddBeerView: View {
     @State private var attempts = 0
     @State private var isShaking = false
     
-    @State private var alcoholContentTextColor: Color = .black
-    @State private var caloriesTextColor: Color = .black
+    @State private var alcoholContentTextColor: Color = .red
+    @State private var caloriesTextColor: Color = .red
     @State private var statusMessage : String = "Introduce un nombre y selecciona una imagen"
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode

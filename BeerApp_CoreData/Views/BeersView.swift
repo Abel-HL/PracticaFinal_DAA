@@ -239,9 +239,11 @@ struct ContentView: View {
     @Binding var searchText: String
     @State private var onlyFavorites: Bool = false // Estado del botón favorito
     @Binding var sortCriteria: SortCriteria // Asumiendo que tienes un enum SortCriteria
-    @Environment(\.editMode) var editMode
+
     @State private var showActionSheet = false
-    var beerTypes: [String] = []
+    @State var beerTypes: [String] = []
+    
+    @Environment(\.editMode) var editMode
     
     init(searchText: Binding<String>, sortCriteria: Binding<SortCriteria>) {
         _searchText = searchText
@@ -287,6 +289,9 @@ struct ContentView: View {
                 }
                 .onChange(of: searchText) { newSearchText in
                     viewModel.sortAndFilterBeers(filter: newSearchText, sort: sortCriteria, isFavorite: onlyFavorites)
+                }
+                .onChange(of: onlyFavorites) { newFavs in
+                    self.beerTypes = viewModel.getUniqueBeerTypes(isFavorite: newFavs)
                 }
             
             // Resto de tu toolbar y elementos de navegación
