@@ -1,0 +1,92 @@
+[
+    {
+        "name": "Nacional 1",
+        "countryCode": "ES",
+        "beerTypes": {
+            "Lager": [
+                {
+                    "name": "Lager Beer 3-5-150",
+                    "type": "Lager",
+                    "alcoholContent": 5.0,
+                    "calories": 150,
+                    "imageData": "MahouCan.jpeg"
+                },
+                {
+                    "name": "Lager Beer 2-4.5-180",
+                    "type": "Lager",
+                    "alcoholContent": 4.5,
+                    "calories": 180,
+                    "imageData": "MahouCan.jpeg"
+                }
+            ],
+            "Pilsen": [
+                {
+                    "name": "Pilsen Beer 1-4.8-180",
+                    "type": "Pilsen",
+                    "alcoholContent": 4.8,
+                    "calories": 180,
+                    "imageData": "MahouGlass.png"
+                },
+                {
+                    "name": "Pilsen Beer 2-5.2-170",
+                    "type": "Pilsen",
+                    "alcoholContent": 5.2,
+                    "calories": 170,
+                    "imageData": "MahouGlass.png"
+                }
+            ]
+        },
+        "imageData": "MahouLogo.png"
+    },
+    {
+        "name": "Nacional 2",
+        "countryCode": "ES",
+        "beerTypes": {
+            "Lager": [
+                {
+                    "name": "Lager Beer 2-4.5-140",
+                    "type": "Lager",
+                    "alcoholContent": 4.5,
+                    "calories": 140,
+                    "imageData": "Lager2"
+                }
+            ],
+            "Pilsen": [
+                {
+                    "name": "Pilsen Beer 2-5.2-170",
+                    "type": "Pilsen",
+                    "alcoholContent": 5.2,
+                    "calories": 170,
+                    "imageData": "Pilsen2"
+                }
+            ]
+        },
+        "imageData": "MahouLogo2.png"
+    },
+    {
+        "name": "Importado 3",
+        "countryCode": "FR",
+        "beerTypes": {
+            "Lager": [
+                {
+                    "name": "Lager Beer 3-4.7-145",
+                    "type": "Lager",
+                    "alcoholContent": 4.7,
+                    "calories": 145,
+                    "imageData": "Lager3"
+                }
+            ],
+            "Pilsen": [
+                {
+                    "name": "Pilsen Beer 3-5-165",
+                    "type": "Pilsen",
+                    "alcoholContent": 5.0,
+                    "calories": 165,
+                    "imageData": "Pilsen3"
+                }
+            ]
+        },
+        "imageData": "MahouLogo3.png"
+    }
+]
+
