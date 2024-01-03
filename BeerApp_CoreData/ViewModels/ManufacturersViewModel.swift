@@ -114,6 +114,22 @@ class ManufacturersViewModel: ObservableObject{
         getBeers()
     }
     
+    func addBeer(newBeer beer: BeerEntity) {
+        let context = manager.container.viewContext
+        let newBeer = BeerEntity(context: context)
+        newBeer.id = beer.id
+        newBeer.name = beer.name
+        newBeer.type = beer.type
+        newBeer.alcoholContent = beer.alcoholContent
+        newBeer.calories = beer.calories
+        newBeer.favorite = beer.favorite
+        newBeer.imageData = beer.imageData
+        newBeer.manufacturer = beer.manufacturer
+        
+        save()
+        getBeers()
+    }
+    
     //  Beers
     func addBeer(name: String, type: String,
                  alcoholContent: Float,
@@ -160,6 +176,33 @@ class ManufacturersViewModel: ObservableObject{
         do {
             // Fetch beers based on the specified sort criteria and manufacturer
             self.beers = try manager.container.viewContext.fetch(fetchRequest)
+            print("GetBeers DONE")
+            //print(beers)
+        } catch {
+            print("Error fetching beers: \(error.localizedDescription)")
+        }
+    }
+    
+    
+    func getBeersByType(by type: String) {
+        guard let currentManufacturer = self.manufacturer else {
+            print("Manufacturer is nil")
+            return
+        }
+
+        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
+        // Establecer un predicado para filtrar por el fabricante actual
+        let predicate = NSPredicate(format: "manufacturer == %@ AND type == %@", currentManufacturer, type)
+            fetchRequest.predicate = predicate
+
+            let sortDescriptor = NSSortDescriptor(key: "type", ascending: true)
+            fetchRequest.sortDescriptors = [sortDescriptor] // Agregar el descriptor de ordenación a la solicitud de búsqueda
+        
+        do {
+            // Fetch beers based on the specified sort criteria and manufacturer
+            self.beers = try manager.container.viewContext.fetch(fetchRequest)
+            print("GetBeers BY TYPE DONE")
+            print(beers)
         } catch {
             print("Error fetching beers: \(error.localizedDescription)")
         }
@@ -199,17 +242,67 @@ class ManufacturersViewModel: ObservableObject{
         }
     }
     
-    func updateBeerDetails(forID id: UUID, newBeer: BeerEntity, image: UIImage){
-        getBeers()  //Para asegurarnos que toda la lista de cervezas esta correctamente cargada
-       
-        if let index = beers.firstIndex(where: { $0.id == id }) {
-            // Encuentra la posición en la lista donde el ID coincide
-            beers[index] = newBeer // Reemplaza la cerveza antigua con la nueva
-        }
-        
-        save()
+    /*
+    func updateBeerDetails(forID id: UUID, newBeer: BeerEntity, image: UIImage) {
         getBeers()
+
+        // Eliminar la cerveza existente
+        deleteBeerById(withID: id)
+
+        // Agregar la nueva cerveza
+        addBeer(newBeer: newBeer)
     }
+    */
+    
+    func updateBeer(forID id: UUID,
+                    newName: String,
+                    newType: String,
+                    newAlcoholContent: Float,
+                    newCalories: Int16,
+                    newFavorite: Bool,
+                    newImage: UIImage?) {
+        let context = manager.container.viewContext
+        
+        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        do {
+            let result = try context.fetch(fetchRequest)
+            if let beerToUpdate = result.first {
+                // Comparar y actualizar campos solo si han cambiado
+                if beerToUpdate.name != newName {
+                    beerToUpdate.name = newName
+                }
+                if beerToUpdate.type != newType {
+                    beerToUpdate.type = newType
+                }
+                if beerToUpdate.alcoholContent != newAlcoholContent {
+                    beerToUpdate.alcoholContent = newAlcoholContent
+                }
+                if beerToUpdate.calories != newCalories {
+                    beerToUpdate.calories = newCalories
+                }
+                if beerToUpdate.favorite != newFavorite {
+                    beerToUpdate.favorite = newFavorite
+                }
+                if let compressedImageData = ImageProcessor.compressImage(newImage!), beerToUpdate.imageData != compressedImageData {
+                    beerToUpdate.imageData = compressedImageData
+                }
+                if beerToUpdate.manufacturer != manufacturer {
+                    beerToUpdate.manufacturer = self.manufacturer
+                }
+
+                //try context.save() // Guardar el cambio
+                save()
+                print("Beer updated successfully")
+            }
+        } catch {
+            print("Error updating beer: \(error.localizedDescription)")
+        }
+    }
+
+    
+    
     
     func addAllTypeToDeleteBeersList(forType type: String) {
         guard let currentManufacturer = self.manufacturer else {
@@ -234,6 +327,27 @@ class ManufacturersViewModel: ObservableObject{
         indexSet.map { beers[$0]}.forEach(manager.container.viewContext.delete)
         save()
     }
+    
+    /*
+    func deleteBeerById(withID id: UUID) {
+        let context = manager.container.viewContext
+        
+        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        do {
+            let result = try context.fetch(fetchRequest)
+            if let beerToDelete = result.first {
+                context.delete(beerToDelete)
+                try context.save()
+            }
+        } catch {
+            print("Error deleting beer from CoreData: \(error.localizedDescription)")
+        }
+        save()
+        getBeers()
+    }
+     */
     
     func deleteSelectedBeers(isFavorite favSelection: Bool, orderBy sortCriteria : SortCriteria) {
         for id in self.deleteBeersList {
@@ -295,7 +409,9 @@ class ManufacturersViewModel: ObservableObject{
             let results = try manager.container.viewContext.fetch(fetchRequest)
             let types = results.compactMap { ($0 as? [String: Any])?["type"] as? String }
             let uniqueTypes = Array(Set(types)).sorted() // Ordenar alfabéticamente
+            print("Es aqui si")
             print(uniqueTypes)
+            //getBeers()
             return uniqueTypes
         } catch {
             print("Error fetching unique beer types: \(error.localizedDescription)")
@@ -365,6 +481,9 @@ class ManufacturersViewModel: ObservableObject{
         do {
             // Obtener las cervezas que cumplen con ambos criterios de búsqueda
             self.beers = try manager.container.viewContext.fetch(fetchRequest)
+            for beer in beers {
+                print(beer.name ?? "No name available")
+            }
         } catch {
             print("Error fetching filtered beers: \(error.localizedDescription)")
         }

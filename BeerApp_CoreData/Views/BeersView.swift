@@ -248,7 +248,7 @@ struct ContentView: View {
     init(searchText: Binding<String>, sortCriteria: Binding<SortCriteria>) {
         _searchText = searchText
         _sortCriteria = sortCriteria
-        self.beerTypes = viewModel.getUniqueBeerTypes(isFavorite: onlyFavorites)
+        //self.beerTypes = viewModel.getUniqueBeerTypes(isFavorite: onlyFavorites)
     }
     
     var body: some View {
@@ -293,6 +293,9 @@ struct ContentView: View {
                 .onChange(of: onlyFavorites) { newFavs in
                     self.beerTypes = viewModel.getUniqueBeerTypes(isFavorite: newFavs)
                 }
+                /*.onChange(of: beerTypes){ newTypes in
+                    
+                }*/
             
             // Resto de tu toolbar y elementos de navegación
             // ...
@@ -328,7 +331,7 @@ struct ContentView: View {
 #warning("Eliminar este BarItem")
             ToolbarItem {
                 Button(action: {
-                    viewModel.addBeer(name: "Pilsen-Lager 5.0 50",
+                    viewModel.addBeer(name: "Lager 5.0 50",
                                       type: "Lager",
                                       alcoholContent: 5.0,
                                       calories: 50,
@@ -402,7 +405,7 @@ struct BeerSectionView: View {
     @ObservedObject var viewModel =  ManufacturersViewModel.shared
     let beerType: String
     @Binding var searchText: String
-
+    
     var body: some View {
         Section(header: BeerSectionHeaderView(beerType: beerType)) {
             ForEach(viewModel.beers.filter { $0.type == beerType }) { beer in

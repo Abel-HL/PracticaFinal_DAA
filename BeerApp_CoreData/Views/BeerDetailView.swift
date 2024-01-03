@@ -50,7 +50,7 @@ struct BeerDetailView: View {
         _selectedBeerType = State(initialValue: BeerTypes(rawValue: beer.type ?? "Lager") ?? .lager)
         _isFavorite = State(initialValue: beer.favorite)
         _selectedImage = State(initialValue: ImageProcessor.getImageFromData(beer.imageData ?? Data()))
-        print("Iniciada la beerDetail de \(beer.name ?? "Default")")
+        //print("Iniciada la beerDetail de \(beer.name ?? "Default")")
         //_manufacturerImage = State(initialValue: manufacImage)
     }
     
@@ -145,7 +145,6 @@ struct BeerDetailView: View {
                     TextField("Nombre", text: $beerName)
                         .multilineTextAlignment(.trailing) // Alinear a la derecha
                 }
-                #warning("Poner los Validators del AddBeerView")
                 HStack {
                     Text("Graduación alcohólica:")
                     Spacer()
@@ -224,7 +223,7 @@ struct BeerDetailView: View {
                 .frame(maxWidth: .infinity)
                 .padding(8)
                 .foregroundColor(.white)
-                .background(hasChanges() ? Color.blue.opacity(0.8) : Color.gray) // Cambio de color dependiendo del estado de habilitación
+                .background(validateInput() ? Color.blue.opacity(0.8) : Color.gray) // Cambio de color dependiendo del estado de habilitación
                 .cornerRadius(8)
                 
                 
@@ -258,31 +257,27 @@ struct BeerDetailView: View {
     }
     
     func validateInput() -> Bool {
-        if Float(alcoholContent)! >= 0.0, Float(alcoholContent)! <= 100.0 {
-            return true
-        }
-        return false
+        let isAlcoholContentValid = (0.0...100.0).contains(Float(alcoholContent) ?? -1)
+        let areCaloriesValid = (0...500).contains(Int(calories) ?? -1)
+        let isBeerNameNotEmpty = !beerName.isEmpty
+        
+        return isAlcoholContentValid &&
+            areCaloriesValid &&
+            isBeerNameNotEmpty && hasChanges()
     }
+
     
     func updateBeerDetails() {
-        //Aqui habria que pasar la imagen primero al ImageProcessor.compressImage(image: UImage)
-        
-        let newBeer = BeerEntity(context: viewModel.manager.context)
-        newBeer.name = "Prueba123"
-        newBeer.id = UUID()
-        newBeer.alcoholContent = Float(alcoholContent) ?? -1
-        newBeer.calories = Int16(calories) ?? -1
-        newBeer.type = selectedBeerType.rawValue
-        //newBeer.imageData = compressedImageData
-        newBeer.favorite = isFavorite
-        //Asociamos la nueva cerveza al fabricante en cuestión
-        newBeer.manufacturer = viewModel.manufacturer
-        
-        /*viewModel.updateBeerDetails(forID: beer.id!, newBeer: newBeer, image: (UIImage(named: "BeerLogo") ?? UIImage(systemName: "xmark.circle.fill"))!)*/
+        viewModel.updateBeer(forID: beer.id!,
+                                    newName: beerName,
+                                    newType: selectedBeerType.rawValue,
+                                    newAlcoholContent: Float(alcoholContent) ?? -1,
+                                    newCalories: Int16(calories) ?? -1,
+                                    newFavorite: isFavorite,
+                                    newImage: (UIImage(named: "BeerLogo") ?? UIImage(systemName: "xmark.circle.fill")))
         
         print("Se deberia haber actualizado todo bien.")
         print("Antes : \(beer)")
-        print("Despues: \(newBeer)")
         presentationMode.wrappedValue.dismiss()
     }
 }

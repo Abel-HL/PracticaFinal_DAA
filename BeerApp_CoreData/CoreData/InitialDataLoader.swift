@@ -4,45 +4,81 @@
 //
 //  Created by Abel H L on 25/12/23.
 //
-
 import Foundation
 import CoreData
 
-struct InitialDataLoader {
-    static func importInitialDataIfNeeded() {
-        guard !UserDefaults.standard.bool(forKey: "isJSONImported") else {
-            print("JSON data already imported")
-            return
-        }
-
-        guard let url = Bundle.main.url(forResource: "your_json_file_name", withExtension: "json") else {
-            print("JSON file not found")
-            return
-        }
-
-        do {
-            let jsonData = try Data(contentsOf: url)
-            guard let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]] else {
-                print("Error parsing JSON")
-                return
-            }
-
-            let context = PersistenceController.shared.container.viewContext
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-
-            for breweryDict in jsonArray {
-                // Your logic to create and populate CoreData entities goes here
-                // Refer to previous examples for parsing and saving data to CoreData
-            }
-
-            try context.save()
-            print("Data imported successfully")
-
-            // Update UserDefaults to mark JSON as imported
-            UserDefaults.standard.set(true, forKey: "isJSONImported")
-        } catch {
-            print("Error importing data: \(error.localizedDescription)")
-        }
-    }
-}
-
+/*
+ extension CodingUserInfoKey {
+ static let context = CodingUserInfoKey(rawValue: "context")
+ }
+ 
+ struct InitialDataLoader {
+ static func importInitialDataIfNeeded() {
+ guard !UserDefaults.standard.bool(forKey: "isJSONImported") else {
+ print("JSON data already imported")
+ return
+ }
+ 
+ guard let url = Bundle.main.url(forResource: "initialData", withExtension: "json") else {
+ print("JSON file not found")
+ return
+ }
+ 
+ do {
+ let jsonData = try Data(contentsOf: url)
+ let jsonDecoder = JSONDecoder()
+ let context = PersistenceController.shared.container.viewContext
+ jsonDecoder.userInfo[.context!] = context
+ let breweryArray = try jsonDecoder.decode([Brewery].self, from: jsonData)
+ 
+ for brewery in breweryArray {
+ let manufacturer = ManufacturerEntity(context: context)
+ manufacturer.id = UUID()
+ manufacturer.name = brewery.name
+ manufacturer.countryCode = brewery.countryCode
+ 
+ if let breweryImageData = brewery.imageData {
+ manufacturer.imageData = breweryImageData.data(using: .utf8)
+ }
+ 
+ for beerType in brewery.beerTypes {
+ let beer = BeerEntity(context: context)
+ beer.id = UUID()
+ beer.name = beerType.name
+ beer.type = beerType.type
+ beer.alcoholContent = beerType.alcoholContent
+ beer.calories = beerType.calories
+ 
+ if let beerImageData = beerType.imageData {
+ beer.imageData = beerImageData.data(using: .utf8)
+ }
+ 
+ beer.manufacturer = manufacturer
+ }
+ }
+ 
+ try context.save()
+ print("Data imported successfully")
+ 
+ UserDefaults.standard.set(true, forKey: "isJSONImported")
+ } catch {
+ print("Error importing data: \(error.localizedDescription)")
+ }
+ }
+ }
+ 
+ struct Brewery: Codable {
+ let name: String
+ let countryCode: String
+ let beerTypes: [BeerType]
+ let imageData: String?
+ }
+ 
+ struct BeerType: Codable {
+ let name: String
+ let type: String
+ let alcoholContent: Float
+ let calories: Int16
+ let imageData: String?
+ }
+ */
