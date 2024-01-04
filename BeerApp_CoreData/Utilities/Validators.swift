@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct Validators {
-    
     static func validateAlcoholDecimal(_ newValue: String) -> Bool {
         let decimalRegex = #"^(100(\.00?)?|(\d{1,2}(\.\d{0,2})?))?$"#
         let range = NSRange(location: 0, length: newValue.utf16.count)

@@ -46,9 +46,6 @@ struct ManufacturersView: View {
                 BeersView(manufacturer: manufacturer)
             }*/
             .toolbar {
-                //ToolbarItem(placement: .topBarLeading) {
-                    //MenuView()
-                //}
                 ToolbarItem {
                     Button(action: {
                         viewModel.deleteAllManufacturers()
@@ -78,34 +75,13 @@ struct ManufacturersView: View {
 struct ManufacturerRow: View {
     var manufacturer: ManufacturerEntity
     @StateObject var viewModel = ManufacturersViewModel.shared
-    
-    //@Binding var selectedList: String
-    //@EnvironmentObject var manufacturerListViewModel: ManufacturerListViewModel
-    //@StateObject var manufacturerDetailViewModel: ManufacturerDetailViewModel
-    //@EnvironmentObject var manufacturerListViewModel: ManufacturerListViewModel
-    
     init(manufacturer: ManufacturerEntity) {
         self.manufacturer = manufacturer
     }
     
     var body: some View {
-        //NavigationLink(destination: ManufacturerDetailView(manufacturerDetailViewModel: manufacturerDetailViewModel).environmentObject(manufacturerListViewModel)) {
         NavigationStack{
             HStack {
-                /*if let imagePath = Bundle.main.url(forResource: manufacturer.imageURL, withExtension: nil),
-                 let imageData = try? Data(contentsOf: imagePath),
-                 let uiImage = UIImage(data: imageData) {
-                 
-                 Image(uiImage: uiImage)
-                 .resizable()
-                 .aspectRatio(contentMode: .fit)
-                 .frame(width: 30, height: 30)
-                 .cornerRadius(5)
-                 } else {
-                 Image(systemName: "square.fill")
-                 .foregroundColor(.blue)
-                 .frame(width: 30, height: 30)
-                 }*/
                 if let imageData = manufacturer.imageData,
                    let uiImage = ImageProcessor.getImageFromData(imageData) {
                     Image(uiImage: uiImage)
@@ -142,10 +118,6 @@ struct ManufacturerRow: View {
             }
              */
         }
-        //}
-        /*.onAppear{
-            //manufacturerDetailViewModel.selectedManufacturer = manufacturer
-        }*/
     }
     
     func searchFlag(countryCode: String) -> String? {
@@ -161,35 +133,3 @@ struct ManufacturerRow: View {
 #Preview {
     ManufacturersView()//.environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
-
-
-
-
-/*
- @StateObject var viewModel = ManufacturersViewModel.shared
-
- var body: some View {
-     NavigationView {
-         List {
-             ForEach(viewModel.manufacturers) { manufacturer in
-                 NavigationLink(
-                     destination: Text("Item at \(manufacturer.name ?? "")")
-                 ) {
-                     Text(manufacturer.name ?? "")
-                 }
-             }
-             .onDelete(perform: viewModel.deleteManufacturer)
-         }
-         .toolbar {
-             ToolbarItem {
-                 Button(action: {
-                     viewModel.addManufacturer(name: "Prueba", countryCode: "ES")
-                 }) {
-                     Label("Add Item", systemImage: "plus")
-                 }
-             }
-         }
-         Text("Select an item")
-     }
- }
- */

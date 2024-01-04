@@ -97,8 +97,6 @@ struct AddBeerView: View {
                             .foregroundColor(isFavorite ? .red : .black)
                     }
                 }
-
-                
                 
                 Section {
                     if let selectedImage = selectedImage {
@@ -150,7 +148,6 @@ struct AddBeerView: View {
                 }
             }
             
-            
             Section {
                 Button(action: {
                     // Si se supera el límite, activar el shake
@@ -198,6 +195,7 @@ struct AddBeerView: View {
     
     
 #warning("Revisar esta sección -> Revisar '!' forzado en el ultimo param de addBeer")
+#warning("Revisar esta sección -> Revisar porque se debe seleccionar una imagen")
     func addBeer(){
         viewModel.addBeer(name: beerName,
                           type: beerType.rawValue,

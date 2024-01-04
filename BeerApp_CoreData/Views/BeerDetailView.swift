@@ -98,21 +98,6 @@ struct BeerDetailView: View {
                     .foregroundColor(.accentColor)
             }
             .buttonStyle(.borderless)
-            /*.onChange(of: avatarItem) { _ in
-                  Task {
-                      if let data = try? await avatarItem?.loadTransferable(type: Data.self) {
-                          if let uiImage = UIImage(data: data) {
-                              avatarImage = Image(uiImage: uiImage)
-                              
-                              // Guardar la imagen seleccionada en el directorio de documentos
-                              beer.photoURL = saveImageToDocumentsDirectory(image: uiImage, fileName: "\(beerName).jpg")
-                              //print("Guardada en \(String(describing: beer.photoURL))")
-                              return
-                          }
-                      }
-                      print("Failed")
-                  }
-            }*/
         }
         .overlay(alignment: .bottomTrailing) {
             Button(action: {
@@ -125,16 +110,6 @@ struct BeerDetailView: View {
                     .foregroundColor(.accentColor)
             }
             .buttonStyle(.borderless)
-            /*
-            .onChange(of: avatarItem) { _ in
-                //loadImage(from: beer.photoURL)
-                Task {
-                    if let data = try? await avatarItem?.loadTransferable(type: Data.self) {
-                        selectedImage = UIImage(data: data)
-                        hasImageChanges = true
-                    }
-                }
-            }*/
         }
           
         Form {
@@ -200,14 +175,6 @@ struct BeerDetailView: View {
         .navigationBarTitle(beerName)               //Dinamicamente con el TextField de Name
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            /*ToolbarItem(placement: .navigationBarLeading) {
-                //NavigationLink(destination: //ManufacturerDetailView(manufacturerDetailViewModel: //manufacturerDetailViewModel)) {
-                HStack {
-                    Text((beer.manufacturer?.name)!)
-                }
-            }*/
-            //}
-            
             ToolbarItemGroup(placement: .bottomBar) {
                 Button("Update Beer") {
                     if validateInput() {
@@ -215,7 +182,6 @@ struct BeerDetailView: View {
                         //hasImageChanges = false     //Creo que no hace falta usarlo
                         updateBeerDetails()
                     } else {
-                        // Manejar la validación fallida
                         print("Fail")
                     }
                 }
@@ -223,7 +189,7 @@ struct BeerDetailView: View {
                 .frame(maxWidth: .infinity)
                 .padding(8)
                 .foregroundColor(.white)
-                .background(validateInput() ? Color.blue.opacity(0.8) : Color.gray) // Cambio de color dependiendo del estado de habilitación
+                .background(validateInput() ? Color.blue.opacity(0.8) : Color.gray) // Cambio de color dependiendo validator
                 .cornerRadius(8)
                 
                 
@@ -256,6 +222,7 @@ struct BeerDetailView: View {
         //Add beer.photo != newPhotoSelected
     }
     
+    #warning("Ver si se puede poner esto en el Validators.swift")
     func validateInput() -> Bool {
         let isAlcoholContentValid = (0.0...100.0).contains(Float(alcoholContent) ?? -1)
         let areCaloriesValid = (0...500).contains(Int(calories) ?? -1)
