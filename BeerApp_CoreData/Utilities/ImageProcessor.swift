@@ -18,7 +18,7 @@ struct ImageProcessor {
             return nil
         }
         let imageSize = Double(imageData.count) / 1000.0 // Tamaño en kilobytes
-        print("Tamaño de la imagen en kB: \(imageSize)")
+        print("Image size in kB: \(imageSize)")
         return imageData
     }
     

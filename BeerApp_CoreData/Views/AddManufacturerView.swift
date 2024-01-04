@@ -14,7 +14,7 @@ struct AddManufacturerView: View {
     @State private var isImported: Bool = false
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
-    @State private var statusMessage : String = "Introduce un nombre y selecciona una imagen"
+    @State private var statusMessage : String = "Enter a name and select an image"
     
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
@@ -25,17 +25,17 @@ struct AddManufacturerView: View {
     
     var body: some View {
         Form {
-            Section(header: Text("Nuevo Fabricante")) {
+            Section(header: Text("New Manufacturer")) {
                 HStack{
-                    Text("Nombre: ")
-                    TextField("Fabricante", text: $manufacturerName)
+                    Text("Name: ")
+                    TextField("Manufacturer", text: $manufacturerName)
                         .onChange(of: manufacturerName) { _ in
                             checkNewManufacturerFields()
                         }
                         .multilineTextAlignment(.trailing)
                 }
                 
-                Picker("País de Origen", selection: $manufacturerCountry) {
+                Picker("Country of Origin", selection: $manufacturerCountry) {
                     ForEach(sortedCountries, id: \.self) { country in
                         Text("\(country.flag) \(country.name)").tag(country)
                     }
@@ -65,7 +65,7 @@ struct AddManufacturerView: View {
                             }) {
                                 HStack {
                                     Image(systemName: "square.and.arrow.up")
-                                    Text("Cambiar Imagen")
+                                    Text("Change Image")
                                 }
                             }
                             .padding(2)
@@ -78,7 +78,7 @@ struct AddManufacturerView: View {
                         }) {
                             HStack {
                                 Image(systemName: "photo")
-                                Text("Seleccionar Imagen")
+                                Text("Select Image")
                             }
                         }
                     }
@@ -90,7 +90,7 @@ struct AddManufacturerView: View {
                     HStack {
                         Image(systemName: isImported ? "checkmark.square.fill" : "square")
                             .foregroundColor(isImported ? .blue : .gray)
-                        Text("Importada")
+                        Text("Imported")
                             .foregroundColor(isImported ? .blue : .black)
                     }
                 }
@@ -100,7 +100,7 @@ struct AddManufacturerView: View {
                 Button(action: {
                     addManufacturer()
                 }) {
-                    Text("Guardar Fabricante")
+                    Text("Save Manufacturer")
                         .foregroundColor(checkButtonAvailable() ? Color.white.opacity(0.5) : Color.white)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -114,14 +114,14 @@ struct AddManufacturerView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .navigationTitle("Añadir Fabricante")
+        .navigationTitle("Add Manufacturer")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 NavigationLink(destination: ManufacturersView()) {
                     HStack {
                         Image(systemName: "chevron.backward")
-                        Text("Fabricantes")
+                        Text("Manufacturers")
                     }
                 }
             }
@@ -134,7 +134,7 @@ struct AddManufacturerView: View {
     
     
     func addManufacturer(){
-        viewModel.selectedList = manufacturerCountry.code == "ES" ? "Nacionales" : "Importadas"
+        viewModel.selectedList = manufacturerCountry.code == "ES" ? "Nationals" : "Imported"
         viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!)
         presentationMode.wrappedValue.dismiss()
     }
@@ -148,9 +148,9 @@ struct AddManufacturerView: View {
     
     func checkNewManufacturerFields(){
         DispatchQueue.main.async {
-            statusMessage = manufacturerName.isEmpty && selectedImage == nil ? "Introduce un nombre y selecciona una imagen" :
-                            manufacturerName.isEmpty ? "Introduce un nombre" :
-                            selectedImage == nil ? "Selecciona una imagen" : ""
+            statusMessage = manufacturerName.isEmpty && selectedImage == nil ? "Enter a name and select an image" :
+                            manufacturerName.isEmpty ? "Enter a name" :
+                            selectedImage == nil ? "Select an Image" : ""
         }
     }
     

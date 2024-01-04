@@ -26,7 +26,7 @@ struct AddBeerView: View {
     
     @State private var alcoholContentTextColor: Color = .red
     @State private var caloriesTextColor: Color = .red
-    @State private var statusMessage : String = "Introduce un nombre y selecciona una imagen"
+    @State private var statusMessage : String = "Enter a name and select an image"
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     
@@ -36,11 +36,11 @@ struct AddBeerView: View {
     
     var body: some View {
         Form {
-            Section(header: Text("Detalles de la Nueva Cerveza")) {
+            Section(header: Text("New Beer Details")) {
 #warning("Revisar si poner aqui el HStack del otro proyecto")
                 HStack{
-                    Text("Nombre: ")
-                    TextField("Cerveza", text: $beerName)
+                    Text("Name: ")
+                    TextField("Beer", text: $beerName)
                         .onChange(of: beerName) { _ in
                             checkNewBeerFields()
                         }
@@ -48,7 +48,7 @@ struct AddBeerView: View {
                 }
                 
                 HStack {
-                    Text("Graduación alcohólica:")
+                    Text("Alcohol Content:")
                     Spacer()
                     TextField("0-100", text: alcoholContentBinding(alcoholContent: $alcoholContent, textColor: $alcoholContentTextColor), onEditingChanged: { _ in }, onCommit: {
                     })
@@ -65,7 +65,7 @@ struct AddBeerView: View {
                 }
                 
                 HStack {
-                    Text("Aporte calórico:")
+                    Text("Calories:")
                     Spacer()
                     TextField("0-500", text: caloriesBinding(calories: $calories, textColor: $caloriesTextColor))
                         .keyboardType(.numberPad)
@@ -79,7 +79,7 @@ struct AddBeerView: View {
                 }
                 
                 HStack {
-                    Picker(selection: $beerType, label: Text("Tipo de Cerveza")) {
+                    Picker(selection: $beerType, label: Text("Beer Type")) {
                         ForEach(BeerTypes.allCases, id: \.self) { beerType in
                             Text(beerType.rawValue).tag(beerType)
                         }
@@ -93,7 +93,7 @@ struct AddBeerView: View {
                     HStack {
                         Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .foregroundColor(isFavorite ? .red : .gray)
-                        Text("Favorita")
+                        Text("Favorite")
                             .foregroundColor(isFavorite ? .red : .black)
                     }
                 }
@@ -121,7 +121,7 @@ struct AddBeerView: View {
                             }) {
                                 HStack {
                                     Image(systemName: "square.and.arrow.down")
-                                    Text("Eliminar Imagen")
+                                    Text("Delete Image")
                                 }
                             }
                             .padding(2)
@@ -138,7 +138,7 @@ struct AddBeerView: View {
                             HStack {
                                 Image(systemName: "photo")
                                     .foregroundColor(.red)
-                                Text("Seleccionar Imagen")
+                                Text("Select Image")
                             }
                             .padding(2)
                         }
@@ -165,7 +165,7 @@ struct AddBeerView: View {
                     }
                     addBeer()
                 }) {
-                    Text("Guardar Cerveza")
+                    Text("Save Beer")
                         .foregroundColor(checkButtonAvailable() ? Color.white.opacity(0.5) : Color.white)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -179,7 +179,7 @@ struct AddBeerView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .navigationTitle("Añadir Cerveza")
+        .navigationTitle("Add Beer")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -219,11 +219,11 @@ struct AddBeerView: View {
     
     private func determineStatusMessage() -> String {
         if beerName.isEmpty && hasImage == false {
-            return "Introduce un nombre y selecciona una imagen"
+            return "Enter a name and select an image"
         } else if beerName.isEmpty {
-            return "Introduce un nombre"
+            return "Enter a name"
         } else if hasImage == false {
-            return "Selecciona una imagen"
+            return "Select an image"
         } else {
             return ""
         }

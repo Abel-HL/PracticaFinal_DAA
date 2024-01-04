@@ -217,21 +217,6 @@ struct BeersView: View {
     }
      */
 }
-    /*
-    func filteredBeers(by sortCriteria : SortCriteria) {
-        guard !searchText.isEmpty else {
-            viewModel.getBeers()
-            viewModel.filterBeers(by: sortCriteria)
-            return
-        }
-        viewModel.getBeers()
-        viewModel.filterBeers(by: sortCriteria)
-        viewModel.beers = viewModel.beers.filter {$0.name!.localizedCaseInsensitiveContains(searchText)}
-        //return filteredBeers
-    }
-     */
-
-
 
 struct ContentView: View {
     @ObservedObject var viewModel =  ManufacturersViewModel.shared
@@ -309,7 +294,7 @@ struct ContentView: View {
                 NavigationLink(destination: ManufacturersView()) {
                     HStack {
                         Image(systemName: "chevron.backward")
-                        Text("Fabricantes")
+                        Text("Manufacturers")
                     }
                 }
             }
@@ -345,7 +330,7 @@ struct ContentView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink(destination: AddBeerView()) {
-                    Text("Añadir")
+                    Text("Add")
                 }
             }
             
@@ -367,7 +352,7 @@ struct ContentView: View {
                 }) {
                     Image(systemName: "trash")
                     //Text("Eliminar Cerveza")
-                    Text(editMode?.wrappedValue == .active ? "Eliminar Seleccionadas" : "Eliminar Cervezas")
+                    Text(editMode?.wrappedValue == .active ? "Delete Selected" : "Delete Beers")
                         .fontWeight(.bold)
                 }
                 //.environment(\.editMode, $editMode)
@@ -446,7 +431,6 @@ struct BeerRow: View {
     
     init(beer: BeerEntity) {
         self.beer = beer
-        print("Beer row initialized for \(beer.name ?? "Unknown beer")")
     }
         
     var body: some View {
@@ -516,9 +500,6 @@ struct BeerRow: View {
                     .frame(width: 0, height: 0)
                  
                     
-            }
-            .onAppear {
-                print("Beer row appeared for \(beer.name ?? "Unknown beer")")
             }
             /*
             .navigationDestination(for: BeerEntity.self){ beer in

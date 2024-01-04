@@ -12,7 +12,7 @@ struct SearchBar: View {
     
     var body: some View {
         HStack {
-            TextField("Buscar cerveza", text: $text)
+            TextField("Search Beer", text: $text)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             Button(action: {
                 text = ""

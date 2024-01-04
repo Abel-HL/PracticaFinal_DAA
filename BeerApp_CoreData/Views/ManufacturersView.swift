@@ -14,9 +14,9 @@ struct ManufacturersView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Picker(selection: $viewModel.selectedList, label: Text("Tipo")) {
-                    Text("Nacionales").tag("Nacionales")
-                    Text("Importadas").tag("Importadas")
+                Picker(selection: $viewModel.selectedList, label: Text("Type")) {
+                    Text("Nationals").tag("Nationals")
+                    Text("Imported").tag("Imported")
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
@@ -40,7 +40,7 @@ struct ManufacturersView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
-            .navigationTitle("Fabricantes")
+            .navigationTitle("Manufacturers")
             .navigationBarTitleDisplayMode(.large)
             /*.navigationDestination(for: ManufacturerEntity.self){ manufacturer in
                 BeersView(manufacturer: manufacturer)
@@ -58,7 +58,7 @@ struct ManufacturersView: View {
                 }
                 ToolbarItem {
                     Button(action: {
-                        viewModel.selectedList = "Importadas"
+                        viewModel.selectedList = "Imported"
                         viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!)
                     }) {
                         Label("Add Manufacturer", systemImage: "plus")
@@ -66,7 +66,7 @@ struct ManufacturersView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(destination: AddManufacturerView()) {
-                        Text("Añadir")
+                        Text("Add")
                     }
                 }
             }

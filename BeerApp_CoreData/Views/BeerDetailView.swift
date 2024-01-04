@@ -67,7 +67,7 @@ struct BeerDetailView: View {
                     .cornerRadius(5)
                 
             } else{
-                Text("No se encontró ninguna imagen")
+                Text("Not image found")
             }
         }
         .padding(30)
@@ -138,15 +138,15 @@ struct BeerDetailView: View {
         }
           
         Form {
-            Section(header: Text("Detalles de la Cerveza")) {
+            Section(header: Text("Beer Details")) {
                 HStack {
                     Text("Beer name:")
                     Spacer()
-                    TextField("Nombre", text: $beerName)
+                    TextField("Name", text: $beerName)
                         .multilineTextAlignment(.trailing) // Alinear a la derecha
                 }
                 HStack {
-                    Text("Graduación alcohólica:")
+                    Text("Alcohol Content:")
                     Spacer()
                     TextField("0-100", text: alcoholContentBinding(alcoholContent: $alcoholContent, textColor: $alcoholContentTextColor), onEditingChanged: { _ in }, onCommit: {
                     })
@@ -163,7 +163,7 @@ struct BeerDetailView: View {
                 }
                 
                 HStack {
-                    Text("Aporte calórico:")
+                    Text("Calories:")
                     Spacer()
                     TextField("0-500", text: caloriesBinding(calories: $calories, textColor: $caloriesTextColor))
                         .keyboardType(.numberPad)
@@ -177,7 +177,7 @@ struct BeerDetailView: View {
                 }
                 
                 HStack {
-                    Picker(selection: $selectedBeerType, label: Text("Tipo de Cerveza")) {
+                    Picker(selection: $selectedBeerType, label: Text("Beer Type")) {
                         ForEach(BeerTypes.allCases, id: \.self) { beerType in
                             Text(beerType.rawValue).tag(beerType)
                         }
@@ -190,7 +190,7 @@ struct BeerDetailView: View {
                     HStack {
                         Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .foregroundColor(isFavorite ? .red : .gray)
-                        Text("Favorita")
+                        Text("Favorite")
                             .foregroundColor(isFavorite ? .red : .black)
                     }
                 }
@@ -209,14 +209,14 @@ struct BeerDetailView: View {
             //}
             
             ToolbarItemGroup(placement: .bottomBar) {
-                Button("Actualizar Cerveza") {
+                Button("Update Beer") {
                     if validateInput() {
                         //saveNewBeerImage(uiImage: selectedImage!)
                         //hasImageChanges = false     //Creo que no hace falta usarlo
                         updateBeerDetails()
                     } else {
                         // Manejar la validación fallida
-                        print("Fallo")
+                        print("Fail")
                     }
                 }
                 .disabled(!hasChanges()) // Deshabilitar si no hay cambios
@@ -233,7 +233,7 @@ struct BeerDetailView: View {
                 } label: {
                     HStack {
                         Image(systemName: "xmark")
-                        Text("Cancelar")
+                        Text("Cancel")
                     }
                 }
 
@@ -276,7 +276,7 @@ struct BeerDetailView: View {
                                     newFavorite: isFavorite,
                                     newImage: (UIImage(named: "BeerLogo") ?? UIImage(systemName: "xmark.circle.fill")))
         
-        print("Se deberia haber actualizado todo bien.")
+        print("Updates done.")
         print("Antes : \(beer)")
         presentationMode.wrappedValue.dismiss()
     }

@@ -17,7 +17,7 @@ class ManufacturersViewModel: ObservableObject{
     @Published var manufacturers: [ManufacturerEntity] = []
     @Published var manufacturer: ManufacturerEntity?
     
-    @Published var selectedList: String = "Nacionales"
+    @Published var selectedList: String = "Nationals"
     @Published var beerTypes : [String] = []
     
     @Published var beers: [BeerEntity] = []
@@ -42,7 +42,7 @@ class ManufacturersViewModel: ObservableObject{
     }
     
     func selectedManufacturers(){
-        if self.selectedList == "Nacionales"{
+        if self.selectedList == "Nationals"{
             getNationalManufacturers()
             return
         }
