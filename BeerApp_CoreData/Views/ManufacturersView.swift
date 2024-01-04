@@ -124,7 +124,6 @@ struct ManufacturerRow: View {
         guard let country = CountryInfo.allCases.first(where: { $0.code == countryCode }) else {
             return nil // Código de país no encontrado
         }
-
         return country.flag // Devolver la bandera del país correspondiente al código
     }
 }

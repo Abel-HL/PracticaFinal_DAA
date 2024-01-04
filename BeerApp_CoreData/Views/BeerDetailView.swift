@@ -26,7 +26,7 @@ struct BeerDetailView: View {
     
     
     
-//#warning("Cambiar nombre de estas variables y eliminar las no usadas. Ver si hay duplicadas que hagan la misma funcion")
+#warning("Cambiar nombre de estas variables y eliminar las no usadas. Ver si hay duplicadas que hagan la misma funcion")
     //@State private var avatarItem: PhotosPickerItem?
     @State private var avatarImage: Image?
     @State private var newPhotoURL: URL?
@@ -50,8 +50,6 @@ struct BeerDetailView: View {
         _selectedBeerType = State(initialValue: BeerTypes(rawValue: beer.type ?? "Lager") ?? .lager)
         _isFavorite = State(initialValue: beer.favorite)
         _selectedImage = State(initialValue: ImageProcessor.getImageFromData(beer.imageData ?? Data()))
-        //print("Iniciada la beerDetail de \(beer.name ?? "Default")")
-        //_manufacturerImage = State(initialValue: manufacImage)
     }
     
     var body: some View {
@@ -85,9 +83,6 @@ struct BeerDetailView: View {
                     .frame(width: 30, height: 30)
             }
         }
-        /*.onChange(of: beer.imageData) { newImage in
-            loadImage(from: newPhotoURL, or: selectedImage)
-        }*/
         .overlay(alignment: .bottomLeading) {
             Button(action: {
                 ImagePicker(selectedImage: $selectedImage)
@@ -129,14 +124,12 @@ struct BeerDetailView: View {
                     .frame(maxWidth: 80)
                     .multilineTextAlignment(.trailing)
                     .onChange(of: alcoholContent) { newValue in
-                        //print(newValue)
                         if !Validators.validateAlcoholDecimal(newValue) {
                             alcoholContent = ""
                         }
                     }
                     Text("%").foregroundColor($alcoholContentTextColor.wrappedValue)
                 }
-                
                 HStack {
                     Text("Calories:")
                     Spacer()
@@ -150,7 +143,6 @@ struct BeerDetailView: View {
                         }
                     Text("kcal").foregroundColor($caloriesTextColor.wrappedValue)
                 }
-                
                 HStack {
                     Picker(selection: $selectedBeerType, label: Text("Beer Type")) {
                         ForEach(BeerTypes.allCases, id: \.self) { beerType in
@@ -178,8 +170,6 @@ struct BeerDetailView: View {
             ToolbarItemGroup(placement: .bottomBar) {
                 Button("Update Beer") {
                     if validateInput() {
-                        //saveNewBeerImage(uiImage: selectedImage!)
-                        //hasImageChanges = false     //Creo que no hace falta usarlo
                         updateBeerDetails()
                     } else {
                         print("Fail")
@@ -192,7 +182,6 @@ struct BeerDetailView: View {
                 .background(validateInput() ? Color.blue.opacity(0.8) : Color.gray) // Cambio de color dependiendo validator
                 .cornerRadius(8)
                 
-                
                 //NavigationLink(destination: ManufacturerDetailView(manufacturerDetailViewModel: manufacturerDetailViewModel)) {
                 Button {
                     presentationMode.wrappedValue.dismiss()
@@ -202,9 +191,6 @@ struct BeerDetailView: View {
                         Text("Cancel")
                     }
                 }
-
-                    
-                //}
             }
         }
         .sheet(isPresented: $isImagePickerPresented) {
@@ -219,7 +205,6 @@ struct BeerDetailView: View {
         beer.type != selectedBeerType.rawValue ||
         beer.favorite != isFavorite ||
         hasImageChanges == true
-        //Add beer.photo != newPhotoSelected
     }
     
     #warning("Ver si se puede poner esto en el Validators.swift")
@@ -243,14 +228,6 @@ struct BeerDetailView: View {
                                     newFavorite: isFavorite,
                                     newImage: (UIImage(named: "BeerLogo") ?? UIImage(systemName: "xmark.circle.fill")))
         
-        print("Updates done.")
-        print("Antes : \(beer)")
         presentationMode.wrappedValue.dismiss()
     }
 }
-
-/*
- #Preview {
- BeerDetailView()
- }
- */

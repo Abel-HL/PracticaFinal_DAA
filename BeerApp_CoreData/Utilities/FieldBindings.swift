@@ -4,7 +4,6 @@
 //
 //  Created by Abel H L on 16/12/23.
 //
-
 import Foundation
 import SwiftUI
 
@@ -41,5 +40,3 @@ func caloriesBinding(calories: Binding<String>, textColor: Binding<Color>) -> Bi
         }
     )
 }
-
-// Define similar functions for name if needed...

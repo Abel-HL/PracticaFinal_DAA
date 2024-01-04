@@ -56,7 +56,6 @@ struct AddBeerView: View {
                     .frame(maxWidth: 80)
                     .multilineTextAlignment(.trailing)
                     .onChange(of: alcoholContent) { newValue in
-                        //print(newValue)
                         if !Validators.validateAlcoholDecimal(newValue) {
                             alcoholContent = ""
                         }
@@ -147,7 +146,7 @@ struct AddBeerView: View {
                     }
                 }
             }
-            
+            #warning("Revisar esto del shake con los attempts")
             Section {
                 Button(action: {
                     // Si se supera el límite, activar el shake
@@ -206,7 +205,6 @@ struct AddBeerView: View {
                           manufacturer: viewModel.manufacturer!)
         
         presentationMode.wrappedValue.dismiss()
-        //attempts += 1
     }
     
     func checkNewBeerFields() {

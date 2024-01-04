@@ -21,5 +21,4 @@ struct ViewBuilders {
         }
     }
 
-    // Otros @ViewBuilders...
 }

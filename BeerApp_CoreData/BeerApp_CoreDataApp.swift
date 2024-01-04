@@ -9,12 +9,9 @@ import SwiftUI
 
 @main
 struct BeerApp_CoreDataApp: App {
-    //let persistenceController = PersistenceController.shared
-
     var body: some Scene {
         WindowGroup {
             ManufacturersView()
-                //.environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

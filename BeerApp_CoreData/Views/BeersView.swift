@@ -152,12 +152,9 @@ struct ContentView: View {
                     }
                     
                     editMode?.wrappedValue = editMode?.wrappedValue == .active ? .inactive : .active
-                    
-                    print(editMode?.wrappedValue == .inactive ? viewModel.deleteBeersList : "")
-                    //showDeleteView.toggle()
+                    //print(editMode?.wrappedValue == .inactive ? viewModel.deleteBeersList : "")
                 }) {
                     Image(systemName: "trash")
-                    //Text("Eliminar Cerveza")
                     Text(editMode?.wrappedValue == .active ? "Delete Selected" : "Delete Beers")
                         .fontWeight(.bold)
                 }
@@ -197,13 +194,10 @@ struct BeerSectionView: View {
                 BeerRow(beer: beer)
             }
         }
-        .onAppear {
-            print("Beers count for \(beerType): \(viewModel.beers.filter { $0.type == beerType }.count)")
-            print("Search text: \(searchText)")
-        }
     }
 }
 
+#warning("Falta añadir al button el caso de q si ya se han añadido y se vuelve a pulsar se borren de la lista")
 struct BeerSectionHeaderView: View {
     let beerType: String
     @Environment(\.editMode) var editMode
