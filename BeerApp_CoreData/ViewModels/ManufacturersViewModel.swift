@@ -18,6 +18,7 @@ class ManufacturersViewModel: ObservableObject{
     @Published var manufacturer: ManufacturerEntity?
     
     @Published var selectedList: String = "Nacionales"
+    @Published var beerTypes : [String] = []
     
     @Published var beers: [BeerEntity] = []
     @Published var beer: BeerEntity?
@@ -125,7 +126,6 @@ class ManufacturersViewModel: ObservableObject{
         newBeer.favorite = beer.favorite
         newBeer.imageData = beer.imageData
         newBeer.manufacturer = beer.manufacturer
-        
         save()
         getBeers()
     }
@@ -155,7 +155,7 @@ class ManufacturersViewModel: ObservableObject{
         print("Beer Added")
         save()
         getBeers()
-        
+        getUniqueBeerTypes(isFavorite: false)
     }
     
     #warning("Hay que cambiar este getBeers para que por Defecto se haga el getBeers filtrado por sortCriteria = .Name")
@@ -164,6 +164,7 @@ class ManufacturersViewModel: ObservableObject{
             print("Manufacturer is nil")
             return
         }
+        print(currentManufacturer)
 
         let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
         // Establecer un predicado para filtrar por el fabricante actual
@@ -176,8 +177,13 @@ class ManufacturersViewModel: ObservableObject{
         do {
             // Fetch beers based on the specified sort criteria and manufacturer
             self.beers = try manager.container.viewContext.fetch(fetchRequest)
+            getUniqueBeerTypes(isFavorite: false)
             print("GetBeers DONE")
             //print(beers)
+            for beer in self.beers {
+                print("Beer name vModel: \(beer.name ?? "No name")")
+            }
+
         } catch {
             print("Error fetching beers: \(error.localizedDescription)")
         }
@@ -294,6 +300,7 @@ class ManufacturersViewModel: ObservableObject{
 
                 //try context.save() // Guardar el cambio
                 save()
+                getUniqueBeerTypes(isFavorite: false)
                 print("Beer updated successfully")
             }
         } catch {
@@ -360,7 +367,9 @@ class ManufacturersViewModel: ObservableObject{
         save()
         if favSelection{
             getFavoritesBeers()
+            getUniqueBeerTypes(isFavorite: favSelection)
         }else{
+            getUniqueBeerTypes(isFavorite: favSelection)
             getBeersByBeerTypesAndSortCriteria(sortCriteria: sortCriteria)
         }
         self.deleteBeersList = []
@@ -382,10 +391,10 @@ class ManufacturersViewModel: ObservableObject{
     }
     
     
-    func getUniqueBeerTypes(isFavorite favoriteSelected: Bool) -> [String] {
+    func getUniqueBeerTypes(isFavorite favoriteSelected: Bool) {
         guard let currentManufacturer = self.manufacturer else {
             print("Manufacturer is nil")
-            return []
+            return
         }
 
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "BeerEntity")
@@ -412,10 +421,9 @@ class ManufacturersViewModel: ObservableObject{
             print("Es aqui si")
             print(uniqueTypes)
             //getBeers()
-            return uniqueTypes
+            self.beerTypes = uniqueTypes
         } catch {
             print("Error fetching unique beer types: \(error.localizedDescription)")
-            return []
         }
     }
 

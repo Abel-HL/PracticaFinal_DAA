@@ -241,7 +241,6 @@ struct ContentView: View {
     @Binding var sortCriteria: SortCriteria // Asumiendo que tienes un enum SortCriteria
 
     @State private var showActionSheet = false
-    @State var beerTypes: [String] = []
     
     @Environment(\.editMode) var editMode
     
@@ -261,6 +260,7 @@ struct ContentView: View {
                         viewModel.getFavoritesBeers()
                     }else{
                         viewModel.getBeers()
+                        viewModel.getUniqueBeerTypes(isFavorite: false)
                     }
                     // Aquí puedes realizar la lógica para filtrar por favoritos o realizar cualquier otra acción necesaria
                     //viewModel.filterByFavorites(onlyFavorites)
@@ -280,8 +280,8 @@ struct ContentView: View {
             .padding(.horizontal, 8) // Padding horizontal para el HStack
             
             List {
-                ForEach(beerTypes.indices, id: \.self) { index in
-                    BeerSectionView(beerType: beerTypes[index], searchText: $searchText)
+                ForEach(viewModel.beerTypes, id: \.self) { beerType in
+                    BeerSectionView(beerType: beerType, searchText: $searchText)
                 }
             }
                 .onChange(of: sortCriteria) { newCriteria in
@@ -291,7 +291,7 @@ struct ContentView: View {
                     viewModel.sortAndFilterBeers(filter: newSearchText, sort: sortCriteria, isFavorite: onlyFavorites)
                 }
                 .onChange(of: onlyFavorites) { newFavs in
-                    self.beerTypes = viewModel.getUniqueBeerTypes(isFavorite: newFavs)
+                    viewModel.getUniqueBeerTypes(isFavorite: newFavs)
                 }
                 /*.onChange(of: beerTypes){ newTypes in
                     
@@ -403,6 +403,7 @@ struct ContentView: View {
 
 struct BeerSectionView: View {
     @ObservedObject var viewModel =  ManufacturersViewModel.shared
+    //@State var beerType: String
     let beerType: String
     @Binding var searchText: String
     
@@ -411,6 +412,10 @@ struct BeerSectionView: View {
             ForEach(viewModel.beers.filter { $0.type == beerType }) { beer in
                 BeerRow(beer: beer)
             }
+        }
+        .onAppear {
+            print("Beers count for \(beerType): \(viewModel.beers.filter { $0.type == beerType }.count)")
+            print("Search text: \(searchText)")
         }
     }
 }
@@ -441,6 +446,7 @@ struct BeerRow: View {
     
     init(beer: BeerEntity) {
         self.beer = beer
+        print("Beer row initialized for \(beer.name ?? "Unknown beer")")
     }
         
     var body: some View {
@@ -511,7 +517,9 @@ struct BeerRow: View {
                  
                     
             }
-            
+            .onAppear {
+                print("Beer row appeared for \(beer.name ?? "Unknown beer")")
+            }
             /*
             .navigationDestination(for: BeerEntity.self){ beer in
                 //BeerDetailView(beer: beer)
