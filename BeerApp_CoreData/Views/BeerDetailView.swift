@@ -110,57 +110,20 @@ struct BeerDetailView: View {
         Form {
             Section(header: Text("Beer Details")) {
                 HStack {
-                    Text("Beer name:")
+                    Text("Name:")
                     Spacer()
-                    TextField("Name", text: $beerName)
+                    TextField("Beer Name", text: $beerName)
                         .multilineTextAlignment(.trailing) // Alinear a la derecha
                 }
-                HStack {
-                    Text("Alcohol Content:")
-                    Spacer()
-                    TextField("0-100", text: alcoholContentBinding(alcoholContent: $alcoholContent, textColor: $alcoholContentTextColor), onEditingChanged: { _ in }, onCommit: {
-                    })
-                    .keyboardType(.decimalPad)
-                    .frame(maxWidth: 80)
-                    .multilineTextAlignment(.trailing)
-                    .onChange(of: alcoholContent) { newValue in
-                        if !Validators.validateAlcoholDecimal(newValue) {
-                            alcoholContent = ""
-                        }
-                    }
-                    Text("%").foregroundColor($alcoholContentTextColor.wrappedValue)
-                }
-                HStack {
-                    Text("Calories:")
-                    Spacer()
-                    TextField("0-500", text: caloriesBinding(calories: $calories, textColor: $caloriesTextColor))
-                        .keyboardType(.numberPad)
-                        .multilineTextAlignment(.trailing)
-                        .onChange(of: calories) { newValue in
-                            if !Validators.validateCaloriesTextField(newValue) {
-                                calories = ""
-                            }
-                        }
-                    Text("kcal").foregroundColor($caloriesTextColor.wrappedValue)
-                }
-                HStack {
-                    Picker(selection: $selectedBeerType, label: Text("Beer Type")) {
-                        ForEach(BeerTypes.allCases, id: \.self) { beerType in
-                            Text(beerType.rawValue).tag(beerType)
-                        }
-                    }
-                    .pickerStyle(MenuPickerStyle())
-                }
-                Button(action: {
-                    isFavorite.toggle()
-                }) {
-                    HStack {
-                        Image(systemName: isFavorite ? "heart.fill" : "heart")
-                            .foregroundColor(isFavorite ? .red : .gray)
-                        Text("Favorite")
-                            .foregroundColor(isFavorite ? .red : .black)
-                    }
-                }
+                
+                AlcoholComponentView(alcoholContent: $alcoholContent, alcoholContentTextColor: $alcoholContentTextColor)
+                
+                CaloriesComponentView(calories: $calories, caloriesTextColor: $caloriesTextColor)
+                           
+                
+                BeerTypePickerComponentView(selectedBeerType: $selectedBeerType)
+                
+                FavoriteComponentView(isFavorite: $isFavorite)
             }
         }
         .navigationBarBackButtonHidden(false)

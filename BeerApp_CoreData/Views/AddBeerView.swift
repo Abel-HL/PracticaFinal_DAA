@@ -40,62 +40,23 @@ struct AddBeerView: View {
 #warning("Revisar si poner aqui el HStack del otro proyecto")
                 HStack{
                     Text("Name: ")
-                    TextField("Beer", text: $beerName)
+                    TextField("Beer Name", text: $beerName)
                         .onChange(of: beerName) { _ in
                             checkNewBeerFields()
                         }
                         .multilineTextAlignment(.trailing)
                 }
                 
-                HStack {
-                    Text("Alcohol Content:")
-                    Spacer()
-                    TextField("0-100", text: alcoholContentBinding(alcoholContent: $alcoholContent, textColor: $alcoholContentTextColor), onEditingChanged: { _ in }, onCommit: {
-                    })
-                    .keyboardType(.decimalPad)
-                    .frame(maxWidth: 80)
-                    .multilineTextAlignment(.trailing)
-                    .onChange(of: alcoholContent) { newValue in
-                        if !Validators.validateAlcoholDecimal(newValue) {
-                            alcoholContent = ""
-                        }
-                    }
-                    Text("%").foregroundColor($alcoholContentTextColor.wrappedValue)
-                }
                 
-                HStack {
-                    Text("Calories:")
-                    Spacer()
-                    TextField("0-500", text: caloriesBinding(calories: $calories, textColor: $caloriesTextColor))
-                        .keyboardType(.numberPad)
-                        .multilineTextAlignment(.trailing)
-                        .onChange(of: calories) { newValue in
-                            if !Validators.validateCaloriesTextField(newValue) {
-                                calories = ""
-                            }
-                        }
-                    Text("kcal").foregroundColor($caloriesTextColor.wrappedValue)
-                }
+                AlcoholComponentView(alcoholContent: $alcoholContent, alcoholContentTextColor: $alcoholContentTextColor)
+                            
                 
-                HStack {
-                    Picker(selection: $beerType, label: Text("Beer Type")) {
-                        ForEach(BeerTypes.allCases, id: \.self) { beerType in
-                            Text(beerType.rawValue).tag(beerType)
-                        }
-                    }
-                    .pickerStyle(MenuPickerStyle())
-                }
+                CaloriesComponentView(calories: $calories, caloriesTextColor: $caloriesTextColor)
+                           
                 
-                Button(action: {
-                    isFavorite.toggle()
-                }) {
-                    HStack {
-                        Image(systemName: isFavorite ? "heart.fill" : "heart")
-                            .foregroundColor(isFavorite ? .red : .gray)
-                        Text("Favorite")
-                            .foregroundColor(isFavorite ? .red : .black)
-                    }
-                }
+                BeerTypePickerComponentView(selectedBeerType: $beerType)
+                
+                FavoriteComponentView(isFavorite: $isFavorite)
                 
                 Section {
                     if let selectedImage = selectedImage {
