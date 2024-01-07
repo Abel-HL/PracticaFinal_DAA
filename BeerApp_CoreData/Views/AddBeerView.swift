@@ -25,8 +25,9 @@ struct AddBeerView: View {
     @State private var isShaking = false
     
     @State private var alcoholContentTextColor: Color = .red
+    @State private var beerNameTextColor: Color = .red
     @State private var caloriesTextColor: Color = .red
-    @State private var statusMessage : String = "Enter a name and select an image"
+    //@State private var statusMessage : String = "Enter a name and select an image"
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     
@@ -38,21 +39,43 @@ struct AddBeerView: View {
         Form {
             Section(header: Text("New Beer Details")) {
 #warning("Revisar si poner aqui el HStack del otro proyecto")
-                HStack{
-                    Text("Name: ")
-                    TextField("Beer Name", text: $beerName)
-                        .onChange(of: beerName) { _ in
-                            checkNewBeerFields()
-                        }
+                /*HStack {
+                    Text("Name:")
+                    Spacer()
+                    TextField("Beer Name", text: nameBinding(beerName: $beerName, textColor: $beerNameTextColor))
+                        .frame(maxWidth: .infinity)
                         .multilineTextAlignment(.trailing)
+                    if $beerNameTextColor.wrappedValue == .green {
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(.green)
+                    } else if $beerNameTextColor.wrappedValue == .red {
+                        Image(systemName: "xmark.circle")
+                            .foregroundColor(.red)
+                    }
+                }*/
+                /*
+                HStack {
+                    Text("Name:")
+                    //Spacer()
+                    TextField("Beer Name", text: $beerName)
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.trailing)
+                    
+                    if Validators.validateName(beerName).valid {
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(.green)
+                    } else {
+                        Image(systemName: "xmark.circle")
+                            .foregroundColor(.red)
+                    }
                 }
-                
+                 */
+
+                BeerNameComponentView(beerName: $beerName)
                 
                 AlcoholComponentView(alcoholContent: $alcoholContent, alcoholContentTextColor: $alcoholContentTextColor)
-                            
                 
                 CaloriesComponentView(calories: $calories, caloriesTextColor: $caloriesTextColor)
-                           
                 
                 BeerTypePickerComponentView(selectedBeerType: $beerType)
                 
@@ -75,7 +98,7 @@ struct AddBeerView: View {
                             Button(action: {
                                 self.hasImage = false
                                 self.selectedImage = nil
-                                checkNewBeerFields()
+                                //checkNewBeerFields()
                             }) {
                                 HStack {
                                     Image(systemName: "square.and.arrow.down")
@@ -86,7 +109,7 @@ struct AddBeerView: View {
                         }
                         .onAppear {
                             self.hasImage = true // Cuando hay una imagen, establece hasImage como true al cargar la vista
-                            checkNewBeerFields()
+                            //checkNewBeerFields()
                         }
                         
                     } else {
@@ -94,10 +117,12 @@ struct AddBeerView: View {
                             self.isImagePickerPresented.toggle()
                         }) {
                             HStack {
+                                Text("Select Image")
+                                Spacer()
                                 Image(systemName: "photo")
                                     .foregroundColor(.red)
-                                Text("Select Image")
                             }
+                            .frame(maxWidth: .infinity)
                             .padding(2)
                         }
                         .background(isShaking ? Color.red.opacity(0.3) : Color.clear)
@@ -129,10 +154,10 @@ struct AddBeerView: View {
                         .background(checkButtonAvailable() ? Color.gray : Color.blue)
                         .cornerRadius(10)
                 }
-                //.disabled(checkButtonAvailable())
+                .disabled(checkButtonAvailable())
                 
                 // Label dinámico
-                ViewBuilders.dynamicStatusLabel(for: statusMessage)
+                //ViewBuilders.dynamicStatusLabel(for: statusMessage)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -162,12 +187,13 @@ struct AddBeerView: View {
                           alcoholContent: Float(alcoholContent)!,
                           calories: Int16(calories)!,
                           favorite: isFavorite,
-                          image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!,
+                          image: (selectedImage ?? UIImage(systemName: "xmark.circle"))!,
                           manufacturer: viewModel.manufacturer!)
         
         presentationMode.wrappedValue.dismiss()
     }
     
+    /*
     func checkNewBeerFields() {
         DispatchQueue.main.async {
             statusMessage = determineStatusMessage()
@@ -185,6 +211,7 @@ struct AddBeerView: View {
             return ""
         }
     }
+     */
     
     func checkButtonAvailable() -> Bool {
         return beerName.isEmpty || hasImage == false || Float(alcoholContent) ?? -1 < 0.0 || Int16(calories) ?? -1 < 0

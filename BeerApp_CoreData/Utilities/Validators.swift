@@ -43,7 +43,7 @@ struct Validators {
     }
     
     static func validateName(_ input: String) -> (valid: Bool, value: String, color: Color) {
-        if (4...32).contains(input.count) {
+        if (4...24).contains(input.count) {
             return (true, input, .green)
         } else {
             return (false, input, .red)

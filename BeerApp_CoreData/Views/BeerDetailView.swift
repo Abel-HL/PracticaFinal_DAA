@@ -109,12 +109,7 @@ struct BeerDetailView: View {
           
         Form {
             Section(header: Text("Beer Details")) {
-                HStack {
-                    Text("Name:")
-                    Spacer()
-                    TextField("Beer Name", text: $beerName)
-                        .multilineTextAlignment(.trailing) // Alinear a la derecha
-                }
+                BeerNameComponentView(beerName: $beerName)
                 
                 AlcoholComponentView(alcoholContent: $alcoholContent, alcoholContentTextColor: $alcoholContentTextColor)
                 
@@ -174,11 +169,10 @@ struct BeerDetailView: View {
     func validateInput() -> Bool {
         let isAlcoholContentValid = (0.0...100.0).contains(Float(alcoholContent) ?? -1)
         let areCaloriesValid = (0...500).contains(Int(calories) ?? -1)
-        let isBeerNameNotEmpty = !beerName.isEmpty
+        let isBeerNameValidLength = (4...24).contains(beerName.count)
         
         return isAlcoholContentValid &&
-            areCaloriesValid &&
-            isBeerNameNotEmpty && hasChanges()
+            areCaloriesValid && isBeerNameValidLength && hasChanges()
     }
 
     

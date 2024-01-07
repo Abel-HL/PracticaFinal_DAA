@@ -40,3 +40,19 @@ func caloriesBinding(calories: Binding<String>, textColor: Binding<Color>) -> Bi
         }
     )
 }
+
+func nameBinding(beerName: Binding<String>, textColor: Binding<Color>) -> Binding<String> {
+    return Binding(
+        get: {
+            let validation = Validators.validateName(beerName.wrappedValue)
+            textColor.wrappedValue = validation.color
+            return validation.value
+        },
+        set: { newValue in
+            let validation = Validators.validateName(newValue)
+            beerName.wrappedValue = validation.value
+            textColor.wrappedValue = validation.color
+        }
+    )
+}
+
