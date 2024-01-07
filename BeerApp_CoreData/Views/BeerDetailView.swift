@@ -219,6 +219,7 @@ struct BeerDetailView: View {
     }
 
     
+    
     func updateBeerDetails() {
         viewModel.updateBeer(forID: beer.id!,
                                     newName: beerName,
@@ -226,7 +227,7 @@ struct BeerDetailView: View {
                                     newAlcoholContent: Float(alcoholContent) ?? -1,
                                     newCalories: Int16(calories) ?? -1,
                                     newFavorite: isFavorite,
-                                    newImage: (UIImage(named: "BeerLogo") ?? UIImage(systemName: "xmark.circle.fill")))
+                                    newImage: (selectedImage ?? UIImage(named: "BeerLogo")))
         
         presentationMode.wrappedValue.dismiss()
     }
