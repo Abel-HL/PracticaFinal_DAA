@@ -338,8 +338,6 @@ class ManufacturersViewModel: ObservableObject{
         getBeers()
     }
     
-    
-    #warning("cambiar este getBeers")
     func save(){
         manager.save()
     }

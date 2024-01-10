@@ -38,38 +38,6 @@ struct AddBeerView: View {
     var body: some View {
         Form {
             Section(header: Text("New Beer Details")) {
-#warning("Revisar si poner aqui el HStack del otro proyecto")
-                /*HStack {
-                    Text("Name:")
-                    Spacer()
-                    TextField("Beer Name", text: nameBinding(beerName: $beerName, textColor: $beerNameTextColor))
-                        .frame(maxWidth: .infinity)
-                        .multilineTextAlignment(.trailing)
-                    if $beerNameTextColor.wrappedValue == .green {
-                        Image(systemName: "checkmark.circle")
-                            .foregroundColor(.green)
-                    } else if $beerNameTextColor.wrappedValue == .red {
-                        Image(systemName: "xmark.circle")
-                            .foregroundColor(.red)
-                    }
-                }*/
-                /*
-                HStack {
-                    Text("Name:")
-                    //Spacer()
-                    TextField("Beer Name", text: $beerName)
-                        .frame(maxWidth: .infinity)
-                        .multilineTextAlignment(.trailing)
-                    
-                    if Validators.validateName(beerName).valid {
-                        Image(systemName: "checkmark.circle")
-                            .foregroundColor(.green)
-                    } else {
-                        Image(systemName: "xmark.circle")
-                            .foregroundColor(.red)
-                    }
-                }
-                 */
 
                 BeerNameComponentView(beerName: $beerName)
                 
@@ -179,7 +147,7 @@ struct AddBeerView: View {
     }
     
     
-#warning("Revisar esta sección -> Revisar '!' forzado en el ultimo param de addBeer")
+#warning("Revisar esta sección -> Revisar '!' forzado en el ultimo param de addBeer -> Pasar con el ?? -1 y que en el viewModel se compruebe")
 #warning("Revisar esta sección -> Revisar porque se debe seleccionar una imagen")
     func addBeer(){
         viewModel.addBeer(name: beerName,
