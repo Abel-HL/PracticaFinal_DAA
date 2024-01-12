@@ -39,7 +39,7 @@ struct AddBeerView: View {
         Form {
             Section(header: Text("New Beer Details")) {
 
-                BeerNameComponentView(beerName: $beerName)
+                NameComponentView(varName: $beerName, field: "Beer")
                 
                 AlcoholComponentView(alcoholContent: $alcoholContent, alcoholContentTextColor: $alcoholContentTextColor)
                 
@@ -47,7 +47,7 @@ struct AddBeerView: View {
                 
                 BeerTypePickerComponentView(selectedBeerType: $beerType)
                 
-                FavoriteComponentView(isFavorite: $isFavorite)
+                FavoriteComponentView(isFavorite: $isFavorite, field: "heart")
                 
                 Section {
                     if let selectedImage = selectedImage {
@@ -133,7 +133,7 @@ struct AddBeerView: View {
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                NavigationLink(destination: BeersView()) {
+                NavigationLink(destination: BeersView(manufactFavorite: viewModel.manufacturer!.favorite)) {
                     HStack {
                         Image(systemName: "chevron.backward")
                         Text((viewModel.manufacturer?.name) ?? "Example")

@@ -76,12 +76,13 @@ class ManufacturersViewModel: ObservableObject{
     }
     
     
-    func addManufacturer(name: String, countryCode: String, image: UIImage){
+    func addManufacturer(name: String, countryCode: String, image: UIImage, favorite: Bool){
         if let compressedImageData = ImageProcessor.compressImage(image) {
             let newManufacturer = ManufacturerEntity(context: manager.context)
             newManufacturer.id = UUID()
             newManufacturer.name = name
             newManufacturer.countryCode = countryCode
+            newManufacturer.favorite = favorite
             newManufacturer.imageData = compressedImageData // Asigna la imagen comprimida al atributo imageData de la entidad
             newManufacturer.beers = []  //  Ya que inicialmente no tenemos cervezas asociadas
         }
@@ -89,6 +90,67 @@ class ManufacturersViewModel: ObservableObject{
         save()
     }
     
+    func updateManufacturer(forID id: UUID,
+                             newName: String,
+                             newCountryCode: String,
+                             newImage: UIImage?,
+                             newFavorite: Bool) {
+        let context = manager.container.viewContext
+        
+        let fetchRequest: NSFetchRequest<ManufacturerEntity> = ManufacturerEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        do {
+            let result = try context.fetch(fetchRequest)
+            if let manufacturerToUpdate = result.first {
+                if manufacturerToUpdate.name != newName {
+                    manufacturerToUpdate.name = newName
+                }
+                if manufacturerToUpdate.countryCode != newCountryCode {
+                    manufacturerToUpdate.countryCode = newCountryCode
+                }
+                if manufacturerToUpdate.favorite != newFavorite {
+                    manufacturerToUpdate.favorite = newFavorite
+                }
+                if let compressedImageData = ImageProcessor.compressImage(newImage!), manufacturerToUpdate.imageData != compressedImageData {
+                    manufacturerToUpdate.imageData = compressedImageData
+                }
+                
+                save()
+                selectedManufacturers()
+                // Agrega cualquier otra lógica necesaria después de guardar la actualización
+            }
+        } catch {
+            print("Error updating manufacturer: \(error.localizedDescription)")
+        }
+    }
+    
+    func changeFavoriteManufacturer(){
+        guard let id = self.manufacturer?.id else {
+            // Manejar el caso donde el ID es nulo
+            return
+        }
+        
+        let context = manager.container.viewContext
+        
+        let fetchRequest: NSFetchRequest<ManufacturerEntity> = ManufacturerEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        do {
+            let result = try context.fetch(fetchRequest)
+            if let manufacturerToUpdate = result.first {
+                //print("Antes togel")
+                //print(manufacturerToUpdate.favorite)
+                manufacturerToUpdate.favorite.toggle()
+                //print("Dsps togel")
+                //print(manufacturerToUpdate.favorite)
+                save()
+                selectedManufacturers()
+            }
+        } catch {
+            print("Error updating manufacturer: \(error.localizedDescription)")
+        }
+    }
     
     func deleteManufacturer(indexSet: IndexSet){
         indexSet.map { manufacturers[$0]}.forEach(manager.container.viewContext.delete)

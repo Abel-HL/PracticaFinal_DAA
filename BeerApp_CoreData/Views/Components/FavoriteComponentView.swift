@@ -10,6 +10,7 @@ import SwiftUI
 struct FavoriteComponentView: View {
     
     @Binding var isFavorite: Bool
+    @State var field : String
     
     var body: some View {
         Button(action: {
@@ -17,10 +18,10 @@ struct FavoriteComponentView: View {
         }) {
             HStack {
                 Text("Favorite")
-                    .foregroundColor(isFavorite ? .red : .black)
+                    .foregroundColor(.black)
                 Spacer()
-                Image(systemName: isFavorite ? "heart.fill" : "heart")
-                    .foregroundColor(isFavorite ? .red : .gray)
+                Image(systemName: isFavorite ? "\(field).fill" : field)
+                    .foregroundColor(isFavorite ? (field == "star" ? .yellow : .red) : .gray)
             }
         }
     }

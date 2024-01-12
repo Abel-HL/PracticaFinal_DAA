@@ -14,6 +14,8 @@ struct AddManufacturerView: View {
     @State private var isImported: Bool = false
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
+    @State private var isFavorite : Bool = false
+    #warning("Quitar esto del statusMessage, dejarlo como el AddBeerView")
     @State private var statusMessage : String = "Enter a name and select an image"
     
     @ObservedObject var viewModel = ManufacturersViewModel.shared
@@ -26,14 +28,7 @@ struct AddManufacturerView: View {
     var body: some View {
         Form {
             Section(header: Text("New Manufacturer")) {
-                HStack{
-                    Text("Name: ")
-                    TextField("Manufacturer", text: $manufacturerName)
-                        .onChange(of: manufacturerName) { _ in
-                            checkNewManufacturerFields()
-                        }
-                        .multilineTextAlignment(.trailing)
-                }
+                NameComponentView(varName: $manufacturerName, field: "Manufacturer")
                 
                 Picker("Country of Origin", selection: $manufacturerCountry) {
                     ForEach(sortedCountries, id: \.self) { country in
@@ -45,6 +40,17 @@ struct AddManufacturerView: View {
                     checkImported()
                 }
                 
+                Button(action: {
+                    checkImported()
+                }) {
+                    HStack {
+                        Text("Imported")
+                            .foregroundColor(isImported ? .blue : .black)
+                        Spacer()
+                        Image(systemName: isImported ? "checkmark.square.fill" : "square")
+                            .foregroundColor(isImported ? .blue : .gray)
+                    }
+                }
                 
                 Section {
                     if let selectedImage = selectedImage {
@@ -55,7 +61,7 @@ struct AddManufacturerView: View {
                                 Image(uiImage: selectedImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(maxHeight: 340)
+                                    .frame(maxHeight: 240)
                                 
                                 Spacer()
                             }
@@ -77,24 +83,14 @@ struct AddManufacturerView: View {
                             self.isImagePickerPresented.toggle()
                         }) {
                             HStack {
-                                Image(systemName: "photo")
                                 Text("Select Image")
+                                Spacer()
+                                Image(systemName: "photo")
                             }
                         }
                     }
+                    FavoriteComponentView(isFavorite: $isFavorite, field: "star")
                 }
-                
-                Button(action: {
-                    checkImported()
-                }) {
-                    HStack {
-                        Image(systemName: isImported ? "checkmark.square.fill" : "square")
-                            .foregroundColor(isImported ? .blue : .gray)
-                        Text("Imported")
-                            .foregroundColor(isImported ? .blue : .black)
-                    }
-                }
-                
             }
             Section {
                 Button(action: {
@@ -135,7 +131,7 @@ struct AddManufacturerView: View {
     
     func addManufacturer(){
         viewModel.selectedList = manufacturerCountry.code == "ES" ? "Nationals" : "Imported"
-        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!)
+        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!, favorite: isFavorite)
         presentationMode.wrappedValue.dismiss()
     }
     

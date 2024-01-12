@@ -1,5 +1,5 @@
 //
-//  beerNameComponentView.swift
+//  NameComponentView.swift
 //  BeerApp_CoreData
 //
 //  Created by Abel H L on 7/1/24.
@@ -7,19 +7,21 @@
 
 import SwiftUI
 
-struct BeerNameComponentView: View {
+struct NameComponentView: View {
     
-    @Binding var beerName: String
+    @Binding var varName: String
+    @State var field: String
     
     var body: some View {
         HStack {
             Text("Name:")
             //Spacer()
-            TextField("Beer Name", text: $beerName)
+            #warning("Hacer este campo personalizable. Que el textField pueda poner Beer o Manufacturer Name")
+            TextField("\(field) Name", text: $varName)
                 //.frame(maxWidth: .infinity)
                 .multilineTextAlignment(.trailing)
             
-            if Validators.validateName(beerName).valid {
+            if Validators.validateName(varName).valid {
                 Image(systemName: "checkmark.circle")
                     .foregroundColor(.green)
             } else {
@@ -28,7 +30,7 @@ struct BeerNameComponentView: View {
             }
         }
         /*
-        .onChange(of: beerName) { _ in
+        .onChange(of: varName) { _ in
             //checkNewBeerFields()
         }
          */

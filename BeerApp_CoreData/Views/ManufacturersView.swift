@@ -56,7 +56,7 @@ struct ManufacturersView: View {
                 ToolbarItem {
                     Button(action: {
                         viewModel.selectedList = "Imported"
-                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!)
+                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!, favorite: true)
                     }) {
                         Label("Add Manufacturer", systemImage: "plus")
                     }
@@ -96,7 +96,7 @@ struct ManufacturerRow: View {
                 }
                 Text(manufacturer.name ?? "")
                 
-                NavigationLink(destination: BeersView().onAppear {
+                NavigationLink(destination: BeersView(manufactFavorite: manufacturer.favorite).onAppear {
                     viewModel.setManufacturer(for: manufacturer)
                 }) {
                     //Text("Añadir")
@@ -106,6 +106,10 @@ struct ManufacturerRow: View {
                     //Text("Añadir")
                 }   .opacity(0.0)
                  */
+                if manufacturer.favorite{
+                    Image(systemName: "star.fill")
+                        .foregroundColor(Color.yellow)
+                }
                 Spacer()
                 if manufacturer.countryCode != "ES"{
                     Text(searchFlag(countryCode: manufacturer.countryCode ?? "") ?? "")

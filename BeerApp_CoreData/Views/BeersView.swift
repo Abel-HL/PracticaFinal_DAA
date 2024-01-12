@@ -20,14 +20,20 @@ struct BeersView: View {
     
     @State private var isSelected = false
     //@State private var editMode: EditMode = .inactive
+    @State private var manufacturerFavorite: Bool// Estado del botón favorito
     
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
+    
+    init(manufactFavorite: Bool) {
+        _manufacturerFavorite = State(initialValue: manufactFavorite)
+        //self.beerTypes = viewModel.getUniqueBeerTypes(isFavorite: onlyFavorites)
+    }
    
     
     var body: some View {
         NavigationStack {
-            ContentView(searchText: $searchText, sortCriteria: $sortCriteria)
+            ContentView(searchText: $searchText, sortCriteria: $sortCriteria, manufactFavorite: $manufacturerFavorite)
         }
     }
 }
@@ -37,15 +43,17 @@ struct ContentView: View {
     #warning("En esta view pueden ser @State y en la BeerView eliminar esas variables")
     @Binding var searchText: String
     @State private var onlyFavorites: Bool = false // Estado del botón favorito
+    @Binding private var manufacturerFavorite: Bool// Estado del botón favorito
     @Binding var sortCriteria: SortCriteria // Asumiendo que tienes un enum SortCriteria
 
     @State private var showActionSheet = false
     
     @Environment(\.editMode) var editMode
     
-    init(searchText: Binding<String>, sortCriteria: Binding<SortCriteria>) {
+    init(searchText: Binding<String>, sortCriteria: Binding<SortCriteria>, manufactFavorite: Binding<Bool>) {
         _searchText = searchText
         _sortCriteria = sortCriteria
+        _manufacturerFavorite = manufactFavorite
         //self.beerTypes = viewModel.getUniqueBeerTypes(isFavorite: onlyFavorites)
     }
     
@@ -76,7 +84,10 @@ struct ContentView: View {
                     .padding(.trailing, 16) // Añadir padding al final del SearchBar
             }
             .padding(.horizontal, 8) // Padding horizontal para el HStack
-            
+            .onAppear{
+                print("Appear manufFavs")
+                print(manufacturerFavorite)
+            }
             List {
                 ForEach(viewModel.beerTypes, id: \.self) { beerType in
                     BeerSectionView(beerType: beerType, searchText: $searchText)
@@ -108,6 +119,18 @@ struct ContentView: View {
             ToolbarItem {
                 Button(action: {
                     //viewModel.deleteAllBeers()
+                    //viewModel.changeFavorite()
+                    manufacturerFavorite.toggle()
+                    viewModel.changeFavoriteManufacturer()
+                }) {
+                    Image(systemName: manufacturerFavorite ? "star.fill" : "star")
+                        .foregroundColor(Color.yellow)
+                }
+            }
+#warning("Eliminar este BarItem")
+            /*ToolbarItem {
+                Button(action: {
+                    //viewModel.deleteAllBeers()
                     viewModel.addBeer(name: "Pilsen 3.0 150",
                                       type: "Pilsen",
                                       alcoholContent: 3.0,
@@ -118,7 +141,7 @@ struct ContentView: View {
                 }) {
                     Label("Delete Beer", systemImage: "trash")
                 }
-            }
+            }*/
             
 #warning("Eliminar este BarItem")
             ToolbarItem {

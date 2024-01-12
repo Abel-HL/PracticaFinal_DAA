@@ -149,7 +149,7 @@ struct BeerDetailView: View {
     private var form: some View{
         Form {
             Section(header: Text("Beer Details")) {
-                BeerNameComponentView(beerName: $beerName)
+                NameComponentView(varName: $beerName, field: "Beer")
                 
                 AlcoholComponentView(alcoholContent: $alcoholContent, alcoholContentTextColor: $alcoholContentTextColor)
                 
@@ -158,7 +158,7 @@ struct BeerDetailView: View {
                 
                 BeerTypePickerComponentView(selectedBeerType: $selectedBeerType)
                 
-                FavoriteComponentView(isFavorite: $isFavorite)
+                FavoriteComponentView(isFavorite: $isFavorite, field: "heart")
             }
         }
         .navigationBarBackButtonHidden(false)

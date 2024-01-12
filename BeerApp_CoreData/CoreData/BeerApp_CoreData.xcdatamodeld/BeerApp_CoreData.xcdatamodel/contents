@@ -12,6 +12,7 @@
     </entity>
     <entity name="ManufacturerEntity" representedClassName="ManufacturerEntity" syncable="YES" codeGenerationType="class">
         <attribute name="countryCode" attributeType="String"/>
+        <attribute name="favorite" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="name" attributeType="String"/>
