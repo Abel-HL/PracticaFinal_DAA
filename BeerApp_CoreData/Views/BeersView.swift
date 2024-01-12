@@ -70,6 +70,7 @@ struct ContentView: View {
                 Spacer() // Espaciador para centrar los elementos
                 
                 SearchBar(text: $searchText)
+                    .autocapitalization(.none) // Desactivar autocorrección
                     .padding(.horizontal, 8) // Ajustar el padding horizontal del SearchBar
                     .frame(maxWidth: .infinity) // Ocupar el espacio disponible
                     .padding(.trailing, 16) // Añadir padding al final del SearchBar

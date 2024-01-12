@@ -16,10 +16,11 @@ struct FavoriteComponentView: View {
             isFavorite.toggle()
         }) {
             HStack {
-                Image(systemName: isFavorite ? "heart.fill" : "heart")
-                    .foregroundColor(isFavorite ? .red : .gray)
                 Text("Favorite")
                     .foregroundColor(isFavorite ? .red : .black)
+                Spacer()
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .foregroundColor(isFavorite ? .red : .gray)
             }
         }
     }

@@ -4,18 +4,38 @@
 //
 //  Created by Abel H L on 22/12/23.
 //
-
+import UIKit
 import SwiftUI
+
+// Our custom view modifier to track rotation and
+// call our action
+struct DeviceRotationViewModifier: ViewModifier {
+    let action: (UIDeviceOrientation) -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .onAppear()
+            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+                action(UIDevice.current.orientation)
+            }
+    }
+}
+// A View wrapper to make the modifier easier to use
+extension View {
+    func onRotate(perform action: @escaping (UIDeviceOrientation) -> Void) -> some View {
+        self.modifier(DeviceRotationViewModifier(action: action))
+    }
+}
 
 struct BeerDetailView: View {
     @State private var beer: BeerEntity
-        
+    
     @State private var beerName: String
     @State private var alcoholContent: String
     @State private var calories: String
     @State private var selectedBeerType: BeerTypes
     @State private var isFavorite : Bool = false
-    #warning("Hay q mirar como saber si ha cambiado de beer.imageData a una nueva imagen del ImagaPicker")
+#warning("Hay q mirar como saber si ha cambiado de beer.imageData a una nueva imagen del ImagaPicker")
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
     @State private var hasImageChanges = false
@@ -31,16 +51,20 @@ struct BeerDetailView: View {
     @State private var avatarImage: Image?
     @State private var newPhotoURL: URL?
     @State private var showImagePicker = false
-    @State private var showActionSheet = false
+    //@State private var showActionSheet = false
     @State private var sourceType: UIImagePickerController.SourceType = .camera // Por defecto, abre la cámara
     
     @State private var imageData: Data?
     @State private var displayButtonsInsteadOfImage = false
+
+    @State private var orientation: UIDeviceOrientation
     //@State var manufacturerImage : String
     //@State private var selectedImage: UIImage?
     
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
+    //@Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
     
     init(beer: BeerEntity) {
         _beer = State(initialValue: beer)
@@ -50,39 +74,53 @@ struct BeerDetailView: View {
         _selectedBeerType = State(initialValue: BeerTypes(rawValue: beer.type ?? "Lager") ?? .lager)
         _isFavorite = State(initialValue: beer.favorite)
         _selectedImage = State(initialValue: ImageProcessor.getImageFromData(beer.imageData ?? Data()))
+        _orientation = State(initialValue: UIDevice.current.orientation)
     }
     
     var body: some View {
-        
+        Group {
+            if orientation.isLandscape {
+                // Landscape layout
+                HStack {
+                    imageButton
+                    form
+                }
+            } else {
+                // Portrait layout
+                imageButton
+                form
+            }
+        }
+        .onAppear{
+            orientation = UIDevice.current.orientation
+        }
+        .onRotate { newOrientation in
+            orientation = newOrientation
+            print("orientation")
+            print(orientation.isLandscape)
+        }
+    }
+
+    
+    private var imageButton: some View{
         Button(action: {
-            showActionSheet = true
+            //showActionSheet = true
         }) {
             if let loadedImage = selectedImage {
                 Image(uiImage: loadedImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 150, height: 150)
+                    .frame(width: 140, height: 140)
                     .cornerRadius(5)
                 
             } else{
-                Text("Not image found")
-            }
-        }
-        .padding(30)
-        .onAppear {
-            if let imageData = beer.imageData,
-               let uiImage = ImageProcessor.getImageFromData(imageData) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 30, height: 30)
-                    .cornerRadius(5)
-            } else {
                 Image(systemName: "square.fill")
                     .foregroundColor(.blue)
                     .frame(width: 30, height: 30)
             }
         }
+        
+        .padding(30)
         .overlay(alignment: .bottomLeading) {
             Button(action: {
                 ImagePicker(selectedImage: $selectedImage)
@@ -106,7 +144,9 @@ struct BeerDetailView: View {
             }
             .buttonStyle(.borderless)
         }
-          
+    }
+    
+    private var form: some View{
         Form {
             Section(header: Text("Beer Details")) {
                 BeerNameComponentView(beerName: $beerName)
@@ -150,11 +190,12 @@ struct BeerDetailView: View {
                     }
                 }
             }
-        }
-        .sheet(isPresented: $isImagePickerPresented) {
-            ImagePicker(selectedImage: $selectedImage)
-        }
+        } /*
+           .sheet(isPresented: $isImagePickerPresented) {
+           ImagePicker(selectedImage: $selectedImage)
+           }*/
     }
+    
     
     func hasChanges() -> Bool {
         return beer.name != beerName ||
@@ -165,17 +206,15 @@ struct BeerDetailView: View {
         hasImageChanges == true
     }
     
-    #warning("Ver si se puede poner esto en el Validators.swift")
     func validateInput() -> Bool {
-        let isAlcoholContentValid = (0.0...100.0).contains(Float(alcoholContent) ?? -1)
-        let areCaloriesValid = (0...500).contains(Int(calories) ?? -1)
-        let isBeerNameValidLength = (4...24).contains(beerName.count)
-        
-        return isAlcoholContentValid &&
-            areCaloriesValid && isBeerNameValidLength && hasChanges()
+        return hasChanges() && Validators.validateInput(alcoholContent: alcoholContent,
+                                                        calories: calories,
+                                                        beerName: beerName)
     }
-
-    
+    /*
+    private func imageSize() -> CGFloat {
+        return horizontalSizeClass == .compact ? 80 : 150
+    }*/
     
     func updateBeerDetails() {
         viewModel.updateBeer(forID: beer.id!,
