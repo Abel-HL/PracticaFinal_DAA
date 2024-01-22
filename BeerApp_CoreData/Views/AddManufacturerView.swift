@@ -10,7 +10,8 @@ import SwiftUI
 struct AddManufacturerView: View {
     
     @State private var manufacturerName = ""
-    @State private var manufacturerCountry : CountryInfo = CountryInfo.Spain
+#warning("Cambiar por manufacturerCountry: Country?")
+    @State private var manufacturerCountry : CountryInfo = CountryInfo.Spain    //Country?
     @State private var isImported: Bool = false
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
@@ -18,12 +19,27 @@ struct AddManufacturerView: View {
     #warning("Quitar esto del statusMessage, dejarlo como el AddBeerView")
     @State private var statusMessage : String = "Enter a name and select an image"
     
+    @ObservedObject var countryService = CountryService.shared
     @ObservedObject var viewModel = ManufacturersViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     
-    var sortedCountries: [CountryInfo] {
+    
+    // Obtener la lista de países usando CountryService
+    /*
+     var sortedCountries: [CountryInfo] {
         return CountryInfo.allCases.sorted { $0.name < $1.name }
     }
+     */
+    
+    /*var sortedCountries: [Country] = {
+        var countries: [Country] = []
+        CountryService.shared.getCountriesData { result in
+            countries = result
+            print(result)
+        }
+        return countries
+    }()*/
+     
     
     var body: some View {
         Form {
@@ -31,8 +47,8 @@ struct AddManufacturerView: View {
                 NameComponentView(varName: $manufacturerName, field: "Manufacturer")
                 
                 Picker("Country of Origin", selection: $manufacturerCountry) {
-                    ForEach(sortedCountries, id: \.self) { country in
-                        Text("\(country.flag) \(country.name)").tag(country)
+                    ForEach(countryService.countries, id: \.self) { (country: Country) in
+                        Text("\(country.flagEmoji) \(country.name)").tag(country)
                     }
                 }
                 .pickerStyle(.menu)
@@ -108,6 +124,10 @@ struct AddManufacturerView: View {
                 // Label dinámico
                 ViewBuilders.dynamicStatusLabel(for: statusMessage)
             }
+        }
+        .onAppear {
+            // Llamar a la función para obtener los datos de los países cuando la vista aparece
+            countryService.getCountriesData()
         }
         .navigationBarBackButtonHidden(true)
         .navigationTitle("Add Manufacturer")

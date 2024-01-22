@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		140BEB0C2B58405600944DC7 /* CountriesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140BEB0B2B58405600944DC7 /* CountriesData.swift */; };
 		14140FAE2B29CAAB00D35671 /* AddBeerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14140FAD2B29CAAB00D35671 /* AddBeerView.swift */; };
 		141ABF812B274CFB001EB107 /* BeerApp_CoreDataApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF802B274CFB001EB107 /* BeerApp_CoreDataApp.swift */; };
 		141ABF832B274CFB001EB107 /* ManufacturersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF822B274CFB001EB107 /* ManufacturersView.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		140BEB0B2B58405600944DC7 /* CountriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesData.swift; sourceTree = "<group>"; };
 		14140FAD2B29CAAB00D35671 /* AddBeerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBeerView.swift; sourceTree = "<group>"; };
 		141ABF7D2B274CFB001EB107 /* BeerApp_CoreData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeerApp_CoreData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		141ABF802B274CFB001EB107 /* BeerApp_CoreDataApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeerApp_CoreDataApp.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				144BAF332B28B3B700E85A5B /* ImageProcessor.swift */,
 				14328B212B2DCA5A00FDF65B /* Validators.swift */,
 				14328B232B2DCBDC00FDF65B /* FieldBindings.swift */,
+				140BEB0B2B58405600944DC7 /* CountriesData.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				14140FAE2B29CAAB00D35671 /* AddBeerView.swift in Sources */,
 				14CF64E42B39E4ED00E681B1 /* InitialDataLoader.swift in Sources */,
 				14328B222B2DCA5A00FDF65B /* Validators.swift in Sources */,
+				140BEB0C2B58405600944DC7 /* CountriesData.swift in Sources */,
 				141ABF992B27A04F001EB107 /* AddManufacturerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
