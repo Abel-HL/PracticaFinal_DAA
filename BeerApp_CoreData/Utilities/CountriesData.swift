@@ -33,7 +33,7 @@ class CountryService : ObservableObject{
     }
     
     func getCountriesData() {
-        guard let url = URL(string: "https://restcountries.com/v3.1/name/germany") else {
+        guard let url = URL(string: "https://restcountries.com/v3.1/all?fields=name,flags,cca2,flag,population") else {
             // Si la URL es inválida, utiliza los países predeterminados
             countries = DefaultCountries.countries
             return
@@ -44,23 +44,36 @@ class CountryService : ObservableObject{
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: [])
                     
-                    if let jsonArray = json as? [[String: Any]], let jsonObject = jsonArray.first,
-                       let name = jsonObject["name"] as? [String: Any],
-                       let common = name["common"] as? String,
-                       let cca2 = jsonObject["cca2"] as? String,
-                       let flag = jsonObject["flag"] as? String,
-                       let flags = jsonObject["flags"] as? [String: Any],
-                       let flagURL = flags["png"] as? String {
+                    if let jsonArray = json as? [[String: Any]] {
+                        print(jsonArray.first!)
+                        var updatedCountries = [Country]()
                         
-                        var flagEmoji: String = flag  // Por defecto, utiliza la cadena del JSON
-                        // Intenta convertir la cadena del emoji si está presente
-                        if let unicodeString = flag.applyingTransform(StringTransform("Hex-Any"), reverse: false) {
-                            flagEmoji = unicodeString
+                        for jsonObject in jsonArray {
+                            if let name = jsonObject["name"] as? [String: Any],
+                               let common = name["common"] as? String,
+                               let cca2 = jsonObject["cca2"] as? String,
+                               let flag = jsonObject["flag"] as? String,
+                               let flags = jsonObject["flags"] as? [String: Any],
+                               let flagURL = flags["png"] as? String,
+                               let population = jsonObject["population"] as? Int {
+                                
+                                // Añadir la condición para filtrar por población
+                                if population >= 20000000 {
+                                    var flagEmoji: String = flag  // Por defecto, utiliza la cadena del JSON
+                                    // Intenta convertir la cadena del emoji si está presente
+                                    if let unicodeString = flag.applyingTransform(StringTransform("Hex-Any"), reverse: false) {
+                                        flagEmoji = unicodeString
+                                    }
+                                    
+                                    let country = Country(name: common, countryCode: cca2, flagEmoji: flagEmoji, flagImageUrl: flagURL)
+                                    updatedCountries.append(country)
+                                }
+                            }
                         }
                         
                         // Actualizar la propiedad countries directamente
                         DispatchQueue.main.async {
-                            self.countries = [Country(name: common, countryCode: cca2, flagEmoji: flagEmoji, flagImageUrl: flagURL)]
+                            self.countries = updatedCountries.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == ComparisonResult.orderedAscending }
                         }
                     } else {
                         print("No se pudieron obtener los valores del JSON.")
@@ -84,8 +97,6 @@ class CountryService : ObservableObject{
             }
         }.resume()
     }
-    
-    
 }
 
 /*
