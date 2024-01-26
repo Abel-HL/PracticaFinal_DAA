@@ -32,6 +32,7 @@ class CountryService : ObservableObject{
         ]
     }
     
+    #warning("Eliminar de la url los flags y png y añadir el campo currencies")
     func getCountriesData() {
         guard let url = URL(string: "https://restcountries.com/v3.1/all?fields=name,flags,cca2,flag,population") else {
             // Si la URL es inválida, utiliza los países predeterminados
@@ -45,7 +46,7 @@ class CountryService : ObservableObject{
                     let json = try JSONSerialization.jsonObject(with: data, options: [])
                     
                     if let jsonArray = json as? [[String: Any]] {
-                        print(jsonArray.first!)
+                        //print(jsonArray.first!)
                         var updatedCountries = [Country]()
                         
                         for jsonObject in jsonArray {

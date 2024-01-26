@@ -11,8 +11,8 @@ struct AddManufacturerView: View {
     
     @State private var manufacturerName = ""
 #warning("Cambiar por manufacturerCountry: Country?")
-    @State private var manufacturerCountry : CountryInfo = CountryInfo.Spain    //Country?
-    @State private var isImported: Bool = false
+    @State private var manufacturerCountry: String = ""  //Country?
+    @State private var isImported: Bool = true
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
     @State private var isFavorite : Bool = false
@@ -24,6 +24,9 @@ struct AddManufacturerView: View {
     @Environment(\.presentationMode) var presentationMode
     
     
+    init() {
+        countryService.getCountriesData()
+    }
     // Obtener la lista de países usando CountryService
     /*
      var sortedCountries: [CountryInfo] {
@@ -46,27 +49,9 @@ struct AddManufacturerView: View {
             Section(header: Text("New Manufacturer")) {
                 NameComponentView(varName: $manufacturerName, field: "Manufacturer")
                 
-                Picker("Country of Origin", selection: $manufacturerCountry) {
-                    ForEach(countryService.countries, id: \.self) { (country: Country) in
-                        Text("\(country.flagEmoji) \(country.name)").tag(country)
-                    }
-                }
-                .pickerStyle(.menu)
-                .onChange(of: manufacturerCountry) { _ in
-                    checkImported()
-                }
+                CountryPickerComponentView(manufacturerCountry: $manufacturerCountry, isImported: $isImported)
                 
-                Button(action: {
-                    checkImported()
-                }) {
-                    HStack {
-                        Text("Imported")
-                            .foregroundColor(isImported ? .blue : .black)
-                        Spacer()
-                        Image(systemName: isImported ? "checkmark.square.fill" : "square")
-                            .foregroundColor(isImported ? .blue : .gray)
-                    }
-                }
+                ImportedComponentView(isImported: $isImported)
                 
                 Section {
                     if let selectedImage = selectedImage {
@@ -105,8 +90,10 @@ struct AddManufacturerView: View {
                             }
                         }
                     }
-                    FavoriteComponentView(isFavorite: $isFavorite, field: "star")
                 }
+                
+                
+                FavoriteComponentView(isFavorite: $isFavorite, field: "star")
             }
             Section {
                 Button(action: {
@@ -125,10 +112,10 @@ struct AddManufacturerView: View {
                 ViewBuilders.dynamicStatusLabel(for: statusMessage)
             }
         }
-        .onAppear {
+        /*.onAppear {
             // Llamar a la función para obtener los datos de los países cuando la vista aparece
             countryService.getCountriesData()
-        }
+        }*/
         .navigationBarBackButtonHidden(true)
         .navigationTitle("Add Manufacturer")
         .navigationBarTitleDisplayMode(.large)
@@ -148,20 +135,22 @@ struct AddManufacturerView: View {
     }
     
     
-    
+    #warning("// == configuration.nationalCountry ? \"Nationals\" : \"Imported\"")
     func addManufacturer(){
-        viewModel.selectedList = manufacturerCountry.code == "ES" ? "Nationals" : "Imported"
-        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry.code, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!, favorite: isFavorite)
+        viewModel.selectedList = manufacturerCountry == "ES" ? "Nationals" : "Imported" // == configuration.nationalCountry ? "Nationals" : "Imported"
+        viewModel.addManufacturer(name: manufacturerName, countryCode: manufacturerCountry, image: (selectedImage ?? UIImage(systemName: "xmark.circle.fill"))!, favorite: isFavorite)
         presentationMode.wrappedValue.dismiss()
     }
     
     
     
     private func checkImported() {
-        isImported = manufacturerCountry.name.lowercased() != "spain"
+        print(manufacturerCountry)
+        isImported = manufacturerCountry.lowercased() != "es"   //configuration.nationalCountryCode
     }
     
     
+    #warning("Eliminar esto del StatusMensaje. Ponerlo como esta en el AddBeerView")
     func checkNewManufacturerFields(){
         DispatchQueue.main.async {
             statusMessage = manufacturerName.isEmpty && selectedImage == nil ? "Enter a name and select an image" :
