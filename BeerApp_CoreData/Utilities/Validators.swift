@@ -50,7 +50,13 @@ struct Validators {
         }
     }
     
-    static func validateInput(alcoholContent: String, calories: String, beerName: String) -> Bool {
+    static func validateManufacturerInput(manufacturerName: String) -> Bool {
+        let isBeerNameValidLength = (4...24).contains(manufacturerName.count)
+        
+        return isBeerNameValidLength
+    }
+    
+    static func validateBeerInput(alcoholContent: String, calories: String, beerName: String) -> Bool {
         let isAlcoholContentValid = (0.0...100.0).contains(Float(alcoholContent) ?? -1)
         let areCaloriesValid = (0...500).contains(Int(calories) ?? -1)
         let isBeerNameValidLength = (4...24).contains(beerName.count)

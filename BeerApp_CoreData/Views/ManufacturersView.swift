@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 
 struct ManufacturersView: View {
+    
     @ObservedObject var viewModel = ManufacturersViewModel.shared
 
     var body: some View {
@@ -75,6 +76,8 @@ struct ManufacturersView: View {
 struct ManufacturerRow: View {
     var manufacturer: ManufacturerEntity
     @StateObject var viewModel = ManufacturersViewModel.shared
+    @StateObject var countryService = CountryService.shared
+    
     init(manufacturer: ManufacturerEntity) {
         self.manufacturer = manufacturer
     }
@@ -111,8 +114,17 @@ struct ManufacturerRow: View {
                         .foregroundColor(Color.yellow)
                 }
                 Spacer()
-                if manufacturer.countryCode != "ES"{
+                /*if manufacturer.countryCode != "ES"{
                     Text(searchFlag(countryCode: manufacturer.countryCode ?? "") ?? "")
+                }*/
+                if let countryCode = manufacturer.countryCode, countryCode != "ES" {
+                    if let country = countryService.countries.first(where: { $0.countryCode == countryCode }) {
+                        if !country.flagEmoji.isEmpty {
+                            Text(country.flagEmoji)
+                        } else {
+                            Image(systemName: "flag.slash")
+                        }
+                    }
                 }
             }
             /*
@@ -124,12 +136,14 @@ struct ManufacturerRow: View {
         }
     }
     
+    /*
     func searchFlag(countryCode: String) -> String? {
         guard let country = CountryInfo.allCases.first(where: { $0.code == countryCode }) else {
             return nil // Código de país no encontrado
         }
         return country.flag // Devolver la bandera del país correspondiente al código
     }
+     */
 }
 
 

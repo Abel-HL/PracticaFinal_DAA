@@ -14,6 +14,9 @@ enum SortCriteria: String, CaseIterable {
     case favorites = "Favorites"
 }
 
+
+// Could be imported by an API
+// But these are one of the most common types of beer
 enum BeerTypes: String, CaseIterable {
     case lager = "Lager"
     case pilsen = "Pilsen"
@@ -27,7 +30,7 @@ enum BeerTypes: String, CaseIterable {
 }
 
 
-
+/*
 enum CountryInfo: CaseIterable {
     case China
     case India
@@ -85,4 +88,4 @@ enum CountryInfo: CaseIterable {
         }
     }
 }
-
+*/

@@ -13,10 +13,10 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for x in 0..<10 {
+        /*for x in 0..<10 {
             let newManufacturer = ManufacturerEntity(context: viewContext)
             newManufacturer.name = "Name \(x)"
-        }
+        }*/
         do {
             try viewContext.save()
         } catch {

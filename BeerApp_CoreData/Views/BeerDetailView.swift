@@ -96,7 +96,7 @@ struct BeerDetailView: View {
         }
         .onRotate { newOrientation in
             orientation = newOrientation
-            print("orientation")
+            print("Orientation LandsCape?:")
             print(orientation.isLandscape)
         }
     }
@@ -123,7 +123,7 @@ struct BeerDetailView: View {
         .padding(30)
         .overlay(alignment: .bottomLeading) {
             Button(action: {
-                ImagePicker(selectedImage: $selectedImage)
+                //ImagePicker(selectedImage: $selectedImage)
             }) {
                 Image(systemName: "camera.circle.fill")
                     .symbolRenderingMode(.multicolor)
@@ -136,6 +136,8 @@ struct BeerDetailView: View {
             Button(action: {
                 self.isImagePickerPresented.toggle()
                 hasImageChanges = true
+                print(hasImageChanges)
+                //ImagePicker(selectedImage: $selectedImage)
             }) {
                 Image(systemName: "pencil.circle.fill")
                     .symbolRenderingMode(.multicolor)
@@ -190,10 +192,10 @@ struct BeerDetailView: View {
                     }
                 }
             }
-        } /*
-           .sheet(isPresented: $isImagePickerPresented) {
-           ImagePicker(selectedImage: $selectedImage)
-           }*/
+        }
+        .sheet(isPresented: $isImagePickerPresented) {
+            ImagePicker(selectedImage: $selectedImage)
+        }
     }
     
     
@@ -207,7 +209,7 @@ struct BeerDetailView: View {
     }
     
     func validateInput() -> Bool {
-        return hasChanges() && Validators.validateInput(alcoholContent: alcoholContent,
+        return hasChanges() && Validators.validateBeerInput(alcoholContent: alcoholContent,
                                                         calories: calories,
                                                         beerName: beerName)
     }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+#warning("Eliminar el campo flagImageUrl y añadir el campo currencies")
 struct Country: Identifiable, Hashable {
     let id = UUID()
     let name: String
@@ -34,7 +35,7 @@ class CountryService : ObservableObject{
     
     #warning("Eliminar de la url los flags y png y añadir el campo currencies")
     func getCountriesData() {
-        guard let url = URL(string: "https://restcountries.com/v3.1/all?fields=name,flags,cca2,flag,population") else {
+        guard let url = URL(string: "https://restcountries.com/v3.1/all?fields=name,flags,cca2,flag,population") else { // add ",currencies" a la URL -> para implementaciones futuras con conversión de monedas, precios y demás
             // Si la URL es inválida, utiliza los países predeterminados
             countries = DefaultCountries.countries
             return

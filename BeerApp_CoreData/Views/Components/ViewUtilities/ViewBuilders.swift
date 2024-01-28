@@ -7,8 +7,6 @@
 
 import Foundation
 
-// ViewBuilders.swift
-
 import SwiftUI
 
 struct ViewBuilders {

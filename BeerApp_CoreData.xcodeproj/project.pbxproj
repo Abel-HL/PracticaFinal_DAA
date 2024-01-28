@@ -25,6 +25,8 @@
 		1475B0892B2CD13100729BD7 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1475B0882B2CD13100729BD7 /* SearchBar.swift */; };
 		1478E3612B644B330053E648 /* ImportedComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478E3602B644B330053E648 /* ImportedComponentView.swift */; };
 		1478E3632B644CCB0053E648 /* CountryPickerComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478E3622B644CCB0053E648 /* CountryPickerComponentView.swift */; };
+		148017512B65773C00D4398B /* SaveButtonsComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148017502B65773C00D4398B /* SaveButtonsComponentView.swift */; };
+		148017532B6579E800D4398B /* ButtonSaveTextComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148017522B6579E800D4398B /* ButtonSaveTextComponentView.swift */; };
 		149B9DD62B4AD62000062B74 /* AlcoholComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149B9DD52B4AD62000062B74 /* AlcoholComponentView.swift */; };
 		149B9DD82B4AD71000062B74 /* CaloriesComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149B9DD72B4AD71000062B74 /* CaloriesComponentView.swift */; };
 		149B9DDA2B4AD7E900062B74 /* BeerTypePickerComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149B9DD92B4AD7E900062B74 /* BeerTypePickerComponentView.swift */; };
@@ -56,6 +58,8 @@
 		1475B0882B2CD13100729BD7 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		1478E3602B644B330053E648 /* ImportedComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedComponentView.swift; sourceTree = "<group>"; };
 		1478E3622B644CCB0053E648 /* CountryPickerComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerComponentView.swift; sourceTree = "<group>"; };
+		148017502B65773C00D4398B /* SaveButtonsComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButtonsComponentView.swift; sourceTree = "<group>"; };
+		148017522B6579E800D4398B /* ButtonSaveTextComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSaveTextComponentView.swift; sourceTree = "<group>"; };
 		149B9DD52B4AD62000062B74 /* AlcoholComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlcoholComponentView.swift; sourceTree = "<group>"; };
 		149B9DD72B4AD71000062B74 /* CaloriesComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesComponentView.swift; sourceTree = "<group>"; };
 		149B9DD92B4AD7E900062B74 /* BeerTypePickerComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeerTypePickerComponentView.swift; sourceTree = "<group>"; };
@@ -121,7 +125,6 @@
 			isa = PBXGroup;
 			children = (
 				149B9DD42B4AD5AD00062B74 /* Components */,
-				14E3D8812B2883F80091E1D2 /* ViewUtilities */,
 				141ABF822B274CFB001EB107 /* ManufacturersView.swift */,
 				141ABF982B27A04F001EB107 /* AddManufacturerView.swift */,
 				14B0C5FC2B29BE54004F04A1 /* BeersView.swift */,
@@ -171,6 +174,9 @@
 				1452396A2B4B28E8002D11A5 /* NameComponentView.swift */,
 				1478E3602B644B330053E648 /* ImportedComponentView.swift */,
 				1478E3622B644CCB0053E648 /* CountryPickerComponentView.swift */,
+				148017502B65773C00D4398B /* SaveButtonsComponentView.swift */,
+				148017522B6579E800D4398B /* ButtonSaveTextComponentView.swift */,
+				14E3D8812B2883F80091E1D2 /* ViewUtilities */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -267,6 +273,7 @@
 				14B0C5FD2B29BE54004F04A1 /* BeersView.swift in Sources */,
 				141ABF8A2B274CFC001EB107 /* Persistence.swift in Sources */,
 				1452396B2B4B28E8002D11A5 /* NameComponentView.swift in Sources */,
+				148017532B6579E800D4398B /* ButtonSaveTextComponentView.swift in Sources */,
 				144BAF342B28B3B700E85A5B /* ImageProcessor.swift in Sources */,
 				1478E3612B644B330053E648 /* ImportedComponentView.swift in Sources */,
 				1478E3632B644CCB0053E648 /* CountryPickerComponentView.swift in Sources */,
@@ -284,6 +291,7 @@
 				149B9DDA2B4AD7E900062B74 /* BeerTypePickerComponentView.swift in Sources */,
 				14140FAE2B29CAAB00D35671 /* AddBeerView.swift in Sources */,
 				14CF64E42B39E4ED00E681B1 /* InitialDataLoader.swift in Sources */,
+				148017512B65773C00D4398B /* SaveButtonsComponentView.swift in Sources */,
 				14328B222B2DCA5A00FDF65B /* Validators.swift in Sources */,
 				140BEB0C2B58405600944DC7 /* CountriesData.swift in Sources */,
 				141ABF992B27A04F001EB107 /* AddManufacturerView.swift in Sources */,
