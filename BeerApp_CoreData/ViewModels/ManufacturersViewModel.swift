@@ -217,7 +217,7 @@ class ManufacturersViewModel: ObservableObject{
     }
     
     
-#warning("Hay que cambiar este getBeers para que por Defecto se haga el getBeers filtrado por sortCriteria = .Name")
+//#warning("Hay que cambiar este getBeers para que por Defecto se haga el getBeers filtrado por sortCriteria = .Name")
     func getBeers() {
         guard let currentManufacturer = self.manufacturer else {
             return

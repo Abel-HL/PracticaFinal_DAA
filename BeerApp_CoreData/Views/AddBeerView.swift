@@ -181,7 +181,7 @@ struct AddBeerView: View {
                 FavoriteComponentView(isFavorite: $isFavorite, field: "heart")
             }
             
-            #warning("Revisar esto del shake con los attempts")
+            //#warning("Revisar esto del shake con los attempts")
             /*Section {
                 Button(action: {
                     // Si se supera el límite, activar el shake
@@ -249,8 +249,8 @@ struct AddBeerView: View {
     }
     
     
-#warning("Revisar esta sección -> Revisar '!' forzado en el ultimo param de addBeer -> Pasar con el ?? -1 y que en el viewModel se compruebe")
-#warning("Revisar esta sección -> Revisar porque se debe seleccionar una imagen")
+//#warning("Revisar esta sección -> Revisar '!' forzado en el ultimo param de addBeer -> Pasar con el ?? -1 y que en el viewModel se compruebe")
+//#warning("Revisar esta sección -> Revisar porque se debe seleccionar una imagen")
     func addBeer(){
         viewModel.addBeer(name: beerName,
                           type: beerType.rawValue,

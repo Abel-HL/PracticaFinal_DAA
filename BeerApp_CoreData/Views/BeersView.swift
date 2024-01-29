@@ -40,7 +40,7 @@ struct BeersView: View {
 
 struct ContentView: View {
     @ObservedObject var viewModel =  ManufacturersViewModel.shared
-    #warning("En esta view pueden ser @State y en la BeerView eliminar esas variables")
+    //#warning("En esta view pueden ser @State y en la BeerView eliminar esas variables")
     @Binding var searchText: String
     @State private var onlyFavorites: Bool = false // Estado del botón favorito
     @Binding private var manufacturerFavorite: Bool// Estado del botón favorito
@@ -127,7 +127,6 @@ struct ContentView: View {
                         .foregroundColor(Color.yellow)
                 }
             }
-#warning("Eliminar este BarItem")
             /*ToolbarItem {
                 Button(action: {
                     //viewModel.deleteAllBeers()
@@ -142,8 +141,7 @@ struct ContentView: View {
                     Label("Delete Beer", systemImage: "trash")
                 }
             }*/
-            
-#warning("Eliminar este BarItem")
+            /*
             ToolbarItem {
                 Button(action: {
                     viewModel.addBeer(name: "Lager 5.0 50",
@@ -156,7 +154,7 @@ struct ContentView: View {
                 }) {
                     Label("Add Beer", systemImage: "plus")
                 }
-            }
+            }*/
             
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink(destination: AddBeerView()) {
@@ -221,7 +219,7 @@ struct BeerSectionView: View {
     }
 }
 
-#warning("Falta añadir al button el caso de q si ya se han añadido y se vuelve a pulsar se borren de la lista")
+//#warning("Falta añadir al button el caso de q si ya se han añadido y se vuelve a pulsar se borren de la lista")
 struct BeerSectionHeaderView: View {
     let beerType: String
     @Environment(\.editMode) var editMode
@@ -287,7 +285,7 @@ struct BeerRow: View {
                         .foregroundColor(.red)
                 }
                 
-                #warning("Revisar esto porq igual es mejor usar solo el viewModel.beer en vez de pasarla por parametro")
+                //#warning("Revisar esto porq igual es mejor usar solo el viewModel.beer en vez de pasarla por parametro")
                 /*
                 NavigationLink(value: beer) {
                 }   //.opacity(0.0)

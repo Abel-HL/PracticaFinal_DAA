@@ -16,7 +16,7 @@ struct NameComponentView: View {
         HStack {
             Text("Name:")
             //Spacer()
-            #warning("Hacer este campo personalizable. Que el textField pueda poner Beer o Manufacturer Name")
+            //#warning("Hacer este campo personalizable. Que el textField pueda poner Beer o Manufacturer Name")
             TextField("\(field) Name", text: $varName)
                 //.frame(maxWidth: .infinity)
                 .multilineTextAlignment(.trailing)

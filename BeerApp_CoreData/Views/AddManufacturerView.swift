@@ -10,7 +10,7 @@ import SwiftUI
 struct AddManufacturerView: View {
     
     @State private var manufacturerName = ""
-#warning("Cambiar por manufacturerCountry: Country?")
+//#warning("Cambiar por manufacturerCountry: Country?")
     @State private var manufacturerCountry: String = ""  //Country?
     @State private var isImported: Bool = true
     
@@ -19,8 +19,8 @@ struct AddManufacturerView: View {
     @State private var isImagePickerPresented = false
     
     @State private var isFavorite : Bool = false
-    #warning("Quitar esto del statusMessage, dejarlo como el AddBeerView")
-    @State private var statusMessage : String = "Enter a name and select an image"
+    //#warning("Quitar esto del statusMessage, dejarlo como el AddBeerView")
+    //@State private var statusMessage : String = "Enter a name and select an image"
     
     @State private var orientation: UIDeviceOrientation
     @ObservedObject var countryService = CountryService.shared
@@ -92,7 +92,7 @@ struct AddManufacturerView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(.blue)
-                    .frame(width: 140, height: 140)
+                    .frame(width: 80, height: 80)
             }
         }
         
@@ -200,7 +200,7 @@ struct AddManufacturerView: View {
     }
     
     
-    #warning("// == configuration.nationalCountry ? \"Nationals\" : \"Imported\"")
+    //#warning("// == configuration.nationalCountry ? \"Nationals\" : \"Imported\"")
     func addManufacturer(){
         viewModel.selectedList = manufacturerCountry == "ES" ? "Nationals" : "Imported" // == configuration.nationalCountry ? "Nationals" : "Imported"
         print("Veamos cual es el manufCountry: ")
@@ -217,14 +217,14 @@ struct AddManufacturerView: View {
     }
     
     
-    #warning("Eliminar esto del StatusMensaje. Ponerlo como esta en el AddBeerView")
+    /*#warning("Eliminar esto del StatusMensaje. Ponerlo como esta en el AddBeerView")
     func checkNewManufacturerFields(){
         DispatchQueue.main.async {
             statusMessage = manufacturerName.isEmpty && selectedImage == nil ? "Enter a name and select an image" :
                             manufacturerName.isEmpty ? "Enter a name" :
                             selectedImage == nil ? "Select an Image" : ""
         }
-    }
+    }*/
     
     
     

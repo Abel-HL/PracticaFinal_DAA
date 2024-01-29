@@ -35,7 +35,7 @@ struct BeerDetailView: View {
     @State private var calories: String
     @State private var selectedBeerType: BeerTypes
     @State private var isFavorite : Bool = false
-#warning("Hay q mirar como saber si ha cambiado de beer.imageData a una nueva imagen del ImagaPicker")
+//#warning("Hay q mirar como saber si ha cambiado de beer.imageData a una nueva imagen del ImagaPicker")
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
     @State private var hasImageChanges = false
@@ -46,7 +46,7 @@ struct BeerDetailView: View {
     
     
     
-#warning("Cambiar nombre de estas variables y eliminar las no usadas. Ver si hay duplicadas que hagan la misma funcion")
+//#warning("Cambiar nombre de estas variables y eliminar las no usadas. Ver si hay duplicadas que hagan la misma funcion")
     //@State private var avatarItem: PhotosPickerItem?
     @State private var avatarImage: Image?
     @State private var newPhotoURL: URL?

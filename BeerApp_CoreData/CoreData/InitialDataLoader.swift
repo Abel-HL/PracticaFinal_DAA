@@ -26,7 +26,6 @@ class DataLoader {
         UserDefaults.standard.set(true, forKey: initialDataLoadedKey)
     }
 
-    #warning("Poner realistas los datos porq sale la imagen de Mahou(ES) y la bandera de China(CN)...")
     private static func loadInitialData() {
         let viewModel = ManufacturersViewModel.shared
         
