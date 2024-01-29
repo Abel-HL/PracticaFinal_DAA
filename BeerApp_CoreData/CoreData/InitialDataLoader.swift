@@ -6,79 +6,71 @@
 //
 import Foundation
 import CoreData
+import UIKit
 
-/*
-extension CodingUserInfoKey {
-    static let context = CodingUserInfoKey(rawValue: "context")
-}
+class DataLoader {
+    static let initialDataLoadedKey = "InitialDataLoaded"
 
-struct InitialDataLoader {
-    static func importInitialDataIfNeeded() {
-        guard !UserDefaults.standard.bool(forKey: "isJSONImported") else {
-            print("JSON data already imported")
+    static func loadInitialDataIfNeeded() {
+        let isInitialDataLoaded = UserDefaults.standard.bool(forKey: initialDataLoadedKey)
+
+        guard !isInitialDataLoaded else {
+            // Los datos ya han sido cargados, no es necesario cargarlos de nuevo
             return
         }
+
+        // Lógica para cargar datos iniciales
+        loadInitialData()
+
+        // Marcar que los datos iniciales han sido cargados
+        UserDefaults.standard.set(true, forKey: initialDataLoadedKey)
+    }
+
+    #warning("Poner realistas los datos porq sale la imagen de Mahou(ES) y la bandera de China(CN)...")
+    private static func loadInitialData() {
+        let viewModel = ManufacturersViewModel.shared
         
-        guard let url = Bundle.main.url(forResource: "initialData", withExtension: "json") else {
-            print("JSON file not found")
-            return
-        }
+        let beerData: [(manufacturerName: String, manufacturerCountryCode: String, beerName: String, beerType: String, beerAlcoholContent: Float, beerCalories: Int16, beerFavorite: Bool, manufacturerFavorite: Bool, manufacturerImageName: String, beerImageName: String)] = [
+            ("Prueba 1", "ES", "Lager 5.0 50", "Lager", 5.0, 50, false, true, "Logos/MahouLogo", "Photos/MahouCan"),
+            ("Prueba 2", "ES", "Lager 3.0 70", "Lager", 3.0, 70, false, false, "Logos/MahouLogo2", "Photos/MahouBottle"),
+            ("Prueba 3", "NL", "Lager 5.0 50", "Lager", 5.0, 50, false, false, "Imported/Logos/HeinekenLogo", "Imported/Photos/HeinekenCan"),
+            ("Prueba 4", "NL", "Lager 5.0 50", "Lager", 5.0, 50, false, true, "Imported/Logos/HeinekenLogo2", "Imported/Photos/HeinekenBottle")
+        ]
         
-        do {
-            let jsonData = try Data(contentsOf: url)
-            let jsonDecoder = JSONDecoder()
-            let context = PersistenceController.shared.container.viewContext
-            jsonDecoder.userInfo[.context!] = context
-            let breweryArray = try jsonDecoder.decode([Brewery].self, from: jsonData)
+        let beerTypes: [(name: String, type: String, alcoholContent: Float, calories: Int16, favorite: Bool)] = [
+            ("Pilsen 4.0 150", "Pilsen", 4.0, 150, false),
+            ("Pilsen 6.5 120", "Pilsen", 6.5, 120, true)
+        ]
+        
+        for data in beerData {
+            viewModel.addManufacturerAndBeerForInitialData(
+                name: data.manufacturerName,
+                manufacturerCountryCode: data.manufacturerCountryCode,
+                beerName: data.beerName,
+                beerType: data.beerType,
+                beerAlcoholContent: data.beerAlcoholContent,
+                beerCalories: data.beerCalories,
+                beerFavorite: data.beerFavorite,
+                manufacturerFavorite: data.manufacturerFavorite,
+                manufacturerImage: UIImage(named: "\(data.manufacturerImageName)")!,
+                beerImage: UIImage(named: "\(data.beerImageName)") ?? UIImage(systemName: "xmark.circle.fill")!
+            )
             
-            for brewery in breweryArray {
-                let manufacturer = ManufacturerEntity(context: context)
-                manufacturer.id = UUID()
-                manufacturer.name = brewery.name
-                manufacturer.countryCode = brewery.countryCode
-                
-                if let breweryImageData = brewery.imageData {
-                    manufacturer.imageData = breweryImageData.data(using: .utf8)
-                }
-                
-                for beerType in brewery.beerTypes {
-                    let beer = BeerEntity(context: context)
-                    beer.id = UUID()
-                    beer.name = beerType.name
-                    beer.type = beerType.type
-                    beer.alcoholContent = beerType.alcoholContent
-                    beer.calories = beerType.calories
-                    
-                    if let beerImageData = beerType.imageData {
-                        beer.imageData = beerImageData.data(using: .utf8)
-                    }
-                    
-                    beer.manufacturer = manufacturer
-                }
+            for beerType in beerTypes {
+                viewModel.addBeer(
+                    name: beerType.name,
+                    type: beerType.type,
+                    alcoholContent: beerType.alcoholContent,
+                    calories: beerType.calories,
+                    favorite: beerType.favorite,
+                    image: UIImage(named: "\(data.beerImageName)") ?? UIImage(systemName: "xmark.circle.fill")!,
+                    manufacturer: viewModel.manufacturer!
+                )
             }
-            
-            try context.save()
-            print("Data imported successfully")
-            
-            UserDefaults.standard.set(true, forKey: "isJSONImported")
-        } catch {
-            print("Error importing data: \(error.localizedDescription)")
         }
+        
+        // Guarda los cambios
+        PersistenceController.shared.save()
     }
 }
 
-struct Brewery: Codable {
-    let name: String
-    let countryCode: String
-    let beerTypes: [BeerType]
-    let imageData: String?
-}
-
-struct BeerType: Codable {
-    let name: String
-    let type: String
-    let alcoholContent: Float
-    let calories: Int16
-    let imageData: String?
-}
-*/

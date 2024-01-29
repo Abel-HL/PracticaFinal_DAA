@@ -208,7 +208,6 @@ class ManufacturersViewModel: ObservableObject{
             newBeer.type = type
             newBeer.imageData = compressedImageData
             newBeer.favorite = favorite
-            
             newBeer.manufacturer = manufacturer     //Asociamos la nueva cerveza al fabricante en cuestión
         }
         
@@ -500,63 +499,43 @@ class ManufacturersViewModel: ObservableObject{
             print("Error fetching filtered beers: \(error.localizedDescription)")
         }
     }
+    
+    
+    //InitialDataLoader
+    func addManufacturerAndBeerForInitialData(name: String, manufacturerCountryCode: String, beerName: String, beerType: String, beerAlcoholContent: Float, beerCalories: Int16, beerFavorite: Bool, manufacturerFavorite: Bool, manufacturerImage: UIImage, beerImage: UIImage) {
+        
+        if let compressedManufacturerImageData = ImageProcessor.compressImage(manufacturerImage),
+           let compressedBeerImageData = ImageProcessor.compressImage(beerImage) {
+            
+            // Agrega el fabricante
+            let newManufacturer = ManufacturerEntity(context: manager.context)
+            newManufacturer.id = UUID()
+            newManufacturer.name = name
+            newManufacturer.countryCode = manufacturerCountryCode
+            newManufacturer.favorite = manufacturerFavorite
+            newManufacturer.imageData = compressedManufacturerImageData
+            newManufacturer.beers = []
+            
+            self.manufacturer = newManufacturer
+            
+            // Agrega la cerveza asociada al fabricante
+            let newBeer = BeerEntity(context: manager.context)
+            newBeer.id = UUID()
+            newBeer.name = beerName
+            newBeer.alcoholContent = beerAlcoholContent
+            newBeer.calories = beerCalories
+            newBeer.type = beerType
+            newBeer.imageData = compressedBeerImageData
+            newBeer.favorite = beerFavorite
+            newBeer.manufacturer = newManufacturer
+            
+            // Guarda los cambios
+            save()
+            
+            // Refresca los datos necesarios
+            selectedManufacturers()
+            getBeers()
+            getUniqueBeerTypes(isFavorite: false)
+        }
+    }
 }
-
-    
-    /*
-    func filterBeers(for sortCriteria: SortCriteria) {
-        guard let currentManufacturer = self.manufacturer else {
-            print("Manufacturer is nil")
-            return
-        }
-
-        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
-        
-        // Establecer un predicado para filtrar por el fabricante actual
-        let predicate = NSPredicate(format: "manufacturer == %@", currentManufacturer)
-        fetchRequest.predicate = predicate
-        
-        var sortDescriptor: NSSortDescriptor
-        
-        switch sortCriteria {
-        case .name:
-            sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-        case .calories:
-            sortDescriptor = NSSortDescriptor(key: "calories", ascending: true)
-        case .alcoholContent:
-            sortDescriptor = NSSortDescriptor(key: "alcoholContent", ascending: true)
-        }
-        
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        do {
-            // Fetch beers based on the specified sort criteria and manufacturer
-            self.beers = try manager.container.viewContext.fetch(fetchRequest)
-        } catch {
-            print("Error fetching beers: \(error.localizedDescription)")
-        }
-    }
-     */
-    
-    
-    /*
-    func deleteBeerById(withID id: UUID) {
-        let context = manager.container.viewContext
-        
-        let fetchRequest: NSFetchRequest<BeerEntity> = BeerEntity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        
-        do {
-            let result = try context.fetch(fetchRequest)
-            if let beerToDelete = result.first {
-                context.delete(beerToDelete)
-                try context.save()
-            }
-        } catch {
-            print("Error deleting beer from CoreData: \(error.localizedDescription)")
-        }
-        save()
-        getBeers()
-    }
-     */
-

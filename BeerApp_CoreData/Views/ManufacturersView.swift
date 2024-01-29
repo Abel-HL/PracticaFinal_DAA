@@ -57,7 +57,7 @@ struct ManufacturersView: View {
                 ToolbarItem {
                     Button(action: {
                         viewModel.selectedList = "Imported"
-                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logo")!, favorite: true)
+                        viewModel.addManufacturer(name: "Prueba", countryCode: "CN", image: UIImage(named: "Logos/MahouLogo")!, favorite: true)
                     }) {
                         Label("Add Manufacturer", systemImage: "plus")
                     }
@@ -90,7 +90,7 @@ struct ManufacturerRow: View {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 30, height: 30)
+                        .frame(width: 35, height: 35)
                         .cornerRadius(5)
                 } else {
                     Image(systemName: "square.fill")

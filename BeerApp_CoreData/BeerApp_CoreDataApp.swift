@@ -12,6 +12,9 @@ struct BeerApp_CoreDataApp: App {
     var body: some Scene {
         WindowGroup {
             ManufacturersView()
+                .onAppear{
+                    DataLoader.loadInitialDataIfNeeded()
+                }
         }
     }
 }

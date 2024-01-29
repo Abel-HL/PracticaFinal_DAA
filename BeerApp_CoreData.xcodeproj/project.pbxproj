@@ -13,7 +13,7 @@
 		141ABF832B274CFB001EB107 /* ManufacturersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF822B274CFB001EB107 /* ManufacturersView.swift */; };
 		141ABF852B274CFC001EB107 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 141ABF842B274CFC001EB107 /* Assets.xcassets */; };
 		141ABF882B274CFC001EB107 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 141ABF872B274CFC001EB107 /* Preview Assets.xcassets */; };
-		141ABF8A2B274CFC001EB107 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF892B274CFC001EB107 /* Persistence.swift */; };
+		141ABF8A2B274CFC001EB107 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF892B274CFC001EB107 /* PersistenceController.swift */; };
 		141ABF8D2B274CFC001EB107 /* BeerApp_CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF8B2B274CFC001EB107 /* BeerApp_CoreData.xcdatamodeld */; };
 		141ABF972B277AD9001EB107 /* ManufacturersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF962B277AD9001EB107 /* ManufacturersViewModel.swift */; };
 		141ABF992B27A04F001EB107 /* AddManufacturerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141ABF982B27A04F001EB107 /* AddManufacturerView.swift */; };
@@ -46,7 +46,7 @@
 		141ABF822B274CFB001EB107 /* ManufacturersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturersView.swift; sourceTree = "<group>"; };
 		141ABF842B274CFC001EB107 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		141ABF872B274CFC001EB107 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		141ABF892B274CFC001EB107 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		141ABF892B274CFC001EB107 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		141ABF8C2B274CFC001EB107 /* BeerApp_CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BeerApp_CoreData.xcdatamodel; sourceTree = "<group>"; };
 		141ABF962B277AD9001EB107 /* ManufacturersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturersViewModel.swift; sourceTree = "<group>"; };
 		141ABF982B27A04F001EB107 /* AddManufacturerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddManufacturerView.swift; sourceTree = "<group>"; };
@@ -137,7 +137,7 @@
 		141ABF942B277967001EB107 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				141ABF892B274CFC001EB107 /* Persistence.swift */,
+				141ABF892B274CFC001EB107 /* PersistenceController.swift */,
 				141ABF8B2B274CFC001EB107 /* BeerApp_CoreData.xcdatamodeld */,
 				14CF64E32B39E4ED00E681B1 /* InitialDataLoader.swift */,
 			);
@@ -271,7 +271,7 @@
 			files = (
 				149B9DDC2B4AD8A000062B74 /* FavoriteComponentView.swift in Sources */,
 				14B0C5FD2B29BE54004F04A1 /* BeersView.swift in Sources */,
-				141ABF8A2B274CFC001EB107 /* Persistence.swift in Sources */,
+				141ABF8A2B274CFC001EB107 /* PersistenceController.swift in Sources */,
 				1452396B2B4B28E8002D11A5 /* NameComponentView.swift in Sources */,
 				148017532B6579E800D4398B /* ButtonSaveTextComponentView.swift in Sources */,
 				144BAF342B28B3B700E85A5B /* ImageProcessor.swift in Sources */,

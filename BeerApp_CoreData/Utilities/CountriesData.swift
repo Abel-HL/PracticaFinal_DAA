@@ -60,7 +60,7 @@ class CountryService : ObservableObject{
                                let population = jsonObject["population"] as? Int {
                                 
                                 // Añadir la condición para filtrar por población
-                                if population >= 20000000 {
+                                if population >= 16000000 {
                                     var flagEmoji: String = flag  // Por defecto, utiliza la cadena del JSON
                                     // Intenta convertir la cadena del emoji si está presente
                                     if let unicodeString = flag.applyingTransform(StringTransform("Hex-Any"), reverse: false) {

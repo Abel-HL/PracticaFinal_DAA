@@ -151,7 +151,7 @@ struct ContentView: View {
                                       alcoholContent: 5.0,
                                       calories: 50,
                                       favorite: false,
-                                      image: (UIImage(named: "BeerLogo") ?? UIImage(systemName: "xmark.circle.fill"))!,
+                                      image: (UIImage(named: "Photos/MahouCan") ?? UIImage(systemName: "xmark.circle.fill"))!,
                                       manufacturer: viewModel.manufacturer!)
                 }) {
                     Label("Add Beer", systemImage: "plus")
